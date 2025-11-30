@@ -1,7 +1,6 @@
 ---
 name: resume-formatter
 description: Convert resume YAML to professionally formatted PDF using Typst templates. Use when generating final resume PDFs, comparing template layouts, or creating print-ready documents.
-version: 2.0.0
 ---
 
 # Resume Formatter

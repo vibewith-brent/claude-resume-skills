@@ -1,7 +1,6 @@
 ---
 name: resume-template-maker
 description: Create custom Typst resume templates using structured design principles. Use when user wants a custom template or industry-specific styling.
-version: 1.0.0
 ---
 
 # Resume Template Maker Skill

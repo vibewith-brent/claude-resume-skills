@@ -1,7 +1,6 @@
 ---
 name: resume-optimizer
 description: Optimize resume content for target roles with ATS optimization, impact quantification, and keyword alignment. Use when tailoring for job postings or adding metrics.
-version: 1.0.0
 ---
 
 # Resume Optimizer
