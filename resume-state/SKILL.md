@@ -101,6 +101,19 @@ uv run scripts/diff_versions.py v1 v2
         └── jobs/                  # Cached job postings
 ```
 
+## Store Location
+
+Scripts find `.resume_versions` using this search order:
+
+1. **Environment variable**: `RESUME_VERSIONS_PATH` (if set)
+2. **Upward search**: From current directory upward to root
+3. **Global fallback**: `~/.resume_versions`
+
+This allows:
+- Running commands from any subdirectory of your project
+- Using a global store for all projects (`~/.resume_versions`)
+- Overriding location with `export RESUME_VERSIONS_PATH=/custom/path`
+
 ## Workflow Integration
 
 State scripts provide path resolution for other skills:

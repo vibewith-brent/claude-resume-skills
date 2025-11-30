@@ -20,6 +20,23 @@ This ensures all resume work is tracked and versioned.
 
 Run `uv sync` first if dependencies aren't installed.
 
+### Testing Skills
+
+```bash
+# Verify all skills are loaded (should list 6 skills)
+ls -la .claude/skills/
+
+# Test extraction
+uv run .claude/skills/resume-extractor/scripts/extract_pdf.py test.pdf
+
+# Validate YAML structure
+uv run .claude/skills/resume-optimizer/scripts/validate_yaml.py resume.yaml
+
+# Test PDF generation pipeline
+uv run .claude/skills/resume-formatter/scripts/yaml_to_latex.py resume.yaml modern -o test.tex
+uv run .claude/skills/resume-formatter/scripts/compile_latex.py test.tex -o test.pdf
+```
+
 ### Version Management (USE FIRST)
 ```bash
 # Initialize a project (do this first when starting)
@@ -123,6 +140,8 @@ Versions
 ## Key Files
 
 - **State Schema**: `.resume_versions/projects/<name>/project.json` — version history and metadata
+- **Global Config**: `.resume_versions/config.json` — active project setting
+- **State Utils**: `resume-state/scripts/state_utils.py` — shared utilities for version management (schema v1.0.0)
 - **YAML Schema**: `.claude/skills/resume-extractor/references/resume_schema.yaml` — canonical structure for resume data
 - **LaTeX Templates**: `.claude/skills/resume-formatter/assets/templates/latex/*.tex.j2` — Jinja2 templates with `latex_escape` filter
 - **Visual QA Checklist**: `.claude/skills/resume-reviewer/references/visual_qa_checklist.md` — structured evaluation criteria
@@ -211,3 +230,51 @@ uv run .claude/skills/resume-state/scripts/export_version.py v3 ~/Desktop/applic
 ```
 
 Version history is preserved in `.resume_versions/projects/<name>/project.json`.
+
+## Development Notes
+
+### Python Environment
+
+- Managed with `uv` (auto-installed by Claude Code)
+- Requires Python >=3.10
+- Dependencies in `pyproject.toml`: pdfplumber, python-docx, pyyaml, jinja2, requests, beautifulsoup4
+
+### Skill Architecture
+
+- **Source of Truth**: Edit `resume-*/` directories directly
+- **Symlinks**: `.claude/skills/` contains symlinks to `resume-*/` for auto-loading
+- **Scripts**: All utility scripts use `uv run` and are callable from skill directories
+- **State Management**: Centralized in `state_utils.py` with functions for config/project loading, version resolution, path handling
+
+### Version Store Structure
+
+```
+.resume_versions/
+├── config.json              # {"version": "1.0.0", "active_project": "ml_engineer"}
+└── projects/<name>/
+    ├── project.json         # {"version": "1.0.0", "active_version": "v2", "versions": [...]}
+    ├── sources/             # Immutable original files
+    ├── versions/v1/         # YAML snapshots + artifacts
+    └── jobs/                # Cached job postings
+```
+
+### Store Location Resolution
+
+Scripts find `.resume_versions` using this search order:
+
+1. **Environment variable**: `RESUME_VERSIONS_PATH` (if set)
+2. **Upward search**: From current directory to root (like `.git`)
+3. **Global fallback**: `~/.resume_versions`
+
+This enables:
+- Running commands from any subdirectory within the project
+- Using a global store for all resume projects
+- Custom location via `export RESUME_VERSIONS_PATH=/path/to/store`
+
+### Adding New Scripts
+
+When adding scripts to `resume-state/scripts/`:
+1. Import from `state_utils.py` for consistency
+2. Use `resolve_project()` to handle --project/-p flags
+3. Follow pattern: load state → modify → save state
+4. Update `resume-state/SKILL.md` commands reference

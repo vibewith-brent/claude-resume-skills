@@ -25,6 +25,7 @@
 \usepackage{multicol}
 \usepackage{tabularx}
 \usepackage{needspace}
+\usepackage{fontawesome5}
 
 % Prevent orphan headers (keep experience entries together)
 \widowpenalty=10000
@@ -80,7 +81,7 @@
 \begin{center}
     {% raw %}\myname{{% endraw %}{{ contact.name | latex_escape }}{% raw %}}{% endraw %}\\[0.3em]
     {% raw %}\jobtitle{{% endraw %}{{ contact.title | latex_escape }}{% raw %}}{% endraw %}\\[0.3em]
-    {% raw %}\contactinfo{{% endraw %}{{ contact.phone | latex_escape }} | {% if contact.email %}{% raw %}\href{mailto:{% endraw %}{{ contact.email }}{% raw %}}{{% endraw %}{{ contact.email | latex_escape }}{% raw %}}{% endraw %}{% endif %}{% raw %}}{% endraw %}
+    {% raw %}\contactinfo{{% endraw %}{% if contact.location %}{{ contact.location | latex_escape }} | {% endif %}{{ contact.phone | latex_escape }} | {% if contact.email %}{% raw %}\href{mailto:{% endraw %}{{ contact.email }}{% raw %}}{{% endraw %}{{ contact.email | latex_escape }}{% raw %}}{% endraw %}{% endif %}{% if contact.linkedin %} | {% raw %}\href{{% endraw %}{{ contact.linkedin }}{% raw %}}{\faLinkedin}{% endraw %}{% endif %}{% raw %}}{% endraw %}
 \end{center}
 
 {% if summary %}
@@ -92,7 +93,7 @@
 {% raw %}\section{Experience}{% endraw %}
 {% for job in experience %}
 {% for position in job.positions %}
-{% raw %}\needspace{4\baselineskip}{% endraw %}
+{% raw %}\needspace{6\baselineskip}{% endraw %}
 {% raw %}\experienceentry{{% endraw %}{{ position.title | latex_escape }}{% raw %}}{{% endraw %}{{ position.dates | latex_escape }}{% raw %}}{{% endraw %}{{ job.company | latex_escape }}{% raw %}}{% endraw %}
 {% if position.achievements %}
 {% raw %}\begin{itemize}{% endraw %}
@@ -121,14 +122,10 @@
 {% endif %}
 
 {% if education %}
-{% raw %}\section{Education}
-\vspace{0.2em}
-\noindent\begin{tabular}{@{}lll@{}}
-{% endraw %}
+{% raw %}\section{Education}{% endraw %}
 {% for edu in education %}
-{% raw %}\textbf{{% endraw %}{{ edu.degree | latex_escape }}{% raw %}}{% endraw %} & {% raw %}{\color{subtextgray}{% endraw %}{{ edu.institution | latex_escape }}{% raw %}}{% endraw %}{% if edu.minor %}{% raw %} {\footnotesize({% endraw %}{{ edu.minor | latex_escape }}{% raw %})}{% endraw %}{% endif %} & {% raw %}{\color{dateblue}{% endraw %}{{ edu.graduation_year }}{% raw %}}{% endraw %}{% raw %}\\{% endraw %}
+{% raw %}\noindent\textbf{{% endraw %}{{ edu.degree | latex_escape }}{% raw %}}{% endraw %} — {% raw %}{\color{subtextgray}{% endraw %}{{ edu.institution | latex_escape }}{% raw %}}{% endraw %}{% if edu.minor %}{% raw %} {\footnotesize({% endraw %}{{ edu.minor | latex_escape }}{% raw %})}{% endraw %}{% endif %}{% raw %} \hfill {\color{dateblue}{% endraw %}{{ edu.graduation_year }}{% raw %}}\par{% endraw %}
 {% endfor %}
-{% raw %}\end{tabular}{% endraw %}
 {% endif %}
 
 {% if certifications %}
@@ -160,7 +157,9 @@
 
 {% if attribution %}
 {% raw %}\vfill
-\hfill{\tiny\color{subtextgray}{% endraw %}{{ attribution.text | latex_escape }}{% if attribution.url %} {% raw %}\href{{% endraw %}{{ attribution.url }}{% raw %}}{{% endraw %}{{ attribution.link_text | latex_escape }}{% raw %}}{% endraw %}{% endif %}{% raw %}}{% endraw %}
+\begin{center}
+{\tiny\color{subtextgray}{% endraw %}{{ attribution.text | latex_escape }}{% if attribution.url %} {% raw %}\href{{% endraw %}{{ attribution.url }}{% raw %}}{{% endraw %}{{ attribution.link_text | latex_escape }}{% raw %}}{% endraw %}{% endif %}{% raw %}}
+\end{center}{% endraw %}
 {% endif %}
 
 {% raw %}
