@@ -1,0 +1,131 @@
+# Resume YAML Schema Reference
+# This file defines the standard structure for resume data in YAML format
+
+# Complete example with all fields:
+contact:
+  name: "Full Name"
+  title: "Professional Title / Current Role"
+  phone: "Phone Number"
+  email: "email@example.com"
+  location: "City, State"  # optional
+  linkedin: "linkedin.com/in/profile"  # optional
+  github: "github.com/username"  # optional
+  website: "https://example.com"  # optional
+
+summary: |
+  Professional summary paragraph. Use YAML literal block style (|) for multi-line text.
+  This should be 2-5 sentences highlighting key qualifications, experience, and value proposition.
+
+experience:
+  - company: "Company Name"
+    location: "City, State"  # optional
+    positions:
+      - title: "Job Title"
+        dates: "Start Date - End Date"
+        achievements:
+          - "Achievement or responsibility bullet point"
+          - "Another achievement with metrics when possible"
+          - "Use action verbs to start each bullet"
+
+  - company: "Previous Company"
+    location: "City, State"
+    positions:
+      - title: "Senior Role"
+        dates: "Start Date - End Date"
+        achievements:
+          - "Achievement 1"
+          - "Achievement 2"
+
+      - title: "Junior Role"  # Multiple positions at same company
+        dates: "Start Date - End Date"
+        achievements:
+          - "Achievement 1"
+
+skills:
+  # Organize skills by category for better readability
+  # Use lists for multiple items in a category
+
+  "Category 1 (e.g., Programming Languages)":
+    - "Skill 1"
+    - "Skill 2"
+
+  "Category 2 (e.g., Frameworks & Libraries)":
+    - "Framework 1"
+    - "Framework 2"
+
+  "Category 3 (e.g., Tools & Platforms)":
+    - "Tool 1"
+    - "Tool 2"
+
+education:
+  - institution: "University Name"
+    degree: "Degree Type, Major"
+    graduation_year: "Year"
+    location: "City, State"  # optional
+    gpa: "3.8/4.0"  # optional
+    honors: "Summa Cum Laude"  # optional
+    minor: "Minor Field"  # optional
+
+  - institution: "Another Institution"
+    degree: "Degree Type, Major"
+    graduation_year: "Year"
+
+# Optional sections (include if relevant):
+
+certifications:  # optional
+  - name: "Certification Name"
+    issuer: "Issuing Organization"
+    date: "Issue Date"
+    credential_id: "ID123456"  # optional
+    url: "https://verify.example.com"  # optional
+
+projects:  # optional
+  - name: "Project Name"
+    dates: "Start - End"
+    description: "Brief description of the project"
+    technologies:
+      - "Tech 1"
+      - "Tech 2"
+    achievements:
+      - "Key achievement or outcome"
+      - "Another achievement"
+    url: "https://project.example.com"  # optional
+
+publications:  # optional
+  - title: "Publication Title"
+    authors: "Author 1, Author 2, Your Name"
+    venue: "Journal/Conference Name"
+    date: "Publication Date"
+    url: "https://doi.org/..."  # optional
+
+awards:  # optional
+  - name: "Award Name"
+    issuer: "Issuing Organization"
+    date: "Award Date"
+    description: "Brief description if needed"  # optional
+
+languages:  # optional
+  - language: "Language Name"
+    proficiency: "Native/Fluent/Professional/Conversational/Basic"
+
+volunteer:  # optional
+  - organization: "Organization Name"
+    role: "Volunteer Role"
+    dates: "Start - End"
+    description: "Brief description of volunteer work"
+    achievements:
+      - "Achievement or contribution"
+
+# Guidelines for creating quality YAML resumes:
+#
+# 1. Use consistent date formats throughout (e.g., "Jan 2020 - Present", "2018 - 2020", "Mar 2021 - Dec 2022")
+# 2. Start all achievement bullets with strong action verbs
+# 3. Include metrics and quantifiable results where possible
+# 4. Keep achievements concise (1-2 lines each)
+# 5. Order experience reverse-chronologically (most recent first)
+# 6. Use proper YAML syntax:
+#    - Use quotes for strings containing special characters (: , [ ] { } & * # ? | - < > = ! % @ \)
+#    - Use | for multi-line strings (like summary)
+#    - Use consistent indentation (2 spaces recommended)
+# 7. Include only sections relevant to your experience
+# 8. Omit optional fields that don't apply

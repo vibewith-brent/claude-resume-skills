@@ -1,0 +1,195 @@
+# Strong Action Verbs for Resume Bullets
+# Organized by impact category
+
+leadership:
+  - Led
+  - Directed
+  - Managed
+  - Spearheaded
+  - Drove
+  - Championed
+  - Orchestrated
+  - Coordinated
+  - Oversaw
+  - Supervised
+  - Guided
+  - Steered
+  - Headed
+  - Governed
+  - Piloted
+
+achievement_delivery:
+  - Delivered
+  - Achieved
+  - Launched
+  - Deployed
+  - Shipped
+  - Released
+  - Built
+  - Developed
+  - Created
+  - Designed
+  - Implemented
+  - Established
+  - Executed
+  - Completed
+  - Produced
+  - Generated
+  - Constructed
+  - Formulated
+
+improvement_optimization:
+  - Improved
+  - Optimized
+  - Enhanced
+  - Reduced
+  - Increased
+  - Accelerated
+  - Streamlined
+  - Automated
+  - Eliminated
+  - Minimized
+  - Maximized
+  - Boosted
+  - Elevated
+  - Refined
+  - Strengthened
+  - Upgraded
+  - Modernized
+  - Revitalized
+  - Transformed
+
+technical_execution:
+  - Architected
+  - Engineered
+  - Refactored
+  - Migrated
+  - Integrated
+  - Configured
+  - Deployed
+  - Instrumented
+  - Monitored
+  - Debugged
+  - Programmed
+  - Coded
+  - Scripted
+  - Automated
+  - Containerized
+  - Orchestrated
+  - Provisioned
+
+analysis_research:
+  - Analyzed
+  - Investigated
+  - Researched
+  - Evaluated
+  - Assessed
+  - Identified
+  - Diagnosed
+  - Discovered
+  - Determined
+  - Examined
+  - Explored
+  - Studied
+  - Measured
+  - Quantified
+  - Validated
+  - Tested
+  - Profiled
+  - Benchmarked
+
+collaboration_communication:
+  - Collaborated
+  - Partnered
+  - Presented
+  - Advised
+  - Consulted
+  - Mentored
+  - Trained
+  - Educated
+  - Evangelized
+  - Influenced
+  - Coordinated
+  - Aligned
+  - Facilitated
+  - Communicated
+  - Briefed
+  - Demonstrated
+  - Engaged
+  - Liaised
+
+innovation_creation:
+  - Pioneered
+  - Innovated
+  - Invented
+  - Conceptualized
+  - Originated
+  - Designed
+  - Prototyped
+  - Introduced
+  - Established
+  - Founded
+  - Initiated
+  - Launched
+  - Devised
+  - Crafted
+
+problem_solving:
+  - Resolved
+  - Solved
+  - Troubleshot
+  - Debugged
+  - Fixed
+  - Remediated
+  - Addressed
+  - Mitigated
+  - Overcame
+  - Rectified
+  - Corrected
+
+strategy_planning:
+  - Strategized
+  - Planned
+  - Defined
+  - Established
+  - Formulated
+  - Designed
+  - Architected
+  - Charted
+  - Mapped
+  - Outlined
+  - Structured
+
+data_ml_specific:
+  - Modeled
+  - Trained
+  - Fine-tuned
+  - Deployed
+  - Monitored
+  - Validated
+  - Evaluated
+  - Preprocessed
+  - Engineered (features)
+  - Instrumented
+  - Productionized
+  - Operationalized
+  - Experimented
+  - A/B tested
+  - Predicted
+  - Classified
+  - Clustered
+  - Forecasted
+
+# Verbs to avoid (weak or overused):
+# - Helped (vague)
+# - Worked on (passive)
+# - Responsible for (passive)
+# - Tasked with (passive)
+# - Participated in (low impact)
+# - Assisted with (low impact)
+# - Involved in (vague)
+# - Dealt with (vague)
+# - Handled (vague)
+# - Did (weak)
+# - Made (weak)
+# - Tried (unsuccessful implication)

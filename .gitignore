@@ -30,6 +30,8 @@ Thumbs.db
 *.docx
 *.pdf
 
-# Resume content files
-*.yaml
-*.yml
+# User resume files (ignore in root and .claude directories)
+/*resume*.yaml
+/*resume*.yml
+.claude/**/*.yaml
+.claude/**/*.yml

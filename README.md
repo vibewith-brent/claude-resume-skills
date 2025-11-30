@@ -1,194 +1,195 @@
 # Resume Helper Skills for Claude Code
 
-Three professional skills for extracting, optimizing, and formatting resumes with Claude Code on macOS.
+Professional resume management suite for Claude Code: extract from PDF/DOCX, optimize for ATS and target roles, format to professional PDFs with 4 designer templates.
+
+## Features
+
+- **Extract**: Convert PDF/DOCX resumes to structured, editable YAML format
+- **Optimize**: Enhance content with ATS compatibility, quantifiable metrics, and keyword alignment
+- **Format**: Generate professional PDFs with 4 industry-optimized LaTeX templates
 
 ## Quick Start
 
 ```bash
 # 1. Clone this repository
-git clone https://github.com/yourusername/resume_helper.git
-cd resume_helper
+git clone https://github.com/vibewith-brent/claude-resume-skills.git
+cd claude-resume-skills
 
-# 2. Install prerequisites (one-time setup)
+# 2. Install MacTeX (required for PDF generation)
 brew install --cask mactex
 
 # 3. Open Claude Code in this directory
-# Skills are automatically loaded and ready to use!
+# Skills auto-load from .claude/skills/ and are ready to use
 ```
 
-## What This Does
-
-- **Extract** PDF/DOCX resumes to editable YAML format
-- **Optimize** content with ATS compatibility, metrics, and keyword alignment
-- **Format** professional PDFs with 4 designer templates
-
-## Prerequisites (macOS)
+## Prerequisites
 
 ### Required
 
 1. **Claude Code** - Download from [claude.ai/claude-code](https://claude.ai/claude-code)
-2. **uv** (Python package manager) - Automatically installed by Claude Code
-3. **MacTeX** (for PDF generation):
+2. **MacTeX** (for PDF generation):
    ```bash
    brew install --cask mactex
    ```
 
-   After installation, verify:
+   Verify installation:
    ```bash
    pdflatex --version
    ```
 
-   > **Note:** MacTeX is ~4GB. For minimal install (100MB): `brew install --cask mactex-no-gui`
+   > **Note:** MacTeX is ~4GB. For minimal install: `brew install --cask mactex-no-gui` (100MB)
 
 ### Auto-Installed
 
-These Python packages install automatically when you use the skills:
-- `pdfplumber`, `python-docx` (extractor)
-- `pyyaml`, `requests`, `beautifulsoup4` (optimizer)
-- `jinja2`, `pyyaml` (formatter)
+- **uv** - Python package manager (installed by Claude Code)
+- **Python packages** - Installed automatically when using skills:
+  - `pdfplumber`, `python-docx` (extractor)
+  - `pyyaml`, `requests`, `beautifulsoup4` (optimizer)
+  - `jinja2`, `pyyaml` (formatter)
 
 ## Installation
 
-### Option 1: Install via Plugin Marketplace (Easiest)
+### Option 1: Plugin Marketplace (Recommended)
 
-Register this repository as a Claude Code plugin marketplace:
+Register this repo as a Claude Code plugin marketplace:
 
 ```
-/plugin marketplace add yourusername/resume_helper
+/plugin marketplace add vibewith-brent/claude-resume-skills
 ```
 
-Then install the resume skills:
+Install the resume skills bundle:
 
 ```
 /plugin install resume-skills
 ```
 
-All three skills (extractor, optimizer, formatter) will be available globally in any Claude Code project.
+All three skills are now available globally in any Claude Code project.
 
-### Option 2: Clone and Use Locally
+### Option 2: Local Development
+
+Clone and use locally for development or customization:
 
 ```bash
-git clone https://github.com/yourusername/resume_helper.git
-cd resume_helper
+git clone https://github.com/vibewith-brent/claude-resume-skills.git
+cd claude-resume-skills
 ```
 
-Open Claude Code in this directory. Skills load automatically from `.claude/skills/`.
+Open Claude Code in this directory. Skills auto-load from `.claude/skills/`.
 
-### Option 3: Install Globally (Manual)
+### Option 3: Manual Global Install
 
-To use these skills in any Claude Code project:
+Install skills globally by unzipping to Claude's skills directory:
 
 ```bash
-# Unzip skills to Claude's global directory
 unzip resume-extractor.skill -d ~/Library/Application\ Support/Claude/skills/resume-extractor
 unzip resume-optimizer.skill -d ~/Library/Application\ Support/Claude/skills/resume-optimizer
 unzip resume-formatter.skill -d ~/Library/Application\ Support/Claude/skills/resume-formatter
 ```
 
-## How to Use
+## Usage
 
-Just talk to Claude Code in natural language. The skills activate automatically based on your request.
+Talk to Claude Code in natural language. Skills activate automatically based on your request.
 
-### Extract Resume from PDF
+### Extract Resume from PDF/DOCX
 
 ```
 "Extract my resume from resume.pdf to YAML format"
 ```
 
-Claude will:
-1. Extract text from your PDF
-2. Parse into structured YAML
-3. Save as `firstname_lastname_resume.yaml`
+**What happens:**
+1. Text extracted from PDF/DOCX
+2. Content parsed into structured YAML
+3. Saved as `firstname_lastname_resume.yaml`
 
-### Optimize Resume
+### Optimize Resume Content
 
 ```
 "Optimize my resume: add metrics, strengthen bullets, ensure ATS compatibility"
 ```
 
-Claude will:
-1. Review bullets for weak verbs
-2. Add quantifiable metrics
-3. Apply ATS guidelines
-4. Update professional summary
-5. Provide improved YAML
+**What happens:**
+1. Weak action verbs identified and replaced
+2. Quantifiable metrics added to achievements
+3. ATS guidelines applied
+4. Professional summary updated
+5. Improved YAML provided
 
-### Tailor for Job
+### Tailor for Specific Job
 
 ```
-"Tailor my resume for this job: [paste job URL]"
+"Tailor my resume for this job: [paste job URL or description]"
 ```
 
-Claude will:
-1. Analyze job requirements
-2. Identify keyword gaps
-3. Reorder and rewrite bullets
-4. Integrate relevant keywords
-5. Provide job-specific YAML
+**What happens:**
+1. Job requirements analyzed
+2. Keyword gaps identified
+3. Bullets reordered by relevance
+4. Keywords integrated naturally
+5. Job-specific YAML provided
 
-### Generate PDF
+### Generate Professional PDF
 
 ```
 "Convert my resume YAML to PDF using the modern template"
 ```
 
-Claude will:
-1. Convert YAML to LaTeX
-2. Compile to PDF
-3. Provide polished resume
+**What happens:**
+1. YAML converted to LaTeX
+2. Compiled to PDF with pdflatex
+3. Professional resume ready to submit
 
-## Available Templates
+## Templates
 
 | Template | Best For | Style |
 |----------|----------|-------|
-| **modern** | Tech, AI/ML, Software | Clean sans-serif, blue accents, minimalist |
-| **creative** | Design, Marketing, Startups | Bold blue header, colorful sections |
-| **classic** | Finance, Law, Consulting | Traditional serif, conservative |
+| **modern** | Tech, AI/ML, Software Engineering | Clean sans-serif, blue accents, Source Sans Pro typography |
+| **creative** | Design, Marketing, Startups | Bold blue header, colorful section dividers |
+| **classic** | Finance, Law, Consulting | Traditional serif, conservative black/white |
 | **academic** | Research, Academia, Science | Education-first, publication-focused |
 
-### Template Examples
+### Template Commands
 
 ```
-# Generate single template
+# Generate with specific template
 "Generate PDF with modern template"
 
 # Compare all templates
 "Generate PDFs with all 4 templates so I can compare"
 
-# Get recommendation
-"Which template is best for AI engineering roles at tech companies?"
+# Get template recommendation
+"Which template is best for AI engineering roles?"
 ```
 
-## Complete Workflow Example
+## Complete Workflow
 
-Start with a PDF resume and create a tailored version:
+End-to-end example: PDF resume → optimized → tailored → formatted PDF
 
 ```
 1. "Extract my resume from old_resume.pdf"
    → Creates old_resume.yaml
 
-2. "Optimize this resume for better ATS compatibility and add metrics"
-   → Provides optimized_resume.yaml
+2. "Optimize this resume: add metrics and strengthen impact"
+   → Creates optimized_resume.yaml
 
-3. "Tailor my resume for this Senior AI Engineer role at Google: [job URL]"
-   → Provides google_resume.yaml
+3. "Tailor my resume for this Senior ML Engineer role: [job URL]"
+   → Creates tailored_resume.yaml
 
 4. "Generate PDF with modern template"
-   → Creates google_resume.pdf
+   → Creates tailored_resume.pdf
 ```
 
-## Direct Command Reference
+## Direct Commands
 
-If you prefer running commands directly:
+For users who prefer CLI over conversational interface:
 
 ### Extract PDF to YAML
 ```bash
-uv run --with pdfplumber resume-extractor/scripts/extract_pdf.py your_resume.pdf
+uv run --with pdfplumber resume-extractor/scripts/extract_pdf.py resume.pdf
 ```
 
 ### Extract DOCX to YAML
 ```bash
-uv run --with python-docx resume-extractor/scripts/extract_docx.py your_resume.docx
+uv run --with python-docx resume-extractor/scripts/extract_docx.py resume.docx
 ```
 
 ### Validate YAML Structure
@@ -201,41 +202,40 @@ uv run --with pyyaml resume-optimizer/scripts/validate_yaml.py resume.yaml
 # Step 1: Convert YAML to LaTeX
 uv run --with jinja2 --with pyyaml \
   resume-formatter/scripts/yaml_to_latex.py \
-  resume.yaml \
-  modern \
-  -o resume.tex
+  resume.yaml modern -o resume.tex
 
 # Step 2: Compile LaTeX to PDF
 uv run resume-formatter/scripts/compile_latex.py \
-  resume.tex \
-  -o resume.pdf
+  resume.tex -o resume.pdf
 ```
 
 ### One-Liner PDF Generation
 ```bash
-uv run --with jinja2 --with pyyaml resume-formatter/scripts/yaml_to_latex.py resume.yaml modern -o resume.tex && uv run resume-formatter/scripts/compile_latex.py resume.tex -o resume.pdf
+uv run --with jinja2 --with pyyaml resume-formatter/scripts/yaml_to_latex.py resume.yaml modern -o resume.tex && \
+uv run resume-formatter/scripts/compile_latex.py resume.tex -o resume.pdf
 ```
 
-## File Structure
+## Repository Structure
 
 ```
-resume_helper/
-├── README.md                          # This file
-├── brent_skoumal_resume.yaml          # Example resume in YAML format
+claude-resume-skills/
+├── .claude-plugin/
+│   └── marketplace.json              # Plugin marketplace config
 │
-├── resume-extractor.skill             # Packaged skill (ZIP)
-├── resume-optimizer.skill             # Packaged skill (ZIP)
-├── resume-formatter.skill             # Packaged skill (ZIP)
+├── .claude/skills/                   # Skills for local development
+│   ├── resume-extractor/
+│   ├── resume-formatter/
+│   └── resume-optimizer/
 │
-├── resume-extractor/
-│   ├── SKILL.md                       # Skill instructions
+├── resume-extractor/                 # Extractor source
+│   ├── SKILL.md
 │   ├── scripts/
 │   │   ├── extract_pdf.py
 │   │   └── extract_docx.py
 │   └── references/
 │       └── resume_schema.yaml
 │
-├── resume-optimizer/
+├── resume-optimizer/                 # Optimizer source
 │   ├── SKILL.md
 │   ├── scripts/
 │   │   ├── validate_yaml.py
@@ -248,186 +248,182 @@ resume_helper/
 │       ├── general-optimization.md
 │       └── examples.md
 │
-└── resume-formatter/
-    ├── SKILL.md
-    ├── scripts/
-    │   ├── yaml_to_latex.py
-    │   └── compile_latex.py
-    ├── references/
-    │   ├── theme_guide.md
-    │   ├── troubleshooting.md
-    │   └── examples.md
-    └── assets/
-        └── templates/
-            └── latex/
-                ├── modern_custom.tex.j2      # Modern with Source Sans Pro
-                ├── creative.tex.j2           # Bold blue header design
-                ├── classic.tex.j2            # Traditional layout
-                └── academic.tex.j2           # Research-focused
+├── resume-formatter/                 # Formatter source
+│   ├── SKILL.md
+│   ├── scripts/
+│   │   ├── yaml_to_latex.py
+│   │   └── compile_latex.py
+│   ├── references/
+│   │   ├── theme_guide.md
+│   │   ├── troubleshooting.md
+│   │   └── examples.md
+│   └── assets/templates/latex/
+│       ├── modern_custom.tex.j2      # Source Sans Pro, modern design
+│       ├── creative.tex.j2           # Bold blue header
+│       ├── classic.tex.j2            # Traditional serif
+│       └── academic.tex.j2           # Research-focused
+│
+├── resume-extractor.skill            # Packaged skills (ZIP)
+├── resume-optimizer.skill
+├── resume-formatter.skill
+│
+├── README.md
+├── LICENSE
+└── .gitignore
 ```
 
 ## Troubleshooting
 
 ### Skills Not Loading
 
-1. **Verify you're in the correct directory:**
-   ```bash
-   pwd  # Should show /path/to/resume_helper
-   ls .claude/skills/  # Should show three skill directories
-   ```
+**Verify directory structure:**
+```bash
+pwd                    # Should show: .../claude-resume-skills
+ls .claude/skills/     # Should list: resume-extractor, resume-formatter, resume-optimizer
+```
 
-2. **Restart Claude Code:**
-   - Close Claude Code completely
-   - Navigate to `resume_helper` directory in Terminal
-   - Open Claude Code from here
+**Restart Claude Code:**
+1. Close Claude Code completely
+2. Navigate to repo directory in terminal
+3. Reopen Claude Code
 
-3. **Ask Claude Code:**
-   ```
-   "What skills do you have available?"
-   ```
+**Verify skills are available:**
+```
+"What skills do you have available?"
+```
 
 ### pdflatex Not Found
 
-If you see "pdflatex not found" error:
-
-1. **Install MacTeX:**
-   ```bash
-   brew install --cask mactex
-   ```
-
-2. **Verify installation:**
-   ```bash
-   pdflatex --version
-   ```
-
-3. **If still not found, add to PATH:**
-   ```bash
-   export PATH="/Library/TeX/texbin:$PATH"
-   ```
-
-### LaTeX Compilation Errors
-
-Common issues and solutions:
-
-**Missing packages:**
+**Install MacTeX:**
 ```bash
-# Reinstall with full LaTeX
-brew uninstall --cask mactex-no-gui
 brew install --cask mactex
 ```
 
-**Content too long:**
-- Use resume-optimizer to condense content
+**Verify installation:**
+```bash
+pdflatex --version
+```
+
+**If still not found, manually add to PATH:**
+```bash
+export PATH="/Library/TeX/texbin:$PATH"
+```
+
+Add to `~/.zshrc` for persistence:
+```bash
+echo 'export PATH="/Library/TeX/texbin:$PATH"' >> ~/.zshrc
+```
+
+### LaTeX Compilation Errors
+
+**Missing LaTeX packages:**
+```bash
+# Uninstall minimal version
+brew uninstall --cask mactex-no-gui
+
+# Install full version
+brew install --cask mactex
+```
+
+**Content too long (exceeds page limit):**
+- Use resume-optimizer to condense bullets
 - Aim for 1-2 pages maximum
 - Remove older or less relevant positions
+- Prioritize most impactful achievements
 
-**Font issues:**
-- Source Sans Pro is included with MacTeX
-- If errors persist, use `classic` template (uses standard fonts)
+**Font errors with modern template:**
+- Source Sans Pro is included with full MacTeX
+- If issues persist, use `classic` template (standard fonts only)
 
 ### YAML Validation Errors
 
-Validate your YAML structure:
-
+**Validate structure:**
 ```bash
 uv run --with pyyaml resume-optimizer/scripts/validate_yaml.py resume.yaml
 ```
 
-Common issues:
-- Missing required fields (name, email)
-- Invalid YAML syntax (check indentation)
-- Empty sections
-- Weak action verbs
+**Common issues:**
+- Missing required fields (`name`, `email`)
+- Invalid YAML syntax (indentation errors)
+- Empty sections (remove or populate)
+- Weak action verbs (use optimizer to strengthen)
 
 ## Best Practices
 
-### Content
+### Content Quality
 
-- **Quantify everything:** Add metrics to all achievements
-- **Action verbs:** Start bullets with powerful verbs (Architected, Delivered, Increased)
-- **Keywords:** Match exact terminology from job descriptions
-- **Concise:** 1-2 pages maximum
-- **ATS-friendly:** Use standard headers, simple structure
+- **Quantify achievements**: Add specific metrics (%, $, time saved, users impacted)
+- **Strong action verbs**: Start bullets with Architected, Delivered, Increased, Reduced, etc.
+- **Keywords**: Match exact terminology from target job descriptions
+- **Brevity**: Keep to 1-2 pages; prioritize recent and relevant experience
+- **Specificity**: Replace vague descriptions with concrete outcomes
 
 ### Workflow
 
-1. **Keep YAML master:** Edit resume.yaml, generate PDFs as needed
-2. **Version control:** Save YAML versions for different roles
-3. **File naming:** Use `firstname_lastname_company.pdf` format
-4. **Verify PDFs:** Always review generated PDF before submitting
-5. **Test ATS:** Run `pdftotext resume.pdf` to verify text extraction
+1. **YAML as source of truth**: Edit `resume.yaml`, generate PDFs as needed
+2. **Version control**: Create job-specific YAML files (`resume_google.yaml`, `resume_meta.yaml`)
+3. **File naming**: Use `firstname_lastname_company.pdf` format
+4. **Review before sending**: Always inspect generated PDF for formatting issues
+5. **ATS testing**: Verify text extraction with `pdftotext resume.pdf -` (should be readable)
 
 ### Template Selection
 
-- **Tech/AI/ML:** Modern template (clean, contemporary)
-- **Finance/Consulting:** Classic template (traditional)
-- **Design/Marketing:** Creative template (bold, visual)
-- **Academia/Research:** Academic template (education-first)
-- **Startups:** Modern or Creative templates
-
-## Example YAML Resume
-
-See `brent_skoumal_resume.yaml` for a complete example with:
-- Professional summary
-- 10+ years of experience
-- Skills organized by category
-- Multiple degrees
-- Proper YAML structure
-
-## Tips for Best Results
-
-### Using Claude Code
-
-1. **Be specific:** "Add metrics to my Sony role" is better than "improve resume"
-2. **Iterate:** Ask Claude to refine specific sections
-3. **Compare:** Generate multiple template PDFs to see what works best
-4. **Validate:** Use the validation script before formatting
+- **Tech/AI/ML/Software**: Modern (contemporary, Source Sans Pro)
+- **Finance/Consulting/Law**: Classic (traditional, conservative)
+- **Design/Marketing/UX**: Creative (bold, visual hierarchy)
+- **Academia/Research**: Academic (education-first, publications)
+- **Startups**: Modern or Creative
 
 ### ATS Optimization
 
-1. **Standard headers:** Use "Experience", "Education", "Skills"
-2. **Simple formatting:** Avoid tables, columns, graphics
-3. **Keywords:** Mirror job description language
-4. **File format:** Submit PDF (most compatible)
-5. **Test extraction:** Verify text copies correctly from PDF
+1. **Standard section headers**: Use "Experience", "Education", "Skills" (not "Work History", "Background")
+2. **Simple formatting**: Avoid tables, multi-column layouts, text boxes, graphics
+3. **Keyword matching**: Mirror exact phrases from job description where accurate
+4. **PDF format**: Submit PDF (not DOCX) for consistent rendering
+5. **Test extraction**: Verify text copies cleanly from PDF
 
 ### Job Tailoring
 
-1. **Read job description carefully:** Note required skills, keywords
-2. **Identify gaps:** Ask Claude to find missing keywords
-3. **Reorder bullets:** Put most relevant achievements first
-4. **Update summary:** Align with specific role requirements
-5. **Verify keywords:** Ensure exact matches for critical terms
+1. **Analyze job description**: Note required vs. preferred skills
+2. **Keyword gap analysis**: Ask Claude to identify missing keywords
+3. **Reorder bullets**: Place most relevant achievements first
+4. **Customize summary**: Align professional summary with role requirements
+5. **Verify keyword integration**: Ensure natural incorporation (avoid keyword stuffing)
 
 ## Support
 
-For issues or questions:
+**Skill documentation**: Each skill has detailed `SKILL.md` with instructions
 
-1. **Check skill documentation:** Each skill has detailed SKILL.md
-2. **Review references:** See `references/` directories for guides
-3. **Validate YAML:** Use validation script to check structure
-4. **Troubleshooting:** See troubleshooting section above
-5. **Open issue:** Report bugs on GitHub
+**Reference guides**: Check `references/` directories for:
+- ATS guidelines
+- Action verb lists
+- Impact patterns
+- Job tailoring strategies
+- Template selection guide
+- Troubleshooting tips
+
+**Validate YAML**: Use validation script before formatting:
+```bash
+uv run --with pyyaml resume-optimizer/scripts/validate_yaml.py resume.yaml
+```
+
+**Report issues**: [Open an issue on GitHub](https://github.com/vibewith-brent/claude-resume-skills/issues)
 
 ## Version History
 
-### v1.0.0 (Current)
+### v1.0.0
+
 - Modern custom template with Source Sans Pro typography
 - Enhanced color palette and font weight hierarchy
-- All 4 templates fully functional and ATS-compatible
-- Automatic MacTeX PATH detection for macOS
-- Comprehensive troubleshooting guides
+- 4 templates fully functional and ATS-compatible
+- MacTeX PATH auto-detection for macOS
+- Plugin marketplace support
+- Comprehensive reference documentation
 - YAML validation script
-- Progressive disclosure with reference files
+- MIT License
 
 ## License
 
-MIT License - See LICENSE file for details.
+MIT License - See [LICENSE](LICENSE) file for details.
 
 LaTeX templates use standard packages and are freely available for personal and commercial use.
-
----
-
-**Built with Claude Code**
-
-Ready to optimize your resume? Clone this repo, open Claude Code, and start the conversation!
