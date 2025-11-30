@@ -35,3 +35,7 @@ Thumbs.db
 
 # Resume version store (user data)
 .resume_versions/
+
+# Packaged skill distributions (build artifacts)
+dist/
+*.skill
