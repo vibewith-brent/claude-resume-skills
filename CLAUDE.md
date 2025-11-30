@@ -48,7 +48,7 @@ uv run .claude/skills/resume-optimizer/scripts/fetch_job_posting.py "<url>" --ou
 ## Architecture
 
 ```
-.claude/skills/           # Active skills (auto-loaded by Claude Code)
+resume-*/                 # Canonical skill sources
 ├── resume-extractor/     # PDF/DOCX → text extraction
 ├── resume-optimizer/     # Content improvement, ATS, tailoring
 ├── resume-formatter/     # YAML → LaTeX → PDF
@@ -56,10 +56,10 @@ uv run .claude/skills/resume-optimizer/scripts/fetch_job_posting.py "<url>" --ou
 ├── resume-reviewer/      # Visual QA for compiled PDFs
 └── resume-template-maker/ # Create custom LaTeX templates
 
-resume-*/                 # Source copies (packaged to .skill ZIP files)
+.claude/skills/           # Symlinks to resume-*/ (auto-loaded by Claude Code)
 ```
 
-Skills are duplicated: `.claude/skills/` for runtime, `resume-*/` for development/packaging.
+Single source of truth: edit `resume-*/` directories; `.claude/skills/` contains symlinks.
 
 ### Skill Workflow
 

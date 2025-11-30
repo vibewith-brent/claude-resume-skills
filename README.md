@@ -86,6 +86,8 @@ Install skills globally by unzipping to Claude's skills directory:
 unzip resume-extractor.skill -d ~/Library/Application\ Support/Claude/skills/resume-extractor
 unzip resume-optimizer.skill -d ~/Library/Application\ Support/Claude/skills/resume-optimizer
 unzip resume-formatter.skill -d ~/Library/Application\ Support/Claude/skills/resume-formatter
+unzip resume-reviewer.skill -d ~/Library/Application\ Support/Claude/skills/resume-reviewer
+unzip resume-template-maker.skill -d ~/Library/Application\ Support/Claude/skills/resume-template-maker
 ```
 
 ## Usage
@@ -220,32 +222,32 @@ For users who prefer CLI over conversational interface:
 
 ### Extract PDF to YAML
 ```bash
-uv run resume-extractor/scripts/extract_pdf.py resume.pdf
+uv run .claude/skills/resume-extractor/scripts/extract_pdf.py resume.pdf
 ```
 
 ### Extract DOCX to YAML
 ```bash
-uv run resume-extractor/scripts/extract_docx.py resume.docx
+uv run .claude/skills/resume-extractor/scripts/extract_docx.py resume.docx
 ```
 
 ### Validate YAML Structure
 ```bash
-uv run resume-optimizer/scripts/validate_yaml.py resume.yaml
+uv run .claude/skills/resume-optimizer/scripts/validate_yaml.py resume.yaml
 ```
 
 ### Generate PDF from YAML
 ```bash
 # Step 1: Convert YAML to LaTeX
-uv run resume-formatter/scripts/yaml_to_latex.py resume.yaml modern -o resume.tex
+uv run .claude/skills/resume-formatter/scripts/yaml_to_latex.py resume.yaml modern -o resume.tex
 
 # Step 2: Compile LaTeX to PDF
-uv run resume-formatter/scripts/compile_latex.py resume.tex -o resume.pdf
+uv run .claude/skills/resume-formatter/scripts/compile_latex.py resume.tex -o resume.pdf
 ```
 
 ### One-Liner PDF Generation
 ```bash
-uv run resume-formatter/scripts/yaml_to_latex.py resume.yaml modern -o resume.tex && \
-uv run resume-formatter/scripts/compile_latex.py resume.tex -o resume.pdf
+uv run .claude/skills/resume-formatter/scripts/yaml_to_latex.py resume.yaml modern -o resume.tex && \
+uv run .claude/skills/resume-formatter/scripts/compile_latex.py resume.tex -o resume.pdf
 ```
 
 ## Repository Structure
@@ -255,14 +257,14 @@ claude-resume-skills/
 ├── .claude-plugin/
 │   └── marketplace.json              # Plugin marketplace config
 │
-├── .claude/skills/                   # Skills for local development
-│   ├── resume-extractor/
-│   ├── resume-optimizer/
-│   ├── resume-formatter/
-│   ├── resume-reviewer/
-│   └── resume-template-maker/
+├── .claude/skills/                   # Symlinks to resume-*/ (auto-loaded)
+│   ├── resume-extractor -> ../../resume-extractor
+│   ├── resume-optimizer -> ../../resume-optimizer
+│   ├── resume-formatter -> ../../resume-formatter
+│   ├── resume-reviewer -> ../../resume-reviewer
+│   └── resume-template-maker -> ../../resume-template-maker
 │
-├── resume-extractor/                 # Extractor source
+├── resume-extractor/                 # Extractor source (canonical)
 │   ├── SKILL.md
 │   ├── scripts/
 │   │   ├── extract_pdf.py
@@ -316,6 +318,8 @@ claude-resume-skills/
 ├── resume-extractor.skill            # Packaged skills (ZIP)
 ├── resume-optimizer.skill
 ├── resume-formatter.skill
+├── resume-reviewer.skill
+├── resume-template-maker.skill
 │
 ├── README.md
 ├── LICENSE
@@ -389,7 +393,7 @@ brew install --cask mactex
 
 **Validate structure:**
 ```bash
-uv run resume-optimizer/scripts/validate_yaml.py resume.yaml
+uv run .claude/skills/resume-optimizer/scripts/validate_yaml.py resume.yaml
 ```
 
 **Common issues:**
@@ -458,7 +462,7 @@ uv run resume-optimizer/scripts/validate_yaml.py resume.yaml
 
 **Validate YAML**: Use validation script before formatting:
 ```bash
-uv run resume-optimizer/scripts/validate_yaml.py resume.yaml
+uv run .claude/skills/resume-optimizer/scripts/validate_yaml.py resume.yaml
 ```
 
 **Report issues**: [Open an issue on GitHub](https://github.com/vibewith-brent/claude-resume-skills/issues)

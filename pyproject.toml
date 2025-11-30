@@ -1,7 +1,7 @@
 [project]
 name = "resume-helper"
-version = "0.1.0"
-description = "Resume management skills suite: extract, optimize, format"
+version = "1.2.0"
+description = "Resume management skills suite: extract, optimize, format, review, and create custom templates"
 requires-python = ">=3.10"
 dependencies = [
     "beautifulsoup4",
