@@ -2,7 +2,8 @@
 name: resume-optimizer
 description: Analyze, critique, and optimize resume content for target roles with ATS optimization, impact quantification, and keyword alignment. Use when improving resume bullets, tailoring for specific job postings, adding metrics to achievements, or ensuring ATS compatibility.
 license: MIT
-version: 1.0.0
+metadata:
+  version: 1.0.0
 allowed-tools:
   - Bash(uv run:*)
   - Read

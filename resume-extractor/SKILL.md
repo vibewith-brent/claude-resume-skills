@@ -2,7 +2,8 @@
 name: resume-extractor
 description: Extract PDF/DOCX resumes to structured YAML format. Use when converting resume documents to YAML, importing existing resumes, or beginning resume workflows. Supports pdfplumber (PDF) and python-docx (DOCX).
 license: MIT
-version: 1.0.0
+metadata:
+  version: 1.0.0
 allowed-tools:
   - Bash(uv run:*)
   - Read

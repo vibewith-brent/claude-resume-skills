@@ -2,7 +2,8 @@
 name: resume-formatter
 description: Convert resume YAML to professionally formatted PDF using Typst templates. Use when generating final resume PDFs, comparing template layouts, or creating print-ready documents. Includes 4 templates optimized for different industries.
 license: MIT
-version: 2.0.0
+metadata:
+  version: 2.0.0
 allowed-tools:
   - Bash(uv run:*)
   - Bash(typst:*)
