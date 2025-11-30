@@ -4,11 +4,48 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Resume management skills suite for Claude Code: extract PDF/DOCX → optimize content → format to PDF → review and iterate. Five skills auto-load from `.claude/skills/` and are invoked via natural language.
+Resume management skills suite for Claude Code: extract PDF/DOCX → optimize content → format to PDF → review and iterate. Six skills auto-load from `.claude/skills/` and are invoked via natural language.
+
+## Workflow Priority
+
+**IMPORTANT**: When a user provides a resume (PDF/DOCX) or starts working on a resume:
+1. **First**: Initialize a project with `resume-state` if none exists
+2. **Then**: Import the resume file to track the original
+3. **Then**: Use other skills (extract, optimize, format)
+4. **Before changes**: Create a new version to preserve history
+
+This ensures all resume work is tracked and versioned.
 
 ## Common Commands
 
 Run `uv sync` first if dependencies aren't installed.
+
+### Version Management (USE FIRST)
+```bash
+# Initialize a project (do this first when starting)
+uv run .claude/skills/resume-state/scripts/init_project.py ml_engineer
+
+# Import resume (copies source, extracts text) - do this before extraction
+uv run .claude/skills/resume-state/scripts/import_resume.py resume.pdf
+
+# Create new version before making changes
+uv run .claude/skills/resume-state/scripts/create_version.py --tag google --notes "Tailored for Google"
+
+# List versions
+uv run .claude/skills/resume-state/scripts/list_versions.py
+
+# Switch active version
+uv run .claude/skills/resume-state/scripts/switch_version.py v1
+
+# Get active YAML path (use this path for other commands)
+uv run .claude/skills/resume-state/scripts/get_active.py
+
+# Export version to directory
+uv run .claude/skills/resume-state/scripts/export_version.py v2 ~/Desktop/applications/
+
+# Compare versions
+uv run .claude/skills/resume-state/scripts/diff_versions.py v1 v2
+```
 
 ### PDF Extraction
 ```bash
@@ -54,9 +91,18 @@ resume-*/                 # Canonical skill sources
 ├── resume-formatter/     # YAML → LaTeX → PDF
 │   └── assets/templates/latex/  # Jinja2 templates (.tex.j2)
 ├── resume-reviewer/      # Visual QA for compiled PDFs
-└── resume-template-maker/ # Create custom LaTeX templates
+├── resume-template-maker/ # Create custom LaTeX templates
+└── resume-state/         # Version and project management
 
 .claude/skills/           # Symlinks to resume-*/ (auto-loaded by Claude Code)
+
+.resume_versions/         # Version store (created on init)
+├── config.json           # Active project setting
+└── projects/<name>/
+    ├── project.json      # Version history
+    ├── sources/          # Original PDFs/DOCXs
+    ├── versions/v1/      # Version snapshots
+    └── jobs/             # Cached job postings
 ```
 
 Single source of truth: edit `resume-*/` directories; `.claude/skills/` contains symlinks.
@@ -64,16 +110,19 @@ Single source of truth: edit `resume-*/` directories; `.claude/skills/` contains
 ### Skill Workflow
 
 ```
-[Extract] → [Optimize] → [Format] → [Review] ←→ [Template Maker]
-   ↓            ↓            ↓          ↓              ↓
- PDF/DOCX    YAML       YAML→PDF    Visual QA    Custom .tex.j2
+[State] → [Extract] → [Optimize] → [Format] → [Review] ←→ [Template Maker]
+   ↓          ↓            ↓            ↓          ↓              ↓
+Project    PDF/DOCX      YAML       YAML→PDF   Visual QA    Custom .tex.j2
+Versions
 ```
 
+- **resume-state**: Manages projects and versions; tracks YAML iterations and original sources
 - **resume-reviewer**: Evaluates compiled PDFs against visual QA checklist, provides structured feedback
 - **resume-template-maker**: Creates custom templates using design vectors (typography, layout, whitespace, color)
 
 ## Key Files
 
+- **State Schema**: `.resume_versions/projects/<name>/project.json` — version history and metadata
 - **YAML Schema**: `.claude/skills/resume-extractor/references/resume_schema.yaml` — canonical structure for resume data
 - **LaTeX Templates**: `.claude/skills/resume-formatter/assets/templates/latex/*.tex.j2` — Jinja2 templates with `latex_escape` filter
 - **Visual QA Checklist**: `.claude/skills/resume-reviewer/references/visual_qa_checklist.md` — structured evaluation criteria
@@ -132,3 +181,33 @@ For custom templates, the template-maker and reviewer work in an iteration loop:
 6. **Repeat** — Continue until all visual QA checks pass
 
 Design vectors prevent generic "AI resume" patterns by providing mid-altitude guidance on fonts, spacing, and color choices tailored to industry expectations.
+
+## Versioned Workflow
+
+For multi-role job searches, use state management to track iterations:
+
+```bash
+# 1. Initialize project for target role
+uv run .claude/skills/resume-state/scripts/init_project.py ml_engineer
+
+# 2. Import existing resume
+uv run .claude/skills/resume-state/scripts/import_resume.py current_resume.pdf
+
+# 3. Parse extracted text into YAML (edit versions/v1/resume.yaml)
+
+# 4. Create optimized version
+uv run .claude/skills/resume-state/scripts/create_version.py --tag optimized --notes "Added metrics"
+
+# 5. Work with active version using get_active.py
+YAML=$(uv run .claude/skills/resume-state/scripts/get_active.py)
+uv run .claude/skills/resume-formatter/scripts/yaml_to_latex.py "$YAML" modern -o "${YAML%.yaml}.tex"
+uv run .claude/skills/resume-formatter/scripts/compile_latex.py "${YAML%.yaml}.tex"
+
+# 6. Create role-specific versions
+uv run .claude/skills/resume-state/scripts/create_version.py --tag google --notes "Tailored for Google SWE"
+
+# 7. Export for submission
+uv run .claude/skills/resume-state/scripts/export_version.py v3 ~/Desktop/applications/google/
+```
+
+Version history is preserved in `.resume_versions/projects/<name>/project.json`.

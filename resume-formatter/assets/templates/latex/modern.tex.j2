@@ -1,8 +1,8 @@
 {% raw %}
-\documentclass[11pt,letterpaper]{article}
+\documentclass[10pt,letterpaper]{article}
 
 % Page setup
-\usepackage[top=0.5in, bottom=0.5in, left=0.6in, right=0.6in]{geometry}
+\usepackage[top=0.4in, bottom=0.3in, left=0.5in, right=0.5in]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 
@@ -24,6 +24,11 @@
 \usepackage{parskip}
 \usepackage{multicol}
 \usepackage{tabularx}
+\usepackage{needspace}
+
+% Prevent orphan headers (keep experience entries together)
+\widowpenalty=10000
+\clubpenalty=10000
 
 % Hyperlink setup
 \hypersetup{
@@ -41,12 +46,12 @@
     {}
     {0em}
     {}
-    [\vspace{-0.5em}\textcolor{linegray}{\rule{\textwidth}{0.4pt}}\vspace{0.3em}]
+    [\vspace{-0.8em}\textcolor{linegray}{\rule{\textwidth}{0.4pt}}\vspace{0.2em}]
 
-\titlespacing*{\section}{0pt}{1em}{0.5em}
+\titlespacing*{\section}{0pt}{0.6em}{0.3em}
 
 % Custom commands
-\newcommand{\myname}[1]{{\fontsize{28}{34}\selectfont\bfseries #1}}
+\newcommand{\myname}[1]{{\fontsize{24}{28}\selectfont\bfseries #1}}
 \newcommand{\jobtitle}[1]{{\large\color{subtextgray}#1}}
 \newcommand{\contactinfo}[1]{{\normalsize #1}}
 
@@ -56,7 +61,7 @@
 }
 
 \newcommand{\skillcategory}[2]{%
-    \noindent{\footnotesize\color{headerblue}\textbf{#1:}} {\footnotesize #2}\par\vspace{0.05em}
+    \noindent{\footnotesize\color{headerblue}\textbf{#1:}} {\footnotesize #2}\par\vspace{0.1em}
 }
 
 \newcommand{\educationentry}[4]{%
@@ -65,7 +70,7 @@
 }
 
 % List formatting
-\setlist[itemize]{leftmargin=1.5em, itemsep=0.2em, parsep=0em, topsep=0.3em}
+\setlist[itemize]{leftmargin=1.5em, itemsep=0.1em, parsep=0em, topsep=0.2em}
 \renewcommand{\labelitemi}{\textbullet}
 
 \begin{document}
@@ -87,6 +92,7 @@
 {% raw %}\section{Experience}{% endraw %}
 {% for job in experience %}
 {% for position in job.positions %}
+{% raw %}\needspace{4\baselineskip}{% endraw %}
 {% raw %}\experienceentry{{% endraw %}{{ position.title | latex_escape }}{% raw %}}{{% endraw %}{{ position.dates | latex_escape }}{% raw %}}{{% endraw %}{{ job.company | latex_escape }}{% raw %}}{% endraw %}
 {% if position.achievements %}
 {% raw %}\begin{itemize}{% endraw %}
@@ -96,9 +102,6 @@
 {% raw %}\end{itemize}{% endraw %}
 {% endif %}
 {% endfor %}
-{% if loop.index == 1 %}
-{% raw %}\newpage{% endraw %}
-{% endif %}
 {% endfor %}
 {% endif %}
 
@@ -120,13 +123,12 @@
 {% if education %}
 {% raw %}\section{Education}
 \vspace{0.2em}
-\noindent\begin{tabularx}{\textwidth}{@{}X X X@{}}
+\noindent\begin{tabular}{@{}lll@{}}
 {% endraw %}
 {% for edu in education %}
-{% raw %}\parbox[t]{0.95\linewidth}{\textbf{{% endraw %}{{ edu.degree | latex_escape }}{% raw %}}\\ {\small\color{subtextgray}{% endraw %}{{ edu.institution | latex_escape }}{% raw %}}{% endraw %}{% if edu.minor %}{% raw %}\\ {\footnotesize\color{subtextgray}Minor: {% endraw %}{{ edu.minor | latex_escape }}{% raw %}}{% endraw %}{% endif %}{% raw %}}{% endraw %}{% if not loop.last %} & {% endif %}
+{% raw %}\textbf{{% endraw %}{{ edu.degree | latex_escape }}{% raw %}}{% endraw %} & {% raw %}{\color{subtextgray}{% endraw %}{{ edu.institution | latex_escape }}{% raw %}}{% endraw %}{% if edu.minor %}{% raw %} {\footnotesize({% endraw %}{{ edu.minor | latex_escape }}{% raw %})}{% endraw %}{% endif %} & {% raw %}{\color{dateblue}{% endraw %}{{ edu.graduation_year }}{% raw %}}{% endraw %}{% raw %}\\{% endraw %}
 {% endfor %}
-{% raw %}\\{% endraw %}
-{% raw %}\end{tabularx}{% endraw %}
+{% raw %}\end{tabular}{% endraw %}
 {% endif %}
 
 {% if certifications %}
@@ -154,6 +156,11 @@
 {% raw %}\end{itemize}{% endraw %}
 {% endif %}
 {% endfor %}
+{% endif %}
+
+{% if attribution %}
+{% raw %}\vfill
+\hfill{\tiny\color{subtextgray}{% endraw %}{{ attribution.text | latex_escape }}{% if attribution.url %} {% raw %}\href{{% endraw %}{{ attribution.url }}{% raw %}}{{% endraw %}{{ attribution.link_text | latex_escape }}{% raw %}}{% endraw %}{% endif %}{% raw %}}{% endraw %}
 {% endif %}
 
 {% raw %}

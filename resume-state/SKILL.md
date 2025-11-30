@@ -1,0 +1,132 @@
+---
+name: resume-state
+description: ALWAYS use this skill first when working with resumes. Initialize projects before extraction, import PDFs/DOCXs to track originals, create versions before making changes. Use when user provides a resume file, starts a new resume project, wants to save progress, or needs to manage multiple resume variants for different roles.
+license: MIT
+version: 1.0.0
+allowed-tools:
+  - Bash(uv run:*)
+  - Read
+  - Write
+---
+
+# Resume State Manager
+
+## Overview
+
+Manage resume versions across multiple projects/target roles. Each version preserves the complete YAML and generated artifacts, enabling rollback, A/B comparison, and organized multi-role job search workflows.
+
+## Quick Start
+
+### Initialize a Project
+
+```bash
+uv run scripts/init_project.py ml_engineer
+```
+
+### Import Existing Resume
+
+```bash
+uv run scripts/import_resume.py resume.pdf --project ml_engineer
+```
+
+Creates v1 with:
+- Copied source PDF in `sources/`
+- Extracted text in `versions/v1/extracted_text.txt`
+- Placeholder YAML in `versions/v1/resume.yaml`
+
+### Create New Version
+
+```bash
+uv run scripts/create_version.py --tag google --notes "Tailored for Google SWE"
+```
+
+Copies YAML from active version to new v2 (or v3, etc.).
+
+### List Versions
+
+```bash
+uv run scripts/list_versions.py
+```
+
+Output:
+```
+ml_engineer versions:
+
+  v1     [import]  2025-11-30  Imported from resume.pdf
+* v2     [derived] 2025-11-30  google - Tailored for Google SWE
+```
+
+### Switch Active Version
+
+```bash
+uv run scripts/switch_version.py v1
+```
+
+### Get Active YAML Path
+
+```bash
+uv run scripts/get_active.py
+# .resume_versions/projects/ml_engineer/versions/v2_google/resume.yaml
+```
+
+### Export for Submission
+
+```bash
+uv run scripts/export_version.py v2 ~/Desktop/applications/google/ --format pdf
+```
+
+### Compare Versions
+
+```bash
+uv run scripts/diff_versions.py v1 v2
+```
+
+## Storage Structure
+
+```
+.resume_versions/
+├── config.json                    # Active project setting
+└── projects/
+    └── ml_engineer/
+        ├── project.json           # Version history + metadata
+        ├── sources/               # Original PDFs/DOCXs (immutable)
+        ├── versions/
+        │   ├── v1/
+        │   │   ├── resume.yaml
+        │   │   └── extracted_text.txt
+        │   └── v2_google/
+        │       ├── resume.yaml
+        │       ├── resume.tex
+        │       └── resume.pdf
+        └── jobs/                  # Cached job postings
+```
+
+## Workflow Integration
+
+State scripts provide path resolution for other skills:
+
+```bash
+# Get active YAML and pipe to formatter
+YAML=$(uv run scripts/get_active.py)
+uv run ../resume-formatter/scripts/yaml_to_latex.py "$YAML" modern -o "${YAML%.yaml}.tex"
+uv run ../resume-formatter/scripts/compile_latex.py "${YAML%.yaml}.tex"
+```
+
+## Commands Reference
+
+| Command | Description |
+|---------|-------------|
+| `init_project.py <name>` | Create new project |
+| `import_resume.py <file>` | Import PDF/DOCX as new version |
+| `create_version.py` | Branch new version from active |
+| `list_versions.py` | Show version history |
+| `switch_version.py <id>` | Change active version |
+| `get_active.py` | Print active YAML path |
+| `export_version.py <id> <dir>` | Copy files to target |
+| `diff_versions.py <a> <b>` | Compare YAML changes |
+
+## Common Options
+
+- `--project, -p`: Specify project (default: active project)
+- `--tag, -t`: Version tag suffix (e.g., `google`, `shortened`)
+- `--notes, -n`: Description of changes
