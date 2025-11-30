@@ -16,10 +16,38 @@ PROJECT_SCHEMA_VERSION = "1.0.0"
 
 
 def get_store_path(start_path: Optional[Path] = None) -> Path:
-    """Find or create the .resume_versions store in the project root."""
+    """Find .resume_versions store by searching upward, then global fallback.
+
+    Search order:
+    1. RESUME_VERSIONS_PATH environment variable
+    2. Search upward from current/start directory for .resume_versions
+    3. Global ~/.resume_versions
+
+    Returns existing store path, or global path for creation.
+    """
+    # Check environment variable
+    env_path = os.environ.get("RESUME_VERSIONS_PATH")
+    if env_path:
+        return Path(env_path).expanduser()
+
+    # Search upward from start_path
     if start_path is None:
         start_path = Path.cwd()
-    return start_path / STORE_DIR
+
+    current = start_path.resolve()
+    while True:
+        candidate = current / STORE_DIR
+        if candidate.exists() and candidate.is_dir():
+            return candidate
+
+        # Check if we've reached root
+        parent = current.parent
+        if parent == current:
+            break
+        current = parent
+
+    # Fall back to global location
+    return Path.home() / STORE_DIR
 
 
 def ensure_store_exists(store_path: Optional[Path] = None) -> Path:
