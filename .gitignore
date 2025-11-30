@@ -12,14 +12,8 @@ venv/
 env/
 ENV/
 
-# LaTeX intermediate files
-*.aux
-*.log
-*.out
-*.toc
-*.fls
-*.fdb_latexmk
-*.synctex.gz
+# Typst intermediate files (Typst doesn't create any, but include for safety)
+# Note: Typst compiles directly to PDF without intermediate files
 
 # OS files
 .DS_Store
@@ -36,5 +30,12 @@ Thumbs.db
 .claude/**/*.yaml
 .claude/**/*.yml
 
-# Latex files
-*.tex
+# Typst files (generated from YAML)
+*.typ
+
+# Resume version store (user data)
+.resume_versions/
+
+# Packaged skill distributions (build artifacts)
+dist/
+*.skill

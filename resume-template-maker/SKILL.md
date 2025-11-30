@@ -1,6 +1,6 @@
 # Resume Template Maker Skill
 
-Create distinctive, professional LaTeX resume templates using structured design principles. Avoids generic "AI resume" patterns through multi-dimensional design guidance.
+Create distinctive, professional Typst resume templates using structured design principles. Avoids generic "AI resume" patterns through multi-dimensional design guidance.
 
 ## When to Use
 
@@ -21,7 +21,7 @@ Create distinctive, professional LaTeX resume templates using structured design 
 Every template decision maps to four vectors:
 
 ### 1. Typography
-- Font families (not just Computer Modern)
+- Font families (Inter, Source Sans, Roboto, etc.)
 - Weight contrasts (name vs. body)
 - Size hierarchy (5-level scale)
 - Character: authoritative, approachable, creative, traditional
@@ -58,24 +58,24 @@ Every template decision maps to four vectors:
 ### Step 2: Design Template
 Use `references/design_vectors.md` for typography, layout, whitespace, and color decisions.
 Use `references/industry_themes.md` for industry-specific guidance.
-Use `references/latex_patterns.md` for implementation patterns.
+Use `references/typst_patterns.md` for implementation patterns.
 
-### Step 3: Create .tex.j2 Template
-Output to `.claude/skills/resume-formatter/assets/templates/latex/[name].tex.j2`
+### Step 3: Create .typ.j2 Template
+Output to `.claude/skills/resume-formatter/assets/templates/typst/[name].typ.j2`
 
 Template must:
 - Use Jinja2 syntax matching existing templates
-- Include `latex_escape` filter on all user content
+- Include `typst_escape` filter on all user content
 - Handle all YAML schema sections (required + optional)
-- Compile with standard pdflatex
+- Compile with `typst compile`
 
 ### Step 4: Compile and Review
 ```bash
-# Generate LaTeX
-uv run .claude/skills/resume-formatter/scripts/yaml_to_latex.py resume.yaml [template_name] -o test.tex
+# Generate Typst
+uv run .claude/skills/resume-formatter/scripts/yaml_to_typst.py resume.yaml [template_name] -o test.typ
 
 # Compile to PDF
-uv run .claude/skills/resume-formatter/scripts/compile_latex.py test.tex -o test.pdf
+uv run .claude/skills/resume-formatter/scripts/compile_typst.py test.typ -o test.pdf
 ```
 
 Use **resume-reviewer** skill to evaluate output.
@@ -95,16 +95,16 @@ For rapid customization, start from the closest existing template:
 
 | Starting Point | Use When |
 |----------------|----------|
-| `modern.tex.j2` | Clean, contemporary, tech-adjacent |
-| `classic.tex.j2` | Traditional, conservative, formal |
-| `academic.tex.j2` | Research-focused, education-heavy |
-| `creative.tex.j2` | Bold, visual, design-forward |
+| `modern.typ.j2` | Clean, contemporary, tech-adjacent |
+| `classic.typ.j2` | Traditional, conservative, formal |
+| `academic.typ.j2` | Research-focused, education-heavy |
+| `creative.typ.j2` | Bold, visual, design-forward |
 
 ## References
 
 - `references/design_vectors.md` — Detailed guidance on typography, layout, whitespace, color
 - `references/industry_themes.md` — Industry-specific design recommendations
-- `references/latex_patterns.md` — Code patterns for common template features
+- `references/typst_patterns.md` — Code patterns for common template features
 - `references/iteration_workflow.md` — Detailed iteration process
 
 ## Integration with Reviewer
@@ -112,7 +112,7 @@ For rapid customization, start from the closest existing template:
 The template-maker and reviewer form an iteration loop:
 
 ```
-[Design] → [Create .tex.j2] → [Compile PDF] → [Review] → [Adjust] → ...
+[Design] → [Create .typ.j2] → [Compile PDF] → [Review] → [Adjust] → ...
                                     ↑                         ↓
                                     └─────────────────────────┘
 ```

@@ -45,14 +45,14 @@ When reviewing for template-maker iteration:
 2. [Another issue]
 
 ### Recommended Adjustments
-1. [Specific LaTeX adjustment to fix issue 1]
+1. [Specific Typst adjustment to fix issue 1]
 2. [Adjustment for issue 2]
 ```
 
 ## References
 
 - `references/visual_qa_checklist.md` — Complete evaluation checklist
-- `references/common_issues.md` — Known LaTeX resume failure patterns
+- `references/common_issues.md` — Known Typst resume failure patterns
 - `references/feedback_format.md` — Structured feedback templates
 
 ## Integration with Template Maker

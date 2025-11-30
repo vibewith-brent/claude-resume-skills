@@ -2,16 +2,16 @@
 
 ## Overview
 
-The resume-formatter skill includes 4 professionally designed LaTeX templates, each optimized for different industries and personal styles.
+The resume-formatter skill includes 4 professionally designed Typst templates, each optimized for different industries and personal styles.
 
 ## Available Themes
 
 ### 1. Modern (`modern`)
 
 **Best for:** Tech, startups, creative industries
-**Style:** Clean, professional, TeX Gyre Heros (Helvetica-like) typography
+**Style:** Clean, professional, Inter font typography
 **Features:**
-- Article-based layout (clean, compact)
+- Modern layout with blue accents
 - Blue accent color with gray subtext
 - Professional section headers with thin underlines
 - Two-column skills layout
@@ -22,10 +22,10 @@ The resume-formatter skill includes 4 professionally designed LaTeX templates, e
 - Professional yet contemporary
 - Great for tech roles
 - Compact (fits more content)
-- Uses standard LaTeX packages (no extra dependencies)
+- Fast compilation with Typst
 
 **Cons:**
-- Less customization without LaTeX knowledge
+- Requires Inter font (or edit for fallback)
 
 **Recommended for:**
 - Software Engineers
@@ -40,17 +40,17 @@ The resume-formatter skill includes 4 professionally designed LaTeX templates, e
 **Best for:** Finance, consulting, law, traditional industries
 **Style:** Traditional, conservative, minimal formatting
 **Features:**
-- Simple article-based layout
-- No colors or graphics
+- Simple single-column layout
+- No colors or graphics (black/white)
 - Traditional section headers with horizontal rules
 - Maximum readability
-- Standard fonts
+- New Computer Modern font
 
 **Pros:**
-- Works with minimal LaTeX packages
 - Maximum ATS compatibility
 - Professional and conservative
 - Easy to customize
+- Works with any font
 
 **Cons:**
 - Less visually distinctive
@@ -74,7 +74,7 @@ The resume-formatter skill includes 4 professionally designed LaTeX templates, e
 - Numbered publication lists
 - Research interests section
 - Page numbers
-- Subsections for positions
+- Multi-page support
 
 **Pros:**
 - Designed for academic conventions
@@ -102,7 +102,7 @@ The resume-formatter skill includes 4 professionally designed LaTeX templates, e
 - Colored header bar
 - Blue and gray color scheme
 - Visual section separators
-- Modern typography
+- Modern Inter typography
 - Hyperlinked contact info
 
 **Pros:**
@@ -146,47 +146,46 @@ Is the role creative (design, marketing, UX)?
 ### Color Changes
 
 **Modern template:**
-Edit lines 15-18 in `modern.tex.j2`:
-```latex
-\definecolor{headerblue}{RGB}{0,102,204}
-\definecolor{dateblue}{RGB}{0,102,204}
-\definecolor{subtextgray}{RGB}{120,120,120}
-\definecolor{linegray}{RGB}{200,200,200}
+Edit color definitions in `modern.typ.j2`:
+```typst
+#let headerblue = rgb("#0066cc")
+#let dateblue = rgb("#0066cc")
+#let subtextgray = rgb("#787878")
+#let linegray = rgb("#c8c8c8")
 ```
 
 **Creative template:**
-Edit lines 15-17 in `creative.tex.j2`:
-```latex
-\definecolor{primarycolor}{RGB}{0,102,204}    % Main accent color
-\definecolor{accentcolor}{RGB}{51,51,51}       % Secondary color
-\definecolor{lightgray}{RGB}{240,240,240}      % Background accents
+Edit color definitions in `creative.typ.j2`:
+```typst
+#let primary = rgb("#0066cc")    // Main accent color
+#let accent = rgb("#333333")      // Secondary color
+#let lightgray = rgb("#f0f0f0")   // Background accents
 ```
 
 ### Font Changes
 
 **All templates:**
-Change font size in `\documentclass` line:
-```latex
-\documentclass[11pt,a4paper]{...}  % Change 11pt to 10pt, 12pt, etc.
+Change font and size in `#set text()`:
+```typst
+#set text(font: "Inter", size: 10pt)  // Change size to 9pt, 11pt, etc.
 ```
 
-For Classic/Academic/Creative templates, add font package:
-```latex
-\usepackage{times}      % Times New Roman
-\usepackage{helvet}     % Helvetica
-\usepackage{palatino}   % Palatino
+Alternative fonts:
+```typst
+#set text(font: "Helvetica")      // macOS default
+#set text(font: "Arial")          // Windows default
+#set text(font: "Liberation Sans") // Linux default
+#set text(font: "New Computer Modern") // TeX-like serif
 ```
 
 ### Margin Adjustments
 
-**Modern template:**
-```latex
-\usepackage[scale=0.85]{geometry}  % Increase scale for wider margins
-```
-
-**Other templates:**
-```latex
-\usepackage[margin=0.75in]{geometry}  % Adjust margin size
+**All templates:**
+```typst
+#set page(
+  paper: "us-letter",
+  margin: (top: 0.5in, bottom: 0.5in, left: 0.6in, right: 0.6in)
+)
 ```
 
 ### Section Order
@@ -204,73 +203,65 @@ Templates render sections in this order (if present in YAML):
 
 To change order, edit the template file section blocks.
 
-## LaTeX Installation
+## Typst Installation
 
 ### macOS
 
-**Full installation (3.9 GB):**
 ```bash
-brew install --cask mactex
+brew install typst
 ```
 
-**Minimal installation (100 MB):**
+### Linux
+
+**Arch Linux:**
 ```bash
-brew install --cask mactex-no-gui
+pacman -S typst
 ```
 
-### Linux (Ubuntu/Debian)
-
-**Full installation:**
+**Ubuntu/Debian (via binary):**
 ```bash
-sudo apt-get install texlive-full
-```
-
-**Minimal installation:**
-```bash
-sudo apt-get install texlive-latex-base texlive-latex-extra
+curl -L https://github.com/typst/typst/releases/latest/download/typst-x86_64-unknown-linux-musl.tar.xz | tar xJ
+sudo mv typst-x86_64-unknown-linux-musl/typst /usr/local/bin/
 ```
 
 ### Windows
 
-Download and install MiKTeX or TeX Live:
-- MiKTeX: https://miktex.org/download
-- TeX Live: https://www.tug.org/texlive/
+Download from GitHub releases:
+- https://github.com/typst/typst/releases
+
+Or via cargo:
+```bash
+cargo install typst-cli
+```
 
 ## Troubleshooting
 
-### Missing Package Errors
+### Font Not Found
 
-If you get package errors, install the missing packages:
-
-**macOS:**
-```bash
-sudo tlmgr update --self
-sudo tlmgr install <package-name>
-```
-
-**Linux:**
-```bash
-sudo apt-get install texlive-latex-extra
+**Symptom:** "font 'Inter' not found" warning
+**Solution:** Install Inter from Google Fonts, or change template to use system font:
+```typst
+#set text(font: ("Inter", "Helvetica", "Arial"))
 ```
 
 ### Compilation Errors
 
 **Symptom:** Special characters causing errors
-**Solution:** The yaml_to_latex.py script escapes special LaTeX characters automatically. If you see errors, check for unescaped `&`, `%`, `$`, `#`, `_`, `{`, `}` in your YAML.
+**Solution:** The yaml_to_typst.py script escapes special Typst characters automatically. If you see errors, check for unescaped `#`, `@`, `\`, `<`, `>` in your YAML.
 
-**Symptom:** "! Undefined control sequence"
-**Solution:** Template uses undefined command. Install missing packages or use different template.
+**Symptom:** "expected ... found ..." syntax error
+**Solution:** Check for unclosed brackets or wrong content/code mode usage.
 
 **Symptom:** Content cut off or overlapping
 **Solution:** Reduce content length, decrease font size, or adjust margins.
 
 ### PDF Generation Issues
 
-**Symptom:** PDF not generated but no errors
-**Solution:** Run pdflatex twice (compile_latex.py does this automatically).
+**Symptom:** PDF not generated
+**Solution:** Check Typst error output. Typst compiles in single pass.
 
 **Symptom:** Fonts look wrong
-**Solution:** Ensure proper LaTeX installation with font packages.
+**Solution:** Ensure fonts are installed on system. Run `typst fonts` to see available fonts.
 
 ## Best Practices
 
@@ -278,8 +269,8 @@ sudo apt-get install texlive-latex-extra
 2. **Test in B&W:** Print or convert to grayscale to ensure readability
 3. **Check PDF text:** Copy-paste text from PDF to verify proper extraction (ATS test)
 4. **Stay under 2 pages:** Most roles expect 1-2 pages maximum
-5. **Proofread:** LaTeX doesn't check spelling - review final PDF carefully
-6. **Keep YAML source:** Easier to update than editing LaTeX directly
+5. **Proofread:** Review final PDF carefully
+6. **Keep YAML source:** Easier to update than editing Typst directly
 
 ## Template Comparison Matrix
 
@@ -289,15 +280,15 @@ sudo apt-get install texlive-latex-extra
 | Visual Appeal | ★★★★☆ | ★★☆☆☆ | ★★★☆☆ | ★★★★★ |
 | Conservative | ★★★☆☆ | ★★★★★ | ★★★★★ | ★☆☆☆☆ |
 | Content Density | ★★★★★ | ★★★★☆ | ★★★☆☆ | ★★★★☆ |
-| Easy Customization | ★★★☆☆ | ★★★★★ | ★★★★☆ | ★★★☆☆ |
-| Package Requirements | Low | Low | Medium | Medium |
+| Easy Customization | ★★★★☆ | ★★★★★ | ★★★★☆ | ★★★★☆ |
+| Compilation Speed | ★★★★★ | ★★★★★ | ★★★★★ | ★★★★★ |
 | Print Quality | ★★★★★ | ★★★★★ | ★★★★★ | ★★★★☆ |
 | Digital Quality | ★★★★★ | ★★★★☆ | ★★★★★ | ★★★★★ |
 
 ## Advanced Customization
 
-For more extensive template modifications, see LaTeX documentation:
-- titlesec: https://ctan.org/pkg/titlesec
-- geometry: https://ctan.org/pkg/geometry
-- color/xcolor: https://ctan.org/pkg/xcolor
-- enumitem: https://ctan.org/pkg/enumitem
+For more extensive template modifications, see Typst documentation:
+- Page setup: https://typst.app/docs/reference/layout/page/
+- Text styling: https://typst.app/docs/reference/text/text/
+- Colors: https://typst.app/docs/reference/visualize/color/
+- Layout: https://typst.app/docs/reference/layout/

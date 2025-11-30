@@ -90,16 +90,16 @@ For template-maker iteration loops (machine-readable structure):
 #### Issue 1: [Name]
 - **Location**: [Where in document]
 - **Problem**: [What's wrong]
-- **Fix**: [Specific LaTeX adjustment]
-```latex
-% Suggested change
+- **Fix**: [Specific Typst adjustment]
+```typst
+// Suggested change
 [code snippet]
 ```
 
 #### Issue 2: [Name]
 - **Location**: [Where in document]
 - **Problem**: [What's wrong]
-- **Fix**: [Specific LaTeX adjustment]
+- **Fix**: [Specific Typst adjustment]
 
 ### Iteration Instruction
 [If CONTINUE: "Adjust template with fixes above and recompile"]
@@ -193,7 +193,7 @@ Use these formats when highlighting specific problems:
 3. **Prioritize** — Critical issues first, minor issues last
 4. **Be quantitative** — "12pt gap" not "big gap"
 5. **Reference location** — Section, page, or line where issue occurs
-6. **Suggest code** — Include LaTeX snippets for fixes when relevant
+6. **Suggest code** — Include Typst snippets for fixes when relevant
 
 ---
 

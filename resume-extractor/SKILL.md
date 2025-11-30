@@ -104,7 +104,7 @@ Save the parsed YAML to a file with a descriptive name:
 **Preserving formatting:**
 - Bold, italic, and other formatting is lost during text extraction
 - Focus on capturing content structure rather than visual styling
-- Formatting will be reapplied during the LaTeX generation step
+- Formatting will be reapplied during the Typst generation step
 
 **Dealing with incomplete extraction:**
 - If critical information is missing, read the original PDF/DOCX directly
@@ -122,4 +122,4 @@ After extracting resume to YAML:
 
 1. **Edit and refine**: Use a text editor to make manual corrections to the YAML
 2. **Optimize content**: Use the `resume-optimizer` skill to improve bullets, add metrics, and tailor for specific roles
-3. **Format for output**: Use the `resume-formatter` skill to convert YAML to professionally formatted LaTeX/PDF
+3. **Format for output**: Use the `resume-formatter` skill to convert YAML to professionally formatted PDF

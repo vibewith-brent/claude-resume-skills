@@ -13,7 +13,7 @@ Targeted design guidance for specific industries and roles. Each theme defines t
 ### Vector Configuration
 
 **Typography**:
-- Sans-serif primary (TeX Gyre Heros, Fira Sans, Source Sans Pro)
+- Sans-serif primary (Inter, Fira Sans, Source Sans Pro)
 - Monospace for technical skills if desired
 - Medium weight contrast
 - Clean, readable at all sizes
@@ -37,12 +37,11 @@ Targeted design guidance for specific industries and roles. Each theme defines t
 - Dark mode friendly colors (good contrast)
 
 ### Example Configuration
-```latex
-% Tech template setup
-\usepackage{fontspec}
-\setmainfont{Source Sans Pro}
-\definecolor{accent}{RGB}{0, 128, 128}  % Teal
-\usepackage[margin=0.65in]{geometry}
+```typst
+// Tech template setup
+#set text(font: "Inter", size: 10pt)
+#let accent = rgb("#008080")  // Teal
+#set page(margin: 0.65in)
 ```
 
 ---
@@ -80,12 +79,11 @@ Targeted design guidance for specific industries and roles. Each theme defines t
 - Must print perfectly in B&W
 
 ### Example Configuration
-```latex
-% Finance template setup
-\usepackage{fontspec}
-\setmainfont{TeX Gyre Termes}
-\definecolor{accent}{RGB}{0, 51, 102}  % Navy
-\usepackage[margin=0.85in]{geometry}
+```typst
+// Finance template setup
+#set text(font: "New Computer Modern", size: 10pt)
+#let accent = rgb("#003366")  // Navy
+#set page(margin: 0.85in)
 ```
 
 ---
@@ -123,14 +121,13 @@ Targeted design guidance for specific industries and roles. Each theme defines t
 - Should match portfolio aesthetic
 
 ### Example Configuration
-```latex
-% Creative template setup
-\usepackage{fontspec}
-\setmainfont{Source Sans Pro}
-\newfontfamily\headingfont{Playfair Display}
-\definecolor{primary}{RGB}{183, 65, 14}   % Rust
-\definecolor{secondary}{RGB}{47, 79, 79}  % Slate
-\usepackage[margin=0.7in]{geometry}
+```typst
+// Creative template setup
+#set text(font: "Source Sans Pro", size: 10pt)
+#let heading-font = "Playfair Display"
+#let primary = rgb("#B7410E")   // Rust
+#let secondary = rgb("#2F4F4F")  // Slate
+#set page(margin: 0.7in)
 ```
 
 ---
@@ -168,12 +165,11 @@ Targeted design guidance for specific industries and roles. Each theme defines t
 - Focus on content, not presentation
 
 ### Example Configuration
-```latex
-% Academic template setup
-\usepackage{fontspec}
-\setmainfont{TeX Gyre Pagella}  % Palatino-like
-\definecolor{accent}{RGB}{0, 0, 0}  % Black
-\usepackage[margin=0.75in]{geometry}
+```typst
+// Academic template setup
+#set text(font: "New Computer Modern", size: 10pt)
+#let accent = rgb("#000000")  // Black
+#set page(margin: 0.75in)
 ```
 
 ---
@@ -211,12 +207,11 @@ Targeted design guidance for specific industries and roles. Each theme defines t
 - Conservative usage
 
 ### Example Configuration
-```latex
-% Healthcare template setup
-\usepackage{fontspec}
-\setmainfont{Source Sans Pro}
-\definecolor{accent}{RGB}{0, 105, 148}  % Medical blue
-\usepackage[margin=0.7in]{geometry}
+```typst
+// Healthcare template setup
+#set text(font: "Source Sans Pro", size: 10pt)
+#let accent = rgb("#006994")  // Medical blue
+#set page(margin: 0.7in)
 ```
 
 ---
@@ -254,12 +249,11 @@ Targeted design guidance for specific industries and roles. Each theme defines t
 - Absolutely no bright colors
 
 ### Example Configuration
-```latex
-% Legal template setup
-\usepackage{fontspec}
-\setmainfont{TeX Gyre Termes}
-\definecolor{accent}{RGB}{0, 0, 0}  % Black
-\usepackage[margin=0.9in]{geometry}
+```typst
+// Legal template setup
+#set text(font: "New Computer Modern", size: 10pt)
+#let accent = rgb("#000000")  // Black
+#set page(margin: 0.9in)
 ```
 
 ---
@@ -297,12 +291,11 @@ Targeted design guidance for specific industries and roles. Each theme defines t
 - Avoid corporate-stuffy
 
 ### Example Configuration
-```latex
-% Startup template setup
-\usepackage{fontspec}
-\setmainfont{Montserrat}
-\definecolor{accent}{RGB}{46, 134, 171}  % Modern teal
-\usepackage[margin=0.6in]{geometry}
+```typst
+// Startup template setup
+#set text(font: "Inter", size: 10pt)
+#let accent = rgb("#2E86AB")  // Modern teal
+#set page(margin: 0.6in)
 ```
 
 ---
@@ -340,12 +333,11 @@ Targeted design guidance for specific industries and roles. Each theme defines t
 - Plain is preferred
 
 ### Example Configuration
-```latex
-% Government template setup
-\usepackage{fontspec}
-\setmainfont{TeX Gyre Heros}
-\definecolor{accent}{RGB}{0, 51, 102}  % Navy
-\usepackage[margin=0.75in]{geometry}
+```typst
+// Government template setup
+#set text(font: "Inter", size: 10pt)
+#let accent = rgb("#003366")  // Navy
+#set page(margin: 0.75in)
 ```
 
 ---
@@ -383,12 +375,11 @@ Targeted design guidance for specific industries and roles. Each theme defines t
 - Avoid corporate cold
 
 ### Example Configuration
-```latex
-% Non-profit template setup
-\usepackage{fontspec}
-\setmainfont{Source Sans Pro}
-\definecolor{accent}{RGB}{34, 139, 34}  % Forest green
-\usepackage[margin=0.7in]{geometry}
+```typst
+// Non-profit template setup
+#set text(font: "Source Sans Pro", size: 10pt)
+#let accent = rgb("#228B22")  // Forest green
+#set page(margin: 0.7in)
 ```
 
 ---
@@ -426,12 +417,11 @@ Targeted design guidance for specific industries and roles. Each theme defines t
 - Understated elegance
 
 ### Example Configuration
-```latex
-% Executive template setup
-\usepackage{fontspec}
-\setmainfont{EB Garamond}
-\definecolor{accent}{RGB}{47, 79, 79}  % Slate
-\usepackage[margin=1.0in]{geometry}
+```typst
+// Executive template setup
+#set text(font: "New Computer Modern", size: 10pt)
+#let accent = rgb("#2F4F4F")  // Slate
+#set page(margin: 1.0in)
 ```
 
 ---
@@ -469,12 +459,11 @@ Targeted design guidance for specific industries and roles. Each theme defines t
 - Conservative usage
 
 ### Example Configuration
-```latex
-% Transition template setup
-\usepackage{fontspec}
-\setmainfont{Source Sans Pro}
-\definecolor{accent}{RGB}{0, 82, 147}  % Professional blue
-\usepackage[margin=0.7in]{geometry}
+```typst
+// Transition template setup
+#set text(font: "Source Sans Pro", size: 10pt)
+#let accent = rgb("#005293")  // Professional blue
+#set page(margin: 0.7in)
 ```
 
 ---

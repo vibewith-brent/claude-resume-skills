@@ -15,12 +15,12 @@
 **Goal:** Generate modern-template PDF
 
 ```bash
-# Step 1: Convert YAML to LaTeX
-uv run scripts/yaml_to_latex.py brent_resume.yaml modern \
-  --output brent_resume_modern.tex
+# Step 1: Convert YAML to Typst
+uv run scripts/yaml_to_typst.py brent_resume.yaml modern \
+  --output brent_resume_modern.typ
 
 # Step 2: Compile to PDF
-uv run scripts/compile_latex.py brent_resume_modern.tex \
+uv run scripts/compile_typst.py brent_resume_modern.typ \
   --output brent_skoumal_resume.pdf
 
 # Step 3: Review
@@ -37,27 +37,27 @@ xdg-open brent_skoumal_resume.pdf  # Linux
 
 ```bash
 # Generate modern template
-uv run scripts/yaml_to_latex.py resume.yaml modern \
-  --output resume_modern.tex
-uv run scripts/compile_latex.py resume_modern.tex \
+uv run scripts/yaml_to_typst.py resume.yaml modern \
+  --output resume_modern.typ
+uv run scripts/compile_typst.py resume_modern.typ \
   --output resume_modern.pdf
 
 # Generate classic template
-uv run scripts/yaml_to_latex.py resume.yaml classic \
-  --output resume_classic.tex
-uv run scripts/compile_latex.py resume_classic.tex \
+uv run scripts/yaml_to_typst.py resume.yaml classic \
+  --output resume_classic.typ
+uv run scripts/compile_typst.py resume_classic.typ \
   --output resume_classic.pdf
 
 # Generate academic template
-uv run scripts/yaml_to_latex.py resume.yaml academic \
-  --output resume_academic.tex
-uv run scripts/compile_latex.py resume_academic.tex \
+uv run scripts/yaml_to_typst.py resume.yaml academic \
+  --output resume_academic.typ
+uv run scripts/compile_typst.py resume_academic.typ \
   --output resume_academic.pdf
 
 # Generate creative template
-uv run scripts/yaml_to_latex.py resume.yaml creative \
-  --output resume_creative.tex
-uv run scripts/compile_latex.py resume_creative.tex \
+uv run scripts/yaml_to_typst.py resume.yaml creative \
+  --output resume_creative.typ
+uv run scripts/compile_typst.py resume_creative.typ \
   --output resume_creative.pdf
 
 # Review all
@@ -73,12 +73,12 @@ ls -lh resume_*.pdf
 # Input: brent_resume_staff_ai_engineer.yaml
 
 # Step 1: Generate PDF with modern template (for tech role)
-uv run scripts/yaml_to_latex.py \
+uv run scripts/yaml_to_typst.py \
   brent_resume_staff_ai_engineer.yaml modern \
-  --output brent_resume_staff_ai.tex
+  --output brent_resume_staff_ai.typ
 
 # Step 2: Compile
-uv run scripts/compile_latex.py brent_resume_staff_ai.tex \
+uv run scripts/compile_typst.py brent_resume_staff_ai.typ \
   --output brent_skoumal_staff_ai_engineer.pdf
 
 # Step 3: Verify ATS compatibility
@@ -93,17 +93,17 @@ pdftotext brent_skoumal_staff_ai_engineer.pdf - | head -50
 
 ```bash
 # Initial generation
-uv run scripts/yaml_to_latex.py resume.yaml modern \
-  --output resume.tex
-uv run scripts/compile_latex.py resume.tex
+uv run scripts/yaml_to_typst.py resume.yaml modern \
+  --output resume.typ
+uv run scripts/compile_typst.py resume.typ
 
 # Review PDF, decide to make changes
 # Edit resume.yaml (add metrics, improve bullets, etc.)
 
 # Regenerate from updated YAML
-uv run scripts/yaml_to_latex.py resume.yaml modern \
-  --output resume.tex
-uv run scripts/compile_latex.py resume.tex
+uv run scripts/yaml_to_typst.py resume.yaml modern \
+  --output resume.typ
+uv run scripts/compile_typst.py resume.typ
 
 # Repeat until satisfied
 ```
@@ -125,9 +125,9 @@ uv run scripts/extract_pdf.py original_resume.pdf \
 # Result: resume_optimized.yaml
 
 # Step 3: Format to PDF
-uv run scripts/yaml_to_latex.py \
-  resume_optimized.yaml modern --output resume.tex
-uv run scripts/compile_latex.py resume.tex \
+uv run scripts/yaml_to_typst.py \
+  resume_optimized.yaml modern --output resume.typ
+uv run scripts/compile_typst.py resume.typ \
   --output final_resume.pdf
 
 # Final result: final_resume.pdf
@@ -152,7 +152,7 @@ uv run scripts/compile_latex.py resume.tex \
 **Modern Template:**
 ```bash
 # Use for: Software Engineer, Data Scientist, Product Manager, Tech roles
-uv run scripts/yaml_to_latex.py resume.yaml modern --output resume.tex
+uv run scripts/yaml_to_typst.py resume.yaml modern --output resume.typ
 ```
 
 **Best features:**
@@ -164,7 +164,7 @@ uv run scripts/yaml_to_latex.py resume.yaml modern --output resume.tex
 **Classic Template:**
 ```bash
 # Use for: Finance, Consulting, Law, Government, Traditional industries
-uv run scripts/yaml_to_latex.py resume.yaml classic --output resume.tex
+uv run scripts/yaml_to_typst.py resume.yaml classic --output resume.typ
 ```
 
 **Best features:**
@@ -176,7 +176,7 @@ uv run scripts/yaml_to_latex.py resume.yaml classic --output resume.tex
 **Academic Template:**
 ```bash
 # Use for: Research positions, Postdocs, Faculty, Scientific roles
-uv run scripts/yaml_to_latex.py resume.yaml academic --output resume.tex
+uv run scripts/yaml_to_typst.py resume.yaml academic --output resume.typ
 ```
 
 **Best features:**
@@ -188,7 +188,7 @@ uv run scripts/yaml_to_latex.py resume.yaml academic --output resume.tex
 **Creative Template:**
 ```bash
 # Use for: Design, UX, Marketing, Creative industries
-uv run scripts/yaml_to_latex.py resume.yaml creative --output resume.tex
+uv run scripts/yaml_to_typst.py resume.yaml creative --output resume.typ
 ```
 
 **Best features:**
@@ -201,86 +201,73 @@ uv run scripts/yaml_to_latex.py resume.yaml creative --output resume.tex
 
 ### Example 1: Change Color (Modern Template)
 
-**Edit:** `assets/templates/latex/modern.tex.j2` lines 15-18
+**Edit:** `assets/templates/typst/modern.typ.j2` color definitions
 
-```latex
-% Before (default blue theme)
-\definecolor{headerblue}{RGB}{0,102,204}
-\definecolor{dateblue}{RGB}{0,102,204}
-\definecolor{subtextgray}{RGB}{120,120,120}
+```typst
+// Before (default blue theme)
+#let headerblue = rgb("#0066cc")
+#let dateblue = rgb("#0066cc")
+#let subtextgray = rgb("#787878")
 
-% After (try different accent colors)
-\definecolor{headerblue}{RGB}{0,153,76}    % Green accents
-\definecolor{dateblue}{RGB}{0,153,76}
-% Or
-\definecolor{headerblue}{RGB}{102,51,153}  % Purple accents
-\definecolor{dateblue}{RGB}{102,51,153}
+// After (try different accent colors)
+#let headerblue = rgb("#009933")    // Green accents
+#let dateblue = rgb("#009933")
+// Or
+#let headerblue = rgb("#663399")    // Purple accents
+#let dateblue = rgb("#663399")
 ```
 
 ### Example 2: Change Color (Creative Template)
 
-**Edit:** `assets/templates/latex/creative.tex.j2` lines 15-17
+**Edit:** `assets/templates/typst/creative.typ.j2` color definitions
 
-```latex
-% Before
-\definecolor{primarycolor}{RGB}{0,102,204}    % Blue
-\definecolor{accentcolor}{RGB}{51,51,51}       % Dark grey
+```typst
+// Before
+#let primary = rgb("#0066cc")    // Blue
+#let accent = rgb("#333333")      // Dark grey
 
-% After - Professional purple
-\definecolor{primarycolor}{RGB}{102,51,153}    % Purple
-\definecolor{accentcolor}{RGB}{51,51,51}       % Dark grey
+// After - Professional purple
+#let primary = rgb("#663399")    // Purple
+#let accent = rgb("#333333")      // Dark grey
 
-% Or - Tech green
-\definecolor{primarycolor}{RGB}{0,153,76}      % Green
-\definecolor{accentcolor}{RGB}{51,51,51}       % Dark grey
+// Or - Tech green
+#let primary = rgb("#009933")    // Green
+#let accent = rgb("#333333")      // Dark grey
 ```
 
 ### Example 3: Adjust Font Size
 
-**Edit:** Any template, first line
+**Edit:** Any template, text settings
 
-```latex
-% Before (11pt - default)
-\documentclass[11pt,letterpaper]{article}
+```typst
+// Before (10pt - default)
+#set text(font: "Inter", size: 10pt)
 
-% After (10pt - smaller, fits more content)
-\documentclass[10pt,letterpaper]{article}
+// After (9pt - smaller, fits more content)
+#set text(font: "Inter", size: 9pt)
 
-% Or (12pt - larger, more readable)
-\documentclass[12pt,letterpaper]{article}
+// Or (11pt - larger, more readable)
+#set text(font: "Inter", size: 11pt)
 ```
 
 **Result:** Regenerate PDF to see changes
 ```bash
-uv run scripts/compile_latex.py resume.tex
+uv run scripts/compile_typst.py resume.typ
 ```
 
 ### Example 4: Adjust Margins
 
-**Modern template** - Edit geometry scale:
+**All templates** - Edit page settings:
 
-```latex
-% Before
-\usepackage[scale=0.85]{geometry}
+```typst
+// Before
+#set page(margin: (top: 0.4in, bottom: 0.3in, left: 0.5in, right: 0.5in))
 
-% After (wider margins)
-\usepackage[scale=0.80]{geometry}
+// After (wider margins)
+#set page(margin: (top: 0.6in, bottom: 0.5in, left: 0.7in, right: 0.7in))
 
-% Or (narrower margins, more content)
-\usepackage[scale=0.90]{geometry}
-```
-
-**Other templates** - Edit margin size:
-
-```latex
-% Before
-\usepackage[margin=0.75in]{geometry}
-
-% After (wider margins)
-\usepackage[margin=1.0in]{geometry}
-
-% Or (narrower margins)
-\usepackage[margin=0.5in]{geometry}
+// Or (narrower margins, more content)
+#set page(margin: (top: 0.3in, bottom: 0.3in, left: 0.4in, right: 0.4in))
 ```
 
 ### Example 5: Custom Template Workflow
@@ -289,18 +276,18 @@ uv run scripts/compile_latex.py resume.tex
 
 ```bash
 # Step 1: Copy modern template
-cp assets/templates/latex/modern.tex.j2 \
-   assets/templates/latex/custom.tex.j2
+cp assets/templates/typst/modern.typ.j2 \
+   assets/templates/typst/custom.typ.j2
 
-# Step 2: Edit custom.tex.j2
+# Step 2: Edit custom.typ.j2
 # - Change colors
 # - Adjust margins
 # - Modify fonts
 
 # Step 3: Generate PDF with custom template
-uv run scripts/yaml_to_latex.py \
-  resume.yaml custom --output resume_custom.tex
-uv run scripts/compile_latex.py resume_custom.tex
+uv run scripts/yaml_to_typst.py \
+  resume.yaml custom --output resume_custom.typ
+uv run scripts/compile_typst.py resume_custom.typ
 
 # Step 4: Iterate
 ```
@@ -316,9 +303,9 @@ uv run scripts/compile_latex.py resume_custom.tex
 **Why:** Clean, professional, tech-friendly, ATS-compatible
 
 ```bash
-uv run scripts/yaml_to_latex.py \
-  resume.yaml modern --output resume.tex
-uv run scripts/compile_latex.py resume.tex \
+uv run scripts/yaml_to_typst.py \
+  resume.yaml modern --output resume.typ
+uv run scripts/compile_typst.py resume.typ \
   --output john_doe_software_engineer.pdf
 ```
 
@@ -331,9 +318,9 @@ uv run scripts/compile_latex.py resume.tex \
 **Why:** Conservative, traditional, maximum ATS compatibility
 
 ```bash
-uv run scripts/yaml_to_latex.py \
-  resume.yaml classic --output resume.tex
-uv run scripts/compile_latex.py resume.tex \
+uv run scripts/yaml_to_typst.py \
+  resume.yaml classic --output resume.typ
+uv run scripts/compile_typst.py resume.typ \
   --output jane_smith_analyst.pdf
 ```
 
@@ -346,9 +333,9 @@ uv run scripts/compile_latex.py resume.tex \
 **Why:** Emphasis on publications, research-focused
 
 ```bash
-uv run scripts/yaml_to_latex.py \
-  cv.yaml academic --output cv.tex
-uv run scripts/compile_latex.py cv.tex \
+uv run scripts/yaml_to_typst.py \
+  cv.yaml academic --output cv.typ
+uv run scripts/compile_typst.py cv.typ \
   --output robert_johnson_cv.pdf
 ```
 
@@ -361,9 +348,9 @@ uv run scripts/compile_latex.py cv.tex \
 **Why:** Visually distinctive, shows design sensibility
 
 ```bash
-uv run scripts/yaml_to_latex.py \
-  resume.yaml creative --output resume.tex
-uv run scripts/compile_latex.py resume.tex \
+uv run scripts/yaml_to_typst.py \
+  resume.yaml creative --output resume.typ
+uv run scripts/compile_typst.py resume.typ \
   --output sarah_williams_ux_designer.pdf
 ```
 
@@ -373,17 +360,17 @@ uv run scripts/compile_latex.py resume.tex \
 
 ```bash
 # For tech companies - modern template
-uv run scripts/yaml_to_latex.py \
+uv run scripts/yaml_to_typst.py \
   resume_tech_focused.yaml modern \
-  --output resume_tech.tex
-uv run scripts/compile_latex.py resume_tech.tex \
+  --output resume_tech.typ
+uv run scripts/compile_typst.py resume_tech.typ \
   --output resume_tech_companies.pdf
 
 # For consulting - classic template
-uv run scripts/yaml_to_latex.py \
+uv run scripts/yaml_to_typst.py \
   resume_consulting_focused.yaml classic \
-  --output resume_consulting.tex
-uv run scripts/compile_latex.py resume_consulting.tex \
+  --output resume_consulting.typ
+uv run scripts/compile_typst.py resume_consulting.typ \
   --output resume_consulting.pdf
 
 # Maintain multiple YAML versions tailored for different roles
@@ -395,9 +382,9 @@ uv run scripts/compile_latex.py resume_consulting.tex \
 
 ```bash
 # Generate with classic template (best ATS compatibility)
-uv run scripts/yaml_to_latex.py \
-  resume.yaml classic --output resume_ats.tex
-uv run scripts/compile_latex.py resume_ats.tex \
+uv run scripts/yaml_to_typst.py \
+  resume.yaml classic --output resume_ats.typ
+uv run scripts/compile_typst.py resume_ats.typ \
   --output resume_ats_test.pdf
 
 # Test text extraction
@@ -449,20 +436,20 @@ JohnDoeRESUME.pdf            # Inconsistent case
 
 ```bash
 # Generate modern template
-uv run scripts/yaml_to_latex.py RESUME.yaml modern -o out.tex && \
-uv run scripts/compile_latex.py out.tex
+uv run scripts/yaml_to_typst.py RESUME.yaml modern -o out.typ && \
+uv run scripts/compile_typst.py out.typ
 
 # Generate classic template
-uv run scripts/yaml_to_latex.py RESUME.yaml classic -o out.tex && \
-uv run scripts/compile_latex.py out.tex
+uv run scripts/yaml_to_typst.py RESUME.yaml classic -o out.typ && \
+uv run scripts/compile_typst.py out.typ
 
 # Generate academic template
-uv run scripts/yaml_to_latex.py RESUME.yaml academic -o out.tex && \
-uv run scripts/compile_latex.py out.tex
+uv run scripts/yaml_to_typst.py RESUME.yaml academic -o out.typ && \
+uv run scripts/compile_typst.py out.typ
 
 # Generate creative template
-uv run scripts/yaml_to_latex.py RESUME.yaml creative -o out.tex && \
-uv run scripts/compile_latex.py out.tex
+uv run scripts/yaml_to_typst.py RESUME.yaml creative -o out.typ && \
+uv run scripts/compile_typst.py out.typ
 
 # Test ATS compatibility
 pdftotext output.pdf - | less
