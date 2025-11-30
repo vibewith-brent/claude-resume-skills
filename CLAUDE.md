@@ -139,7 +139,7 @@ experience:
 | academic | Research, academia |
 | creative | Design, marketing, UX |
 
-## Template Creation Workflow
+### Custom Template Creation
 
 For custom templates, the template-maker and reviewer work in an iteration loop:
 
@@ -152,64 +152,43 @@ For custom templates, the template-maker and reviewer work in an iteration loop:
 
 Design vectors prevent generic "AI resume" patterns by providing mid-altitude guidance on fonts, spacing, and color choices tailored to industry expectations.
 
-## Versioned Workflow Example
+## Common Pitfalls
 
-```bash
-# 1. Initialize → 2. Import → 3. Edit YAML → 4. Create versions → 5. Generate PDF → 6. Export
-uv run .claude/skills/resume-state/scripts/init_project.py ml_engineer
-uv run .claude/skills/resume-state/scripts/import_resume.py current_resume.pdf
-# Edit versions/v1/resume.yaml with content from extracted_text.txt
-uv run .claude/skills/resume-state/scripts/create_version.py --tag google --notes "Tailored for Google"
+- **YAML escaping**: Quotes containing colons or special chars need proper YAML escaping
+- **Template names**: Lowercase only (`modern-tech` not `Modern-Tech`)
+- **Version IDs**: Format is `v1`, `v2` (lowercase v + number)
+- **Skill invocation**: Use natural language; skills auto-detect from `.claude/skills/` symlinks
+- **Source of truth**: Edit `resume-*/` directories, not `.claude/skills/` (symlinks)
 
-YAML=$(uv run .claude/skills/resume-state/scripts/get_active.py)
-uv run .claude/skills/resume-formatter/scripts/yaml_to_typst.py "$YAML" modern -o "${YAML%.yaml}.typ"
-uv run .claude/skills/resume-formatter/scripts/compile_typst.py "${YAML%.yaml}.typ"
+## Troubleshooting
 
-uv run .claude/skills/resume-state/scripts/export_version.py v2 ~/Desktop/applications/google/
-```
+**Skills not loading:** Verify `.claude/skills/` symlinks point to `resume-*/` directories. Restart Claude Code.
+
+**Typst compile errors:** Check `typst --version`. Escape special chars in YAML (colons, quotes).
+
+**Content overflow:** Reduce achievements to 4-6 per role. Use optimizer to condense bullets.
+
+**State not found:** Run `get_active.py` to verify project exists. If no `.resume_versions/`, run `init_project.py`.
+
+**Store location:** Scripts search upward for `.resume_versions/`, fall back to `~/.resume_versions`. Override with `RESUME_VERSIONS_PATH` env var.
 
 ## Development Notes
 
 ### Python Environment
 
-- Managed with `uv` (auto-installed by Claude Code)
-- Requires Python >=3.10
-- Dependencies in `pyproject.toml`: pdfplumber, python-docx, pyyaml, jinja2, requests, beautifulsoup4
+- Managed with `uv`; run `uv sync` to install dependencies
+- Python >=3.10 required
+- Dependencies: pdfplumber, python-docx, pyyaml, jinja2, requests, beautifulsoup4
 
 ### Skill Architecture
 
-- **Source of Truth**: Edit `resume-*/` directories directly
-- **Symlinks**: `.claude/skills/` contains symlinks to `resume-*/` for auto-loading
-- **Scripts**: All utility scripts use `uv run` and are callable from skill directories
-- **State Management**: Centralized in `state_utils.py` with functions for config/project loading, version resolution, path handling
+- **Source of Truth**: `resume-*/` directories (not `.claude/skills/` symlinks)
+- **State Management**: `state_utils.py` provides config/project loading, version resolution, path handling
+- **New scripts**: Import from `state_utils.py`, use `resolve_project()` for `--project/-p` flags
 
-### Store Location Resolution
+### Packaging Skills
 
-Scripts find `.resume_versions` using this search order:
-
-1. **Environment variable**: `RESUME_VERSIONS_PATH` (if set)
-2. **Upward search**: From current directory to root (like `.git`)
-3. **Global fallback**: `~/.resume_versions`
-
-This enables:
-- Running commands from any subdirectory within the project
-- Using a global store for all resume projects
-- Custom location via `export RESUME_VERSIONS_PATH=/path/to/store`
-
-### Adding New Scripts
-
-When adding scripts to `resume-state/scripts/`:
-1. Import from `state_utils.py` for consistency
-2. Use `resolve_project()` to handle --project/-p flags
-3. Follow pattern: load state → modify → save state
-4. Update `resume-state/SKILL.md` commands reference
-
-### Packaging Skills for Distribution
-
-Package skills as ZIP files per Anthropic's format:
 ```bash
 uv run scripts/package_skills.py           # All skills → dist/*.zip
 uv run scripts/package_skills.py resume-formatter  # Single skill
 ```
-
-ZIP structure: `skill-name.zip` containing `skill-name/` folder at root.
