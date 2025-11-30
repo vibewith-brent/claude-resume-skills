@@ -34,7 +34,7 @@ uv run .claude/skills/resume-extractor/scripts/extract_docx.py <file.docx>
 # Validation
 uv run .claude/skills/resume-optimizer/scripts/validate_yaml.py <resume.yaml>
 
-# PDF generation (templates: modern, classic, academic, creative)
+# PDF generation (templates: modern, modern-tech, classic, academic, creative)
 uv run .claude/skills/resume-formatter/scripts/yaml_to_typst.py <resume.yaml> <template> -o <out.typ>
 uv run .claude/skills/resume-formatter/scripts/compile_typst.py <file.typ> -o <out.pdf>
 
@@ -134,6 +134,7 @@ experience:
 | Template | Use Case |
 |----------|----------|
 | modern | Tech, startups, general |
+| modern-tech | Tech with teal accents, side-line headers |
 | classic | Finance, law, consulting |
 | academic | Research, academia |
 | creative | Design, marketing, UX |
@@ -202,3 +203,13 @@ When adding scripts to `resume-state/scripts/`:
 2. Use `resolve_project()` to handle --project/-p flags
 3. Follow pattern: load state → modify → save state
 4. Update `resume-state/SKILL.md` commands reference
+
+### Packaging Skills for Distribution
+
+Package skills as ZIP files per Anthropic's format:
+```bash
+uv run scripts/package_skills.py           # All skills → dist/*.zip
+uv run scripts/package_skills.py resume-formatter  # Single skill
+```
+
+ZIP structure: `skill-name.zip` containing `skill-name/` folder at root.
