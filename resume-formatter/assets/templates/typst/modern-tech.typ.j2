@@ -1,0 +1,235 @@
+// Modern Tech Resume Template
+// Design: Clean tech-forward aesthetic with teal accents and side-line headers
+// Typography: Inter (modern sans-serif), high weight contrast
+// Layout: Single column, ATS-optimized
+
+#set page(
+  paper: "us-letter",
+  margin: (top: 0.4in, bottom: 0.35in, left: 0.5in, right: 0.5in),
+)
+
+#set text(font: "Inter", size: 10pt)
+#set par(justify: false, leading: 0.55em)
+
+// Color palette - teal primary for tech aesthetic
+#let teal = rgb("#008080")
+#let darkgray = rgb("#404040")
+#let mediumgray = rgb("#6a6a6a")
+#let lightgray = rgb("#d0d0d0")
+
+// Link styling
+#show link: it => text(fill: teal)[#it]
+
+// Section header with left accent line
+#let section(title) = {
+  v(0.5em)
+  box(
+    inset: (left: 6pt),
+    stroke: (left: 2pt + teal),
+    text(size: 12pt, weight: "bold", fill: darkgray)[#upper(title)]
+  )
+  v(0.3em)
+}
+
+// Experience entry helper
+#let job-header(title, dates, company) = {
+  grid(
+    columns: (1fr, auto),
+    text(size: 10.5pt, weight: "bold")[#title],
+    text(size: 9.5pt, fill: teal, weight: "medium")[#dates],
+  )
+  text(size: 9.5pt, fill: mediumgray)[#company]
+  v(0.15em)
+}
+
+// Education entry helper
+#let edu-entry(degree, institution, year) = {
+  grid(
+    columns: (1fr, auto),
+    [#text(weight: "bold")[#degree] #sym.dash.en #text(fill: mediumgray)[#institution]],
+    text(fill: teal, weight: "medium")[#year],
+  )
+}
+
+// ============================================================================
+// HEADER
+// ============================================================================
+
+#align(center)[
+  #text(size: 26pt, weight: "bold", fill: darkgray)[{{ contact.name | typst_escape }}]
+  {% if contact.title %}
+  #v(0.15em)
+  #text(size: 12pt, fill: teal, weight: "medium")[{{ contact.title | typst_escape }}]
+  {% endif %}
+  #v(0.25em)
+  #text(size: 9.5pt, fill: mediumgray)[
+    {% if contact.location %}{{ contact.location | typst_escape }}{% endif %}
+    {% if contact.phone %} #sym.bar.v {{ contact.phone | typst_escape }}{% endif %}
+    {% if contact.email %} #sym.bar.v #link("mailto:{{ contact.email }}")[{{ contact.email | typst_escape }}]{% endif %}
+    {% if contact.linkedin %} #sym.bar.v #link("{{ contact.linkedin }}")[LinkedIn]{% endif %}
+    {% if contact.github %} #sym.bar.v #link("{{ contact.github }}")[GitHub]{% endif %}
+  ]
+]
+
+#v(0.3em)
+#line(length: 100%, stroke: 0.5pt + lightgray)
+
+// ============================================================================
+// PROFESSIONAL SUMMARY
+// ============================================================================
+
+{% if summary %}
+#section("Summary")
+#text(size: 10pt)[{{ summary | typst_escape }}]
+{% endif %}
+
+// ============================================================================
+// EXPERIENCE
+// ============================================================================
+
+{% if experience %}
+#section("Experience")
+{% for job in experience %}
+{% for position in job.positions %}
+#job-header(
+  [{{ position.title | typst_escape }}],
+  [{{ position.dates | typst_escape }}],
+  [{{ job.company | typst_escape }}],
+)
+{% if position.achievements %}
+#set list(marker: text(fill: teal)[•], indent: 0.3em, body-indent: 0.5em, spacing: 0.35em)
+{% for achievement in position.achievements %}
+- {{ achievement | typst_escape }}
+{% endfor %}
+{% endif %}
+#v(0.35em)
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// SKILLS
+// ============================================================================
+
+{% if skills %}
+#section("Skills")
+#grid(
+  columns: (1fr, 1fr),
+  column-gutter: 1em,
+  row-gutter: 0.3em,
+  {% for category, skill_list in skills.items() %}
+  [
+    #text(size: 8.5pt, weight: "bold", fill: teal)[{{ category | typst_escape }}:] #text(size: 8.5pt)[{% if skill_list is iterable and skill_list is not string %}{{ skill_list | join(', ') | typst_escape }}{% else %}{{ skill_list | typst_escape }}{% endif %}]
+  ],
+  {% endfor %}
+)
+{% endif %}
+
+// ============================================================================
+// EDUCATION
+// ============================================================================
+
+{% if education %}
+#section("Education")
+{% for edu in education %}
+#edu-entry(
+  [{{ edu.degree | typst_escape }}],
+  [{{ edu.institution | typst_escape }}],
+  [{{ edu.graduation_year }}],
+)
+{% if edu.gpa %}#text(size: 9pt, fill: mediumgray)[GPA: {{ edu.gpa | typst_escape }}]{% endif %}
+{% if edu.honors %}#text(size: 9pt, fill: mediumgray)[ | {{ edu.honors | typst_escape }}]{% endif %}
+{% if not loop.last %}#v(0.35em){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// CERTIFICATIONS
+// ============================================================================
+
+{% if certifications %}
+#section("Certifications")
+{% for cert in certifications %}
+#grid(
+  columns: (1fr, auto),
+  [#text(weight: "bold")[{{ cert.name | typst_escape }}] #sym.dash.en #text(fill: mediumgray)[{{ cert.issuer | typst_escape }}]],
+  text(fill: teal, weight: "medium")[{{ cert.date | typst_escape }}],
+)
+{% if cert.credential_id %}#text(size: 9pt, fill: mediumgray)[Credential: {{ cert.credential_id | typst_escape }}]{% endif %}
+{% if not loop.last %}#v(0.4em){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// PROJECTS
+// ============================================================================
+
+{% if projects %}
+#section("Projects")
+{% for project in projects %}
+#grid(
+  columns: (1fr, auto),
+  text(weight: "bold")[{{ project.name | typst_escape }}{% if project.url %} #link("{{ project.url }}")[#text(size: 9pt, weight: "regular")[\[link\]]]{% endif %}],
+  text(fill: teal, weight: "medium")[{{ project.dates | typst_escape }}],
+)
+{% if project.technologies %}#text(size: 9pt, fill: mediumgray)[{{ project.technologies | join(', ') | typst_escape }}]{% endif %}
+{% if project.description or project.achievements %}
+#set list(marker: text(fill: teal)[•], indent: 0.3em, body-indent: 0.5em, spacing: 0.4em)
+{% if project.description %}- {{ project.description | typst_escape }}{% endif %}
+{% if project.achievements %}{% for achievement in project.achievements %}- {{ achievement | typst_escape }}
+{% endfor %}{% endif %}
+{% endif %}
+#v(0.4em)
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// PUBLICATIONS
+// ============================================================================
+
+{% if publications %}
+#section("Publications")
+{% for pub in publications %}
+{{ pub.authors | typst_escape }}. "#emph[{{ pub.title | typst_escape }}]." _{{ pub.venue | typst_escape }}_, {{ pub.date | typst_escape }}.{% if pub.url %} #link("{{ pub.url }}")[Link]{% endif %}
+#v(0.3em)
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// AWARDS
+// ============================================================================
+
+{% if awards %}
+#section("Awards")
+{% for award in awards %}
+#grid(
+  columns: (1fr, auto),
+  [#text(weight: "bold")[{{ award.name | typst_escape }}] #sym.dash.en #text(fill: mediumgray)[{{ award.issuer | typst_escape }}]],
+  text(fill: teal, weight: "medium")[{{ award.date | typst_escape }}],
+)
+{% if not loop.last %}#v(0.3em){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// LANGUAGES
+// ============================================================================
+
+{% if languages %}
+#section("Languages")
+{% for lang in languages %}{{ lang.language | typst_escape }} #text(fill: mediumgray)[({{ lang.proficiency | typst_escape }})]{% if not loop.last %} #sym.bar.v {% endif %}{% endfor %}
+{% endif %}
+
+// ============================================================================
+// ATTRIBUTION
+// ============================================================================
+
+{% if attribution %}
+#v(1fr)
+#align(center)[
+  #text(size: 7.5pt, fill: mediumgray)[
+    {{ attribution.text | typst_escape }}
+    {% if attribution.url %} #link("{{ attribution.url }}")[{{ attribution.link_text | typst_escape }}]{% endif %}
+  ]
+]
+{% endif %}

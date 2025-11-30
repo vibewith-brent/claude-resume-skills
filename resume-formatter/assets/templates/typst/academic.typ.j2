@@ -1,0 +1,211 @@
+// Academic/CV Template - Multi-page, education-first, publications
+// Suitable for research, academia, science positions
+
+#set page(
+  paper: "a4",
+  margin: 1in,
+  numbering: "1",
+)
+
+#set text(font: "New Computer Modern", size: 11pt)
+#set par(justify: false, leading: 0.65em)
+
+// Section header with rule below
+#let section(title) = {
+  v(0.8em)
+  text(weight: "bold", size: 12pt)[#title]
+  v(-0.4em)
+  line(length: 100%, stroke: 0.5pt)
+  v(0.4em)
+}
+
+// Subsection header
+#let subsection(title) = {
+  v(0.5em)
+  text(weight: "bold", size: 11pt)[#title]
+  v(0.2em)
+}
+
+// ============================================================================
+// HEADER
+// ============================================================================
+
+#text(size: 20pt, weight: "bold")[{{ contact.name | typst_escape }}]
+
+#v(0.2em)
+
+{% if contact.title %}
+#text(size: 14pt)[{{ contact.title | typst_escape }}]
+#v(0.2em)
+{% endif %}
+
+{% if contact.email or contact.phone or contact.location %}
+{% if contact.email %}Email: #link("mailto:{{ contact.email }}")[{{ contact.email | typst_escape }}]{% if contact.phone or contact.location %} | {% endif %}{% endif %}
+{% if contact.phone %}Phone: {{ contact.phone | typst_escape }}{% if contact.location %} | {% endif %}{% endif %}
+{% if contact.location %}{{ contact.location | typst_escape }}{% endif %}
+{% endif %}
+
+{% if contact.website or contact.linkedin or contact.github %}
+#v(0.1em)
+{% if contact.website %}#link("https://{{ contact.website }}")[{{ contact.website | typst_escape }}]{% if contact.linkedin or contact.github %} | {% endif %}{% endif %}
+{% if contact.linkedin %}#link("https://{{ contact.linkedin }}")[{{ contact.linkedin | typst_escape }}]{% if contact.github %} | {% endif %}{% endif %}
+{% if contact.github %}#link("https://{{ contact.github }}")[{{ contact.github | typst_escape }}]{% endif %}
+{% endif %}
+
+#v(0.8em)
+
+// ============================================================================
+// EDUCATION (First for academic CVs)
+// ============================================================================
+
+{% if education %}
+#section("Education")
+{% for edu in education %}
+#grid(
+  columns: (1fr, auto),
+  text(weight: "bold")[{{ edu.institution | typst_escape }}],
+  [{{ edu.graduation_year }}],
+)
+{{ edu.degree | typst_escape }}{% if edu.gpa %} -- GPA: {{ edu.gpa | typst_escape }}{% endif %}{% if edu.honors %} ({{ edu.honors | typst_escape }}){% endif %}
+{% if edu.minor %}\
+Minor: {{ edu.minor | typst_escape }}{% endif %}
+{% if not loop.last %}#v(0.4em){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// RESEARCH INTERESTS (uses summary)
+// ============================================================================
+
+{% if summary %}
+#section("Research Interests")
+{{ summary | typst_escape }}
+{% endif %}
+
+// ============================================================================
+// PROFESSIONAL EXPERIENCE
+// ============================================================================
+
+{% if experience %}
+#section("Professional Experience")
+{% for job in experience %}
+{% for position in job.positions %}
+#subsection([{{ position.title | typst_escape }} -- {{ job.company | typst_escape }}])
+{% if job.location %}{{ job.location | typst_escape }} | {% endif %}{{ position.dates | typst_escape }}
+{% if position.achievements %}
+#list(
+  marker: [•],
+  indent: 0em,
+  body-indent: 0.5em,
+  spacing: 0.3em,
+  {% for achievement in position.achievements %}
+  [{{ achievement | typst_escape }}],
+  {% endfor %}
+)
+{% endif %}
+{% if not loop.last %}#v(0.3em){% endif %}
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// PUBLICATIONS (numbered list)
+// ============================================================================
+
+{% if publications %}
+#section("Publications")
+#enum(
+  numbering: "1.",
+  indent: 0em,
+  body-indent: 0.5em,
+  spacing: 0.5em,
+  {% for pub in publications %}
+  [{{ pub.authors | typst_escape }}. "{{ pub.title | typst_escape }}." _{{ pub.venue | typst_escape }}_, {{ pub.date | typst_escape }}.{% if pub.url %} #link("{{ pub.url }}")[Link]{% endif %}],
+  {% endfor %}
+)
+{% endif %}
+
+// ============================================================================
+// RESEARCH PROJECTS
+// ============================================================================
+
+{% if projects %}
+#section("Research Projects")
+{% for project in projects %}
+#subsection([{{ project.name | typst_escape }}])
+{{ project.dates | typst_escape }}
+{% if project.description %}\
+{{ project.description | typst_escape }}{% endif %}
+{% if project.achievements %}
+#list(
+  marker: [•],
+  indent: 0em,
+  body-indent: 0.5em,
+  spacing: 0.3em,
+  {% for achievement in project.achievements %}
+  [{{ achievement | typst_escape }}],
+  {% endfor %}
+)
+{% endif %}
+{% if not loop.last %}#v(0.3em){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// TECHNICAL SKILLS
+// ============================================================================
+
+{% if skills %}
+#section("Technical Skills")
+{% for category, skill_list in skills.items() %}
+{% if skill_list is iterable and skill_list is not string %}
+*{{ category | typst_escape }}:* {{ skill_list | join(', ') | typst_escape }} \
+{% else %}
+*{{ category | typst_escape }}:* {{ skill_list | typst_escape }} \
+{% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// AWARDS & HONORS
+// ============================================================================
+
+{% if awards %}
+#section("Awards & Honors")
+{% for award in awards %}
+#grid(
+  columns: (1fr, auto),
+  [*{{ award.name | typst_escape }}* -- {{ award.issuer | typst_escape }}],
+  [{{ award.date | typst_escape }}],
+)
+{% if award.description %}
+{{ award.description | typst_escape }}
+{% endif %}
+{% if not loop.last %}#v(0.3em){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// CERTIFICATIONS
+// ============================================================================
+
+{% if certifications %}
+#section("Certifications")
+{% for cert in certifications %}
+#grid(
+  columns: (1fr, auto),
+  [*{{ cert.name | typst_escape }}* -- {{ cert.issuer | typst_escape }}],
+  [{{ cert.date | typst_escape }}],
+)
+{% if not loop.last %}#v(0.15em){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// LANGUAGES
+// ============================================================================
+
+{% if languages %}
+#section("Languages")
+{% for lang in languages %}{{ lang.language | typst_escape }}: {{ lang.proficiency | typst_escape }}{% if not loop.last %} | {% endif %}{% endfor %}
+{% endif %}

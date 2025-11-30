@@ -52,7 +52,7 @@ def export_version(
     extensions = {
         "pdf": [".pdf"],
         "yaml": [".yaml", ".yml"],
-        "all": [".pdf", ".yaml", ".yml", ".tex"],
+        "all": [".pdf", ".yaml", ".yml", ".typ"],
     }
     allowed = extensions.get(format, extensions["all"])
 

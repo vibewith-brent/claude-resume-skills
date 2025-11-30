@@ -97,7 +97,7 @@ Document requirements before designing:
    ```
 
 4. **Select Base Patterns**
-   - Consult `latex_patterns.md`
+   - Consult `typst_patterns.md`
    - Identify code snippets needed
 
 ### Deliverable
@@ -108,10 +108,10 @@ Design specification:
 ## Template Design: [name]
 
 ### Typography
-- Font: TeX Gyre Heros
+- Font: Inter
 - Name: 24pt bold
 - Headers: 12pt bold
-- Body: 11pt regular
+- Body: 10pt regular
 
 ### Layout
 - Single column
@@ -119,9 +119,9 @@ Design specification:
 - Skills inline
 
 ### Whitespace
-- Margins: 0.7in
-- Section gap: 14pt
-- Item gap: 2pt
+- Margins: 0.5in
+- Section gap: 0.8em
+- Item gap: 0.3em
 
 ### Color
 - Primary: #005293 (headers)
@@ -135,18 +135,18 @@ Design specification:
 
 ### File Location
 ```
-.claude/skills/resume-formatter/assets/templates/latex/[name].tex.j2
+.claude/skills/resume-formatter/assets/templates/typst/[name].typ.j2
 ```
 
 ### Template Checklist
 
 Before first compile:
 - [ ] Jinja2 syntax correct
-- [ ] All user content uses `| latex_escape`
+- [ ] All user content uses `| typst_escape`
 - [ ] All required sections handled (contact, summary, experience, skills, education)
 - [ ] Optional sections have `{% if ... %}` guards
 - [ ] No hardcoded content (all from YAML)
-- [ ] Consistent spacing commands
+- [ ] Consistent spacing values
 
 ### Initial Template
 
@@ -163,13 +163,13 @@ Start with minimal working version:
 ### Commands
 
 ```bash
-# Convert YAML to LaTeX
-uv run .claude/skills/resume-formatter/scripts/yaml_to_latex.py \
-    [resume.yaml] [template_name] -o output.tex
+# Convert YAML to Typst
+uv run .claude/skills/resume-formatter/scripts/yaml_to_typst.py \
+    [resume.yaml] [template_name] -o output.typ
 
-# Compile LaTeX to PDF
-uv run .claude/skills/resume-formatter/scripts/compile_latex.py \
-    output.tex -o output.pdf
+# Compile Typst to PDF
+uv run .claude/skills/resume-formatter/scripts/compile_typst.py \
+    output.typ -o output.pdf
 ```
 
 ### Handle Compilation Errors
@@ -178,11 +178,10 @@ uv run .claude/skills/resume-formatter/scripts/compile_latex.py \
 
 | Error | Cause | Fix |
 |-------|-------|-----|
-| `Undefined control sequence` | Missing package or typo | Add `\usepackage{}` or fix typo |
-| `Missing $ inserted` | Unescaped special char | Use `| latex_escape` filter |
-| `Font not found` | Font not installed | Use different font or install MacTeX full |
-| `Dimension too large` | Spacing calculation error | Check spacing values |
-| `Emergency stop` | Syntax error | Check for missing `}` or `\end{}` |
+| `expected ... found ...` | Syntax error | Check brackets, content/code mode |
+| Unescaped `#` or `@` | Special char in content | Use `| typst_escape` filter |
+| `font not found` | Font not installed | Use different font or install font |
+| Page overflow | Too much content | Reduce margins/font or content |
 
 ### Verify Output
 
@@ -224,13 +223,13 @@ Use the **resume-reviewer** skill to evaluate the compiled PDF.
 
 #### Issue 1: Inconsistent section spacing
 - Location: Between Experience and Skills sections
-- Problem: 20pt gap vs 12pt elsewhere
-- Fix: Use consistent \sectionspace command
+- Problem: 1em gap vs 0.5em elsewhere
+- Fix: Use consistent #v(section-gap) command
 
 #### Issue 2: Date alignment
 - Location: Experience section
 - Problem: Dates not right-aligned consistently
-- Fix: Use tabular with @{\extracolsep{\fill}}
+- Fix: Use grid with (1fr, auto) columns
 ```
 
 ---
@@ -258,39 +257,40 @@ Use the **resume-reviewer** skill to evaluate the compiled PDF.
 ### Common Adjustments
 
 **Spacing Issues**
-```latex
-% Before: inconsistent
-\vspace{12pt}
+```typst
+// Before: inconsistent
+#v(0.8em)
 ...
-\vspace{20pt}
+#v(1.2em)
 
-% After: consistent
-\sectionspace  % Defined as 12pt in preamble
+// After: consistent
+#v(section-gap)  // Defined as 0.8em at top
 ...
-\sectionspace
+#v(section-gap)
 ```
 
 **Alignment Issues**
-```latex
-% Before: hfill not working
-\textbf{Company} \hfill Location
+```typst
+// Before: h(1fr) not working
+*Company* #h(1fr) Location
 
-% After: tabular alignment
-\begin{tabular*}{\textwidth}{@{}l@{\extracolsep{\fill}}r@{}}
-\textbf{Company} & Location \\
-\end{tabular*}
+// After: grid alignment
+#grid(
+  columns: (1fr, auto),
+  [*Company*], [Location]
+)
 ```
 
 **Overflow Issues**
-```latex
-% Option 1: Reduce margins
-\usepackage[margin=0.6in]{geometry}
+```typst
+// Option 1: Reduce margins
+#set page(margin: (x: 0.5in, y: 0.4in))
 
-% Option 2: Reduce font size
-\documentclass[10pt,letterpaper]{article}
+// Option 2: Reduce font size
+#set text(size: 9pt)
 
-% Option 3: Reduce spacing
-\setlist[itemize]{topsep=0pt, itemsep=0pt}
+// Option 3: Reduce spacing
+#set list(spacing: 0.3em, tight: true)
 ```
 
 ---
@@ -331,8 +331,8 @@ Document each iteration:
 - Issues: Section spacing inconsistent, dates misaligned
 
 ### Round 2
-- Fixed: Added consistent \sectionspace command
-- Fixed: Changed to tabular date alignment
+- Fixed: Added consistent section-gap variable
+- Fixed: Changed to grid date alignment
 - Issues: Font hierarchy unclear
 
 ### Round 3
@@ -379,8 +379,8 @@ Provide:
 Template "[name]" created and ready.
 
 Use with:
-  uv run .../yaml_to_latex.py resume.yaml [name] -o resume.tex
-  uv run .../compile_latex.py resume.tex -o resume.pdf
+  uv run .../yaml_to_typst.py resume.yaml [name] -o resume.typ
+  uv run .../compile_typst.py resume.typ -o resume.pdf
 
 Best for: [industry/role]
 Notes: [any special considerations]
@@ -393,8 +393,8 @@ Notes: [any special considerations]
 ### Template Won't Compile
 
 1. Check for Jinja2 syntax errors (missing `%}`, `}}`)
-2. Check for LaTeX syntax errors (missing `}`, `\end{}`)
-3. Compile with verbose output to find line number
+2. Check for Typst syntax errors (unclosed brackets, wrong mode)
+3. Compile directly with `typst compile` for detailed errors
 4. Isolate: Comment out sections until it compiles
 
 ### Review Keeps Finding Issues
@@ -406,7 +406,7 @@ Notes: [any special considerations]
 
 ### Content Doesn't Fit
 
-1. Reduce margins (min 0.5in)
+1. Reduce margins (min 0.4in)
 2. Reduce font sizes (min 9pt body)
 3. Reduce spacing (tighten lists, sections)
 4. Change layout (sidebar can be more efficient)
@@ -425,15 +425,15 @@ Notes: [any special considerations]
 
 ### File Paths
 ```
-Template: .claude/skills/resume-formatter/assets/templates/latex/[name].tex.j2
-Output:   [anywhere user specifies, typically ./resume.tex → ./resume.pdf]
+Template: .claude/skills/resume-formatter/assets/templates/typst/[name].typ.j2
+Output:   [anywhere user specifies, typically ./resume.typ → ./resume.pdf]
 ```
 
 ### Commands
 ```bash
 # Compile pipeline
-uv run .../yaml_to_latex.py resume.yaml [template] -o out.tex
-uv run .../compile_latex.py out.tex -o out.pdf
+uv run .../yaml_to_typst.py resume.yaml [template] -o out.typ
+uv run .../compile_typst.py out.typ -o out.pdf
 
 # Test ATS extraction
 pdftotext out.pdf -

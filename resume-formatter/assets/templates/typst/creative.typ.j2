@@ -1,0 +1,218 @@
+// Creative Resume Template - Bold design with color accents
+// Blue header bar, colored section dividers
+// Best for design, marketing, UX, startup roles
+
+#set page(
+  paper: "a4",
+  margin: (top: 0.6in, bottom: 0.6in, left: 0.6in, right: 0.6in),
+)
+
+#set text(font: "Inter", size: 11pt)
+#set par(justify: false, leading: 0.65em)
+
+// Colors
+#let primarycolor = rgb("#0066cc")
+#let accentcolor = rgb("#333333")
+#let lightgray = rgb("#f0f0f0")
+
+// Section header with thick colored rule
+#let section(title) = {
+  v(0.8em)
+  text(weight: "bold", size: 12pt, fill: primarycolor)[#title]
+  v(-0.3em)
+  line(length: 100%, stroke: 2pt + primarycolor)
+  v(0.5em)
+}
+
+// Job entry
+#let job-entry(title, dates, company, location: none) = {
+  grid(
+    columns: (1fr, auto),
+    text(weight: "bold", fill: accentcolor)[#title],
+    text(fill: primarycolor)[#dates],
+  )
+  emph(company)
+  if location != none [, #location]
+  v(0.2em)
+}
+
+// ============================================================================
+// HEADER WITH COLOR BAR
+// ============================================================================
+
+#place(
+  top + left,
+  dx: -0.6in,
+  dy: -0.6in,
+  rect(
+    width: 100% + 1.2in,
+    height: 2cm,
+    fill: primarycolor,
+  )
+)
+
+#v(0.3cm)
+
+#text(size: 28pt, weight: "bold", fill: white)[{{ contact.name | typst_escape }}]
+
+#v(0.2cm)
+
+{% if contact.title %}
+#text(size: 16pt, fill: white)[{{ contact.title | typst_escape }}]
+{% endif %}
+
+#v(1.0cm)
+
+// Contact info centered
+#align(center)[
+  {% if contact.email %}#link("mailto:{{ contact.email }}")[{{ contact.email | typst_escape }}]{% endif %}
+  {% if contact.phone %} | {{ contact.phone | typst_escape }}{% endif %}
+  {% if contact.location %} | {{ contact.location | typst_escape }}{% endif %}
+  #v(0.1em)
+  {% if contact.linkedin or contact.github or contact.website %}
+  {% if contact.linkedin %}#link("https://{{ contact.linkedin }}")[LinkedIn]{% endif %}
+  {% if contact.github %}{% if contact.linkedin %} | {% endif %}#link("https://{{ contact.github }}")[GitHub]{% endif %}
+  {% if contact.website %}{% if contact.linkedin or contact.github %} | {% endif %}#link("https://{{ contact.website }}")[Website]{% endif %}
+  {% endif %}
+]
+
+#v(0.5em)
+
+// ============================================================================
+// PROFILE
+// ============================================================================
+
+{% if summary %}
+#section("Profile")
+{{ summary | typst_escape }}
+{% endif %}
+
+// ============================================================================
+// EXPERIENCE
+// ============================================================================
+
+{% if experience %}
+#section("Experience")
+{% for job in experience %}
+{% for position in job.positions %}
+#job-entry(
+  [{{ position.title | typst_escape }}],
+  [{{ position.dates | typst_escape }}],
+  [{{ job.company | typst_escape }}],
+  {% if job.location %}location: [{{ job.location | typst_escape }}],{% endif %}
+)
+{% if position.achievements %}
+#list(
+  marker: [•],
+  indent: 0em,
+  body-indent: 0.5em,
+  spacing: 0.4em,
+  {% for achievement in position.achievements %}
+  [{{ achievement | typst_escape }}],
+  {% endfor %}
+)
+{% endif %}
+#v(0.4em)
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// SKILLS
+// ============================================================================
+
+{% if skills %}
+#section("Skills")
+{% for category, skill_list in skills.items() %}
+{% if skill_list is iterable and skill_list is not string %}
+#text(weight: "bold", fill: primarycolor)[{{ category | typst_escape }}:] {{ skill_list | join(', ') | typst_escape }}
+{% else %}
+#text(weight: "bold", fill: primarycolor)[{{ category | typst_escape }}:] {{ skill_list | typst_escape }}
+{% endif %}
+#v(0.2em)
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// EDUCATION
+// ============================================================================
+
+{% if education %}
+#section("Education")
+{% for edu in education %}
+#grid(
+  columns: (1fr, auto),
+  text(weight: "bold", fill: accentcolor)[{{ edu.degree | typst_escape }}],
+  text(fill: primarycolor)[{{ edu.graduation_year }}],
+)
+{{ edu.institution | typst_escape }}{% if edu.location %}, {{ edu.location | typst_escape }}{% endif %}{% if edu.gpa %} -- GPA: {{ edu.gpa | typst_escape }}{% endif %}{% if edu.honors %} ({{ edu.honors | typst_escape }}){% endif %}
+{% if edu.minor %}\
+Minor: {{ edu.minor | typst_escape }}{% endif %}
+{% if not loop.last %}#v(0.4em){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// PROJECTS
+// ============================================================================
+
+{% if projects %}
+#section("Projects")
+{% for project in projects %}
+#grid(
+  columns: (1fr, auto),
+  text(weight: "bold", fill: accentcolor)[{{ project.name | typst_escape }}],
+  text(fill: primarycolor)[{{ project.dates | typst_escape }}],
+)
+{% if project.description %}
+{{ project.description | typst_escape }}
+{% endif %}
+{% if project.achievements %}
+#list(
+  marker: [•],
+  indent: 0em,
+  body-indent: 0.5em,
+  spacing: 0.4em,
+  {% for achievement in project.achievements %}
+  [{{ achievement | typst_escape }}],
+  {% endfor %}
+)
+{% endif %}
+#v(0.3em)
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// CERTIFICATIONS
+// ============================================================================
+
+{% if certifications %}
+#section("Certifications")
+{% for cert in certifications %}
+#grid(
+  columns: (1fr, auto),
+  [*{{ cert.name | typst_escape }}* -- {{ cert.issuer | typst_escape }}],
+  text(fill: primarycolor)[{{ cert.date | typst_escape }}],
+)
+{% if not loop.last %}#v(0.15em){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// AWARDS
+// ============================================================================
+
+{% if awards %}
+#section("Awards")
+{% for award in awards %}
+#grid(
+  columns: (1fr, auto),
+  [*{{ award.name | typst_escape }}* -- {{ award.issuer | typst_escape }}],
+  text(fill: primarycolor)[{{ award.date | typst_escape }}],
+)
+{% if award.description %}
+{{ award.description | typst_escape }}
+{% endif %}
+{% if not loop.last %}#v(0.3em){% endif %}
+{% endfor %}
+{% endif %}

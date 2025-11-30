@@ -224,15 +224,14 @@ Whitespace creates rhythm, guides the eye, and signals professionalism.
 
 Define consistent rhythm:
 
-```latex
-% Example spacing system
-\newlength{\sectionskip}
-\newlength{\subsectionskip}
-\newlength{\itemskip}
+```typst
+// Example spacing system
+#let section-gap = 0.9em      // Between major sections
+#let subsection-gap = 0.5em   // Between jobs/degrees
+#let item-gap = 0.2em         // Between bullets
 
-\setlength{\sectionskip}{14pt}     % Between major sections
-\setlength{\subsectionskip}{8pt}   % Between jobs/degrees
-\setlength{\itemskip}{2pt}         % Between bullets
+// Usage:
+#v(section-gap)
 ```
 
 ### Spacing Ratios
@@ -322,27 +321,27 @@ Color creates hierarchy, personality, and visual interest—but can also distrac
 ### Color Usage Patterns
 
 **Headers Only**:
-```latex
-\definecolor{primary}{RGB}{0, 82, 147}
-% Apply only to section headers
-\section{\color{primary}Experience}
+```typst
+#let primary = rgb("#005293")
+// Apply only to section headers
+#text(fill: primary, weight: "bold")[Experience]
 ```
 
 **Headers + Accent Lines**:
-```latex
-% Headers and horizontal rules
-{\color{primary}\rule{\textwidth}{0.5pt}}
+```typst
+// Headers and horizontal rules
+#line(length: 100%, stroke: 0.5pt + primary)
 ```
 
 **Headers + Links**:
-```latex
-\hypersetup{urlcolor=primary}
+```typst
+#show link: it => text(fill: primary)[#it]
 ```
 
 **Subtle Background** (advanced):
-```latex
-% Sidebar or header background
-\colorbox{lightgray}{...}
+```typst
+// Sidebar or header background
+#rect(fill: lightgray)[...]
 ```
 
 ### Print Considerations
@@ -356,26 +355,26 @@ Always test that:
 ### Specific Color Recommendations
 
 **Safe Professional Blues**:
-```latex
-\definecolor{navyblue}{RGB}{0, 51, 102}      % #003366 - Very conservative
-\definecolor{royalblue}{RGB}{0, 82, 147}     % #005293 - Professional modern
-\definecolor{teal}{RGB}{0, 128, 128}         % #008080 - Tech-friendly
-\definecolor{slate}{RGB}{47, 79, 79}         % #2F4F4F - Sophisticated
+```typst
+#let navyblue = rgb("#003366")      // Very conservative
+#let royalblue = rgb("#005293")     // Professional modern
+#let teal = rgb("#008080")          // Tech-friendly
+#let slate = rgb("#2F4F4F")         // Sophisticated
 ```
 
 **Creative Options**:
-```latex
-\definecolor{coral}{RGB}{255, 127, 80}       % Warm, approachable
-\definecolor{forest}{RGB}{34, 139, 34}       % Natural, grounded
-\definecolor{plum}{RGB}{142, 69, 133}        % Distinctive, creative
-\definecolor{rust}{RGB}{183, 65, 14}         % Bold, confident
+```typst
+#let coral = rgb("#FF7F50")         // Warm, approachable
+#let forest = rgb("#228B22")        // Natural, grounded
+#let plum = rgb("#8E4585")          // Distinctive, creative
+#let rust = rgb("#B7410E")          // Bold, confident
 ```
 
 **Neutral Grays** (for secondary elements):
-```latex
-\definecolor{darkgray}{RGB}{64, 64, 64}      % Body text alternative
-\definecolor{mediumgray}{RGB}{128, 128, 128} % Dates, secondary info
-\definecolor{lightgray}{RGB}{200, 200, 200}  % Rules, backgrounds
+```typst
+#let darkgray = rgb("#404040")      // Body text alternative
+#let mediumgray = rgb("#808080")    // Dates, secondary info
+#let lightgray = rgb("#C8C8C8")     // Rules, backgrounds
 ```
 
 ---
@@ -413,7 +412,7 @@ Color: Custom palette matching personal brand
 
 ## Anti-Patterns to Avoid
 
-1. **Default fonts** — Computer Modern screams "I used LaTeX" without care
+1. **Default fonts** — System defaults signal lack of attention to design
 2. **Random color** — Accent color should be intentional, not arbitrary
 3. **Inconsistent spacing** — Mixed spacing looks unpolished
 4. **Over-designed** — Too many fonts, colors, or elements overwhelms

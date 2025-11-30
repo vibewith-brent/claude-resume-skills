@@ -1,11 +1,11 @@
 ---
 name: resume-formatter
-description: Convert resume YAML to professionally formatted PDF using LaTeX templates. Use when generating final resume PDFs, comparing template layouts, or creating print-ready documents. Includes 4 templates optimized for different industries.
+description: Convert resume YAML to professionally formatted PDF using Typst templates. Use when generating final resume PDFs, comparing template layouts, or creating print-ready documents. Includes 4 templates optimized for different industries.
 license: MIT
-version: 1.0.0
+version: 2.0.0
 allowed-tools:
   - Bash(uv run:*)
-  - Bash(/Library/TeX/texbin/pdflatex:*)
+  - Bash(typst:*)
   - Read
   - Write
 ---
@@ -14,16 +14,16 @@ allowed-tools:
 
 ## Overview
 
-Transform resume YAML files into professionally formatted PDF documents using LaTeX templates. Choose from 4 theme options optimized for different industries and personal styles.
+Transform resume YAML files into professionally formatted PDF documents using Typst templates. Choose from 4 theme options optimized for different industries and personal styles.
 
 ## Quick Start
 
 ```bash
-# Step 1: Convert YAML to LaTeX
-uv run scripts/yaml_to_latex.py resume.yaml modern --output resume.tex
+# Step 1: Convert YAML to Typst
+uv run scripts/yaml_to_typst.py resume.yaml modern --output resume.typ
 
 # Step 2: Compile to PDF
-uv run scripts/compile_latex.py resume.tex
+uv run scripts/compile_typst.py resume.typ
 
 # Result: resume.pdf
 ```
@@ -43,31 +43,35 @@ Role type?
 **Modern** (default)
 - Best for: Tech, startups, general professional roles
 - Style: Clean, professional, blue accents, ATS-friendly
+- Font: Inter
 - Features: Professional icons, compact layout
 
 **Classic**
 - Best for: Finance, consulting, law, traditional industries
 - Style: Conservative, minimal formatting, black/white
+- Font: New Computer Modern (serif)
 - Features: Maximum ATS compatibility, no graphics
 
 **Academic**
 - Best for: Research positions, academia, scientific roles
 - Style: Formal, publication-focused
-- Features: Numbered publications, multi-page friendly
+- Font: New Computer Modern (serif)
+- Features: Numbered publications, multi-page with page numbers
 
 **Creative**
 - Best for: Design, marketing, UX, creative industries
 - Style: Bold, modern, visually distinctive
-- Features: Colored header, modern typography, hyperlinked contact
+- Font: Inter
+- Features: Colored header bar, modern typography
 
 **Detailed comparison:** [Theme Guide](references/theme_guide.md)
 
 ## Workflow
 
-### Convert YAML to LaTeX
+### Convert YAML to Typst
 
 ```bash
-uv run scripts/yaml_to_latex.py <yaml_file> <template> --output <output.tex>
+uv run scripts/yaml_to_typst.py <yaml_file> <template> --output <output.typ>
 ```
 
 **Templates:** `modern`, `classic`, `academic`, `creative`
@@ -75,34 +79,34 @@ uv run scripts/yaml_to_latex.py <yaml_file> <template> --output <output.tex>
 **Examples:**
 ```bash
 # Modern template (tech/startup)
-uv run scripts/yaml_to_latex.py resume.yaml modern --output resume_modern.tex
+uv run scripts/yaml_to_typst.py resume.yaml modern --output resume_modern.typ
 
 # Classic template (finance/consulting)
-uv run scripts/yaml_to_latex.py resume.yaml classic --output resume_classic.tex
+uv run scripts/yaml_to_typst.py resume.yaml classic --output resume_classic.typ
 
 # Academic template (research)
-uv run scripts/yaml_to_latex.py resume.yaml academic --output resume_academic.tex
+uv run scripts/yaml_to_typst.py resume.yaml academic --output resume_academic.typ
 
 # Creative template (design)
-uv run scripts/yaml_to_latex.py resume.yaml creative --output resume_creative.tex
+uv run scripts/yaml_to_typst.py resume.yaml creative --output resume_creative.typ
 ```
 
-### Compile LaTeX to PDF
+### Compile Typst to PDF
 
 ```bash
-uv run scripts/compile_latex.py <tex_file> [--output <output.pdf>]
+uv run scripts/compile_typst.py <typ_file> [--output <output.pdf>]
 ```
 
 **Example:**
 ```bash
-uv run scripts/compile_latex.py resume_modern.tex
+uv run scripts/compile_typst.py resume_modern.typ
 # Creates: resume_modern.pdf
 
 # Or specify custom output name:
-uv run scripts/compile_latex.py resume_modern.tex --output brent_skoumal_resume.pdf
+uv run scripts/compile_typst.py resume_modern.typ --output brent_skoumal_resume.pdf
 ```
 
-The script runs pdflatex twice (for proper formatting) and cleans up auxiliary files (.aux, .log, .out).
+Typst compiles in a single pass with no auxiliary files to clean up.
 
 ### Review PDF
 
@@ -114,79 +118,66 @@ After compilation:
 
 ### Iterate if Needed
 
-1. Edit the YAML source (not LaTeX)
-2. Regenerate LaTeX from updated YAML
+1. Edit the YAML source (not Typst)
+2. Regenerate Typst from updated YAML
 3. Recompile to PDF
 4. Review again
 
-**Why edit YAML instead of LaTeX:**
+**Why edit YAML instead of Typst:**
 - Easier to maintain and update
 - Can regenerate with different templates
 - Works with resume-optimizer skill
 
 ## Prerequisites
 
-### LaTeX Installation
+### Typst Installation
 
 **macOS:**
 ```bash
-# Full installation (3.9 GB)
-brew install --cask mactex
-
-# OR minimal installation (100 MB)
-brew install --cask mactex-no-gui
+brew install typst
 ```
 
-**Linux (Ubuntu/Debian):**
+**Linux:**
 ```bash
-# Full installation
-sudo apt-get install texlive-full
+# Via cargo (requires Rust)
+cargo install typst-cli
 
-# OR minimal installation
-sudo apt-get install texlive-latex-base texlive-latex-extra
+# Or via package manager (check availability)
+```
+
+**Windows:**
+```bash
+winget install --id Typst.Typst
 ```
 
 **Verify:**
 ```bash
-pdflatex --version
+typst --version
 ```
 
 ## Quick Customization
 
-### Change Colors (Modern)
+### Change Colors (Modern/Creative)
 
-Edit template lines 15-18:
-```latex
-\definecolor{headerblue}{RGB}{0,102,204}    % Header and section color
-\definecolor{dateblue}{RGB}{0,102,204}      % Date text color
-\definecolor{subtextgray}{RGB}{120,120,120} % Subtext color
+Edit the color definitions at the top of the template:
+```typst
+#let headerblue = rgb("#0066cc")    // Header and section color
+#let subtextgray = rgb("#787878")   // Subtext color
 ```
 
-### Change Colors (Creative)
+### Change Font
 
-Edit RGB definitions (lines 15-17):
-```latex
-\definecolor{primarycolor}{RGB}{0,102,204}    % Main accent
-\definecolor{accentcolor}{RGB}{51,51,51}       % Secondary
+All templates, near the top:
+```typst
+#set text(font: "Inter", size: 10pt)  // Change font name
 ```
 
-### Change Font Size
-
-All templates, line 1:
-```latex
-\documentclass[11pt,a4paper]{...}  % Try 10pt, 11pt, or 12pt
-```
+Common alternatives: "Helvetica", "Arial", "Source Sans Pro", "Roboto"
 
 ### Change Margins
 
-**Modern:**
-```latex
-\usepackage[scale=0.85]{geometry}  % Increase for wider margins
-```
-
-**Other templates:**
-```latex
-\usepackage[margin=0.75in]{geometry}  % Adjust as needed
+```typst
+#set page(margin: (top: 0.5in, bottom: 0.5in, left: 0.6in, right: 0.6in))
 ```
 
 **Detailed customization:** [Theme Guide](references/theme_guide.md)
@@ -223,12 +214,12 @@ Avoid: resume.pdf, cv_final_v3.pdf
 ```bash
 # Starting from YAML resume:
 
-# 1. Convert to LaTeX with modern template
-uv run scripts/yaml_to_latex.py resume.yaml modern \
-  --output resume_modern.tex
+# 1. Convert to Typst with modern template
+uv run scripts/yaml_to_typst.py resume.yaml modern \
+  --output resume_modern.typ
 
 # 2. Compile to PDF
-uv run scripts/compile_latex.py resume_modern.tex \
+uv run scripts/compile_typst.py resume_modern.typ \
   --output final_resume.pdf
 
 # 3. Review PDF
@@ -237,9 +228,9 @@ open final_resume.pdf  # macOS
 xdg-open final_resume.pdf  # Linux
 
 # 4. (Optional) Generate alternative template for comparison
-uv run scripts/yaml_to_latex.py resume.yaml classic \
-  --output resume_classic.tex
-uv run scripts/compile_latex.py resume_classic.tex \
+uv run scripts/yaml_to_typst.py resume.yaml classic \
+  --output resume_classic.typ
+uv run scripts/compile_typst.py resume_classic.typ \
   --output final_resume_classic.pdf
 ```
 

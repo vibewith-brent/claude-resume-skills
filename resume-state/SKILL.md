@@ -96,7 +96,7 @@ uv run scripts/diff_versions.py v1 v2
         │   │   └── extracted_text.txt
         │   └── v2_google/
         │       ├── resume.yaml
-        │       ├── resume.tex
+        │       ├── resume.typ
         │       └── resume.pdf
         └── jobs/                  # Cached job postings
 ```
@@ -121,8 +121,8 @@ State scripts provide path resolution for other skills:
 ```bash
 # Get active YAML and pipe to formatter
 YAML=$(uv run scripts/get_active.py)
-uv run ../resume-formatter/scripts/yaml_to_latex.py "$YAML" modern -o "${YAML%.yaml}.tex"
-uv run ../resume-formatter/scripts/compile_latex.py "${YAML%.yaml}.tex"
+uv run ../resume-formatter/scripts/yaml_to_typst.py "$YAML" modern -o "${YAML%.yaml}.typ"
+uv run ../resume-formatter/scripts/compile_typst.py "${YAML%.yaml}.typ"
 ```
 
 ## Commands Reference

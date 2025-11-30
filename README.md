@@ -6,7 +6,7 @@ Professional resume management suite for Claude Code: extract from PDF/DOCX, opt
 
 - **Extract**: Convert PDF/DOCX resumes to structured, editable YAML format
 - **Optimize**: Enhance content with ATS compatibility, quantifiable metrics, and keyword alignment
-- **Format**: Generate professional PDFs with 4 industry-optimized LaTeX templates
+- **Format**: Generate professional PDFs with 4 industry-optimized Typst templates
 - **Review**: Visual QA for compiled PDFs with structured feedback
 - **Template Maker**: Create custom templates with design vectors for typography, layout, whitespace, and color
 - **State**: Version control and project management for tracking resume iterations across multiple target roles
@@ -18,8 +18,8 @@ Professional resume management suite for Claude Code: extract from PDF/DOCX, opt
 git clone https://github.com/vibewith-brent/claude-resume-skills.git
 cd claude-resume-skills
 
-# 2. Install MacTeX (required for PDF generation)
-brew install --cask mactex
+# 2. Install Typst (required for PDF generation)
+brew install typst
 
 # 3. Open Claude Code in this directory
 # Skills auto-load from .claude/skills/ and are ready to use
@@ -30,17 +30,17 @@ brew install --cask mactex
 ### Required
 
 1. **Claude Code** - Download from [claude.ai/claude-code](https://claude.ai/claude-code)
-2. **MacTeX** (for PDF generation):
+2. **Typst** (for PDF generation):
    ```bash
-   brew install --cask mactex
+   brew install typst
    ```
 
    Verify installation:
    ```bash
-   pdflatex --version
+   typst --version
    ```
 
-   > **Note:** MacTeX is ~4GB. For minimal install: `brew install --cask mactex-no-gui` (100MB)
+   > **Note:** Typst is only ~20MB - much lighter than MacTeX (~4GB).
 
 ### Auto-Installed
 
@@ -140,8 +140,8 @@ Talk to Claude Code in natural language. Skills activate automatically based on 
 ```
 
 **What happens:**
-1. YAML converted to LaTeX
-2. Compiled to PDF with pdflatex
+1. YAML converted to Typst
+2. Compiled to PDF with Typst
 3. Professional resume ready to submit
 
 ### Review Compiled PDF
@@ -165,7 +165,7 @@ Talk to Claude Code in natural language. Skills activate automatically based on 
 **What happens:**
 1. Industry theme selected (startup + finance blend)
 2. Design vectors defined (typography, layout, whitespace, color)
-3. LaTeX template generated
+3. Typst template generated
 4. Compiled and reviewed in iteration loop
 5. Custom template ready for use
 
@@ -254,17 +254,17 @@ uv run .claude/skills/resume-optimizer/scripts/validate_yaml.py resume.yaml
 
 ### Generate PDF from YAML
 ```bash
-# Step 1: Convert YAML to LaTeX
-uv run .claude/skills/resume-formatter/scripts/yaml_to_latex.py resume.yaml modern -o resume.tex
+# Step 1: Convert YAML to Typst
+uv run .claude/skills/resume-formatter/scripts/yaml_to_typst.py resume.yaml modern -o resume.typ
 
-# Step 2: Compile LaTeX to PDF
-uv run .claude/skills/resume-formatter/scripts/compile_latex.py resume.tex -o resume.pdf
+# Step 2: Compile Typst to PDF
+uv run .claude/skills/resume-formatter/scripts/compile_typst.py resume.typ -o resume.pdf
 ```
 
 ### One-Liner PDF Generation
 ```bash
-uv run .claude/skills/resume-formatter/scripts/yaml_to_latex.py resume.yaml modern -o resume.tex && \
-uv run .claude/skills/resume-formatter/scripts/compile_latex.py resume.tex -o resume.pdf
+uv run .claude/skills/resume-formatter/scripts/yaml_to_typst.py resume.yaml modern -o resume.typ && \
+uv run .claude/skills/resume-formatter/scripts/compile_typst.py resume.typ -o resume.pdf
 ```
 
 ### Version Management
@@ -333,23 +333,23 @@ claude-resume-skills/
 ├── resume-formatter/                 # Formatter source
 │   ├── SKILL.md
 │   ├── scripts/
-│   │   ├── yaml_to_latex.py
-│   │   └── compile_latex.py
+│   │   ├── yaml_to_typst.py
+│   │   └── compile_typst.py
 │   ├── references/
 │   │   ├── theme_guide.md
 │   │   ├── troubleshooting.md
 │   │   └── examples.md
-│   └── assets/templates/latex/
-│       ├── modern.tex.j2             # TeX Gyre Heros, modern design
-│       ├── creative.tex.j2           # Bold blue header
-│       ├── classic.tex.j2            # Traditional serif
-│       └── academic.tex.j2           # Research-focused
+│   └── assets/templates/typst/
+│       ├── modern.typ.j2             # Inter font, modern design
+│       ├── creative.typ.j2           # Bold blue header
+│       ├── classic.typ.j2            # Traditional serif
+│       └── academic.typ.j2           # Research-focused
 │
 ├── resume-reviewer/                  # Reviewer source
 │   ├── SKILL.md
 │   └── references/
 │       ├── visual_qa_checklist.md    # 7-category evaluation
-│       ├── common_issues.md          # LaTeX fixes
+│       ├── common_issues.md          # Typst fixes
 │       └── feedback_format.md        # Structured output
 │
 ├── resume-template-maker/            # Template maker source
@@ -357,7 +357,7 @@ claude-resume-skills/
 │   └── references/
 │       ├── design_vectors.md         # Typography, layout, whitespace, color
 │       ├── industry_themes.md        # 11 industry configurations
-│       ├── latex_patterns.md         # Code snippets
+│       ├── typst_patterns.md         # Code snippets
 │       └── iteration_workflow.md     # Generate-compile-review loop
 │
 ├── resume-state/                     # State/version management source
@@ -404,48 +404,30 @@ ls .claude/skills/     # Should list all 6 skills
 "What skills do you have available?"
 ```
 
-### pdflatex Not Found
+### Typst Not Found
 
-**Install MacTeX:**
+**Install Typst:**
 ```bash
-brew install --cask mactex
+brew install typst
 ```
 
 **Verify installation:**
 ```bash
-pdflatex --version
+typst --version
 ```
 
-**If still not found, manually add to PATH:**
-```bash
-export PATH="/Library/TeX/texbin:$PATH"
-```
+### Typst Compilation Errors
 
-Add to `~/.zshrc` for persistence:
-```bash
-echo 'export PATH="/Library/TeX/texbin:$PATH"' >> ~/.zshrc
-```
-
-### LaTeX Compilation Errors
-
-**Missing LaTeX packages:**
-```bash
-# Uninstall minimal version
-brew uninstall --cask mactex-no-gui
-
-# Install full version
-brew install --cask mactex
-```
+**Font not found:**
+- Typst uses system fonts. Ensure the font (e.g., Inter) is installed
+- On macOS: Download from Google Fonts and install via Font Book
+- Alternatively, edit the template to use a different font (Helvetica, Arial)
 
 **Content too long (exceeds page limit):**
 - Use resume-optimizer to condense bullets
 - Aim for 1-2 pages maximum
 - Remove older or less relevant positions
 - Prioritize most impactful achievements
-
-**Font errors with modern template:**
-- TeX Gyre Heros is included with standard MacTeX installation
-- If issues persist, use `classic` template (standard fonts only)
 
 ### YAML Validation Errors
 
@@ -516,7 +498,7 @@ uv run .claude/skills/resume-optimizer/scripts/validate_yaml.py resume.yaml
 - Visual QA checklist
 - Design vectors (typography, layout, whitespace, color)
 - Industry-specific themes (11 industries)
-- LaTeX code patterns
+- Typst code patterns
 
 **Validate YAML**: Use validation script before formatting:
 ```bash
@@ -543,12 +525,12 @@ uv run .claude/skills/resume-optimizer/scripts/validate_yaml.py resume.yaml
 
 - Added **resume-reviewer** skill for visual QA of compiled PDFs
   - 7-category evaluation checklist (layout, typography, whitespace, alignment, color, content, ATS)
-  - Common LaTeX issues with specific fixes
+  - Common Typst issues with specific fixes
   - Structured feedback formats for iteration
 - Added **resume-template-maker** skill for custom template creation
   - Multi-dimensional design vectors (typography, layout, whitespace, color)
   - 11 industry-specific theme configurations
-  - LaTeX code patterns library
+  - Typst code patterns library
   - Iteration workflow: generate → compile → review → adjust
 - Design approach inspired by [Anthropic's frontend design research](https://www.claude.com/blog/improving-frontend-design-through-skills)
 
@@ -556,14 +538,14 @@ uv run .claude/skills/resume-optimizer/scripts/validate_yaml.py resume.yaml
 
 - Simplified modern template using TeX Gyre Heros (Helvetica-like) typography
 - Removed moderncv dependency for easier installation
-- Improved pdflatex path detection on macOS
+- Improved Typst path detection on macOS
 - Updated documentation and examples
-- All templates use standard LaTeX packages
+- All templates use standard Typst features
 
 ### v1.0.0
 
 - Initial release with 4 templates
-- MacTeX PATH auto-detection for macOS
+- Typst PATH auto-detection for macOS
 - Plugin marketplace support
 - Comprehensive reference documentation
 - YAML validation script
@@ -573,4 +555,4 @@ uv run .claude/skills/resume-optimizer/scripts/validate_yaml.py resume.yaml
 
 MIT License - See [LICENSE](LICENSE) file for details.
 
-LaTeX templates use standard packages and are freely available for personal and commercial use.
+Typst templates are freely available for personal and commercial use.
