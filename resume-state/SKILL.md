@@ -115,7 +115,7 @@ State scripts provide path resolution for other skills:
 ```bash
 # Get active YAML and pipe to formatter
 YAML=$(uv run scripts/get_active.py)
-uv run ../resume-formatter/scripts/yaml_to_typst.py "$YAML" modern -o "${YAML%.yaml}.typ"
+uv run ../resume-formatter/scripts/yaml_to_typst.py "$YAML" executive -o "${YAML%.yaml}.typ"
 uv run ../resume-formatter/scripts/compile_typst.py "${YAML%.yaml}.typ"
 ```
 

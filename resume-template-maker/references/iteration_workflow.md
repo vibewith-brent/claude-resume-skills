@@ -327,7 +327,7 @@ Document each iteration:
 ## Iteration Log
 
 ### Round 1
-- Created initial template from modern base
+- Created initial template from executive base
 - Issues: Section spacing inconsistent, dates misaligned
 
 ### Round 2
@@ -361,10 +361,9 @@ Add template to formatter's options:
 ```markdown
 | Template | Use Case |
 |----------|----------|
-| modern | Tech, startups |
-| classic | Finance, law |
-| academic | Research |
-| creative | Design, marketing |
+| executive | Most roles, professional |
+| compact | Dense experience, 10+ years |
+| minimal | Clean, understated |
 | [new] | [description] |  ← Add entry
 ```
 

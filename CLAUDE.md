@@ -34,12 +34,12 @@ uv run .claude/skills/resume-extractor/scripts/extract_docx.py <file.docx>
 # Validation
 uv run .claude/skills/resume-optimizer/scripts/validate_yaml.py <resume.yaml>
 
-# PDF generation (templates: modern, modern-tech, classic, academic, creative)
+# PDF generation (templates: executive, compact, minimal)
 uv run .claude/skills/resume-formatter/scripts/yaml_to_typst.py <resume.yaml> <template> -o <out.typ>
 uv run .claude/skills/resume-formatter/scripts/compile_typst.py <file.typ> -o <out.pdf>
 
 # One-liner PDF
-uv run .claude/skills/resume-formatter/scripts/yaml_to_typst.py resume.yaml modern -o resume.typ && \
+uv run .claude/skills/resume-formatter/scripts/yaml_to_typst.py resume.yaml executive -o resume.typ && \
 uv run .claude/skills/resume-formatter/scripts/compile_typst.py resume.typ -o resume.pdf
 
 # Job tailoring
@@ -133,11 +133,9 @@ experience:
 
 | Template | Use Case |
 |----------|----------|
-| modern | Tech, startups, general |
-| modern-tech | Tech with teal accents, side-line headers |
-| classic | Finance, law, consulting |
-| academic | Research, academia |
-| creative | Design, marketing, UX |
+| executive | Professional, clean hierarchy, navy accents (default) |
+| compact | Maximum density for extensive experience |
+| minimal | Clean, understated, monochromatic |
 
 ### Custom Template Creation
 

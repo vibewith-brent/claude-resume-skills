@@ -1,64 +1,48 @@
 # Resume Formatter Examples
 
-## Table of Contents
-- [Complete Workflow Examples](#complete-workflow-examples)
-- [Template Comparison](#template-comparison)
-- [Customization Examples](#customization-examples)
-- [Common Use Cases](#common-use-cases)
-
 ## Complete Workflow Examples
 
 ### Example 1: Basic Single-Template Workflow
 
-**Starting point:** `brent_resume.yaml`
+**Starting point:** `resume.yaml`
 
-**Goal:** Generate modern-template PDF
+**Goal:** Generate PDF with executive template
 
 ```bash
 # Step 1: Convert YAML to Typst
-uv run scripts/yaml_to_typst.py brent_resume.yaml modern \
-  --output brent_resume_modern.typ
+uv run scripts/yaml_to_typst.py resume.yaml executive \
+  --output resume.typ
 
 # Step 2: Compile to PDF
-uv run scripts/compile_typst.py brent_resume_modern.typ \
-  --output brent_skoumal_resume.pdf
+uv run scripts/compile_typst.py resume.typ \
+  --output firstname_lastname_resume.pdf
 
 # Step 3: Review
-open brent_skoumal_resume.pdf  # macOS
-# or
-xdg-open brent_skoumal_resume.pdf  # Linux
-
-# Result: brent_skoumal_resume.pdf
+open firstname_lastname_resume.pdf  # macOS
 ```
 
 ### Example 2: Multi-Template Comparison
 
-**Goal:** Generate PDFs with all 4 templates to compare
+**Goal:** Generate PDFs with all 3 templates to compare
 
 ```bash
-# Generate modern template
-uv run scripts/yaml_to_typst.py resume.yaml modern \
-  --output resume_modern.typ
-uv run scripts/compile_typst.py resume_modern.typ \
-  --output resume_modern.pdf
+# Generate executive template
+uv run scripts/yaml_to_typst.py resume.yaml executive \
+  --output resume_executive.typ
+uv run scripts/compile_typst.py resume_executive.typ \
+  --output resume_executive.pdf
 
-# Generate classic template
-uv run scripts/yaml_to_typst.py resume.yaml classic \
-  --output resume_classic.typ
-uv run scripts/compile_typst.py resume_classic.typ \
-  --output resume_classic.pdf
+# Generate compact template
+uv run scripts/yaml_to_typst.py resume.yaml compact \
+  --output resume_compact.typ
+uv run scripts/compile_typst.py resume_compact.typ \
+  --output resume_compact.pdf
 
-# Generate academic template
-uv run scripts/yaml_to_typst.py resume.yaml academic \
-  --output resume_academic.typ
-uv run scripts/compile_typst.py resume_academic.typ \
-  --output resume_academic.pdf
-
-# Generate creative template
-uv run scripts/yaml_to_typst.py resume.yaml creative \
-  --output resume_creative.typ
-uv run scripts/compile_typst.py resume_creative.typ \
-  --output resume_creative.pdf
+# Generate minimal template
+uv run scripts/yaml_to_typst.py resume.yaml minimal \
+  --output resume_minimal.typ
+uv run scripts/compile_typst.py resume_minimal.typ \
+  --output resume_minimal.pdf
 
 # Review all
 ls -lh resume_*.pdf
@@ -70,21 +54,19 @@ ls -lh resume_*.pdf
 
 ```bash
 # Assume you've already optimized resume for target role
-# Input: brent_resume_staff_ai_engineer.yaml
+# Input: resume_staff_ai_engineer.yaml
 
-# Step 1: Generate PDF with modern template (for tech role)
+# Step 1: Generate PDF with executive template (for tech role)
 uv run scripts/yaml_to_typst.py \
-  brent_resume_staff_ai_engineer.yaml modern \
-  --output brent_resume_staff_ai.typ
+  resume_staff_ai_engineer.yaml executive \
+  --output resume_staff_ai.typ
 
 # Step 2: Compile
-uv run scripts/compile_typst.py brent_resume_staff_ai.typ \
+uv run scripts/compile_typst.py resume_staff_ai.typ \
   --output brent_skoumal_staff_ai_engineer.pdf
 
 # Step 3: Verify ATS compatibility
 pdftotext brent_skoumal_staff_ai_engineer.pdf - | head -50
-
-# Result: brent_skoumal_staff_ai_engineer.pdf
 ```
 
 ### Example 4: Iterative Refinement
@@ -93,7 +75,7 @@ pdftotext brent_skoumal_staff_ai_engineer.pdf - | head -50
 
 ```bash
 # Initial generation
-uv run scripts/yaml_to_typst.py resume.yaml modern \
+uv run scripts/yaml_to_typst.py resume.yaml executive \
   --output resume.typ
 uv run scripts/compile_typst.py resume.typ
 
@@ -101,7 +83,7 @@ uv run scripts/compile_typst.py resume.typ
 # Edit resume.yaml (add metrics, improve bullets, etc.)
 
 # Regenerate from updated YAML
-uv run scripts/yaml_to_typst.py resume.yaml modern \
+uv run scripts/yaml_to_typst.py resume.yaml executive \
   --output resume.typ
 uv run scripts/compile_typst.py resume.typ
 
@@ -126,157 +108,105 @@ uv run scripts/extract_pdf.py original_resume.pdf \
 
 # Step 3: Format to PDF
 uv run scripts/yaml_to_typst.py \
-  resume_optimized.yaml modern --output resume.typ
+  resume_optimized.yaml executive --output resume.typ
 uv run scripts/compile_typst.py resume.typ \
   --output final_resume.pdf
-
-# Final result: final_resume.pdf
 ```
 
 ## Template Comparison
 
 ### Visual Comparison Table
 
-| Feature | Modern | Classic | Academic | Creative |
-|---------|--------|---------|----------|----------|
-| **Color scheme** | Blue accents | Black/white | Minimal color | Bold header color |
-| **Icons** | Yes (contact) | No | No | Yes (contact) |
-| **Best for** | Tech, startups | Finance, law | Research, academia | Design, marketing |
-| **ATS-friendly** | High | Very High | High | Medium |
-| **Print-friendly** | High | Very High | High | Medium |
-| **Page density** | Medium | High | Medium | Low |
-| **Multi-page** | Good | Excellent | Excellent | Good |
+| Feature | Executive | Compact | Minimal |
+|---------|-----------|---------|---------|
+| **Color scheme** | Navy/blue accents | Blue/gray | Monochrome + blue |
+| **Best for** | Most roles | Dense experience | Clean look |
+| **ATS-friendly** | High | High | High |
+| **Page density** | Medium | High | Low-Medium |
+| **Font size** | 9pt | 8-8.5pt | 9pt |
 
 ### When to Use Each Template
 
-**Modern Template:**
+**Executive Template:**
 ```bash
-# Use for: Software Engineer, Data Scientist, Product Manager, Tech roles
-uv run scripts/yaml_to_typst.py resume.yaml modern --output resume.typ
+# Use for: Most professional roles
+uv run scripts/yaml_to_typst.py resume.yaml executive --output resume.typ
 ```
 
 **Best features:**
-- Clean, professional appearance
-- ATS-compatible while visually appealing
-- Blue accent color is professional but not boring
-- Icons make contact info easy to spot
+- Professional and contemporary
+- Good balance of content and whitespace
+- Works for most industries
 
-**Classic Template:**
+**Compact Template:**
 ```bash
-# Use for: Finance, Consulting, Law, Government, Traditional industries
-uv run scripts/yaml_to_typst.py resume.yaml classic --output resume.typ
+# Use for: Extensive experience (10+ years)
+uv run scripts/yaml_to_typst.py resume.yaml compact --output resume.typ
 ```
 
 **Best features:**
-- Maximum ATS compatibility
-- Conservative appearance for traditional industries
-- Highest content density (fits more info)
-- Excellent print quality in grayscale
+- Maximum content density
+- Fits more on 2 pages
+- Great for comprehensive skill lists
 
-**Academic Template:**
+**Minimal Template:**
 ```bash
-# Use for: Research positions, Postdocs, Faculty, Scientific roles
-uv run scripts/yaml_to_typst.py resume.yaml academic --output resume.typ
+# Use for: Clean, understated presentation
+uv run scripts/yaml_to_typst.py resume.yaml minimal --output resume.typ
 ```
 
 **Best features:**
-- Emphasis on publications and education
-- Multi-page layout works well
-- Numbered publication lists
-- Research interests section
-
-**Creative Template:**
-```bash
-# Use for: Design, UX, Marketing, Creative industries
-uv run scripts/yaml_to_typst.py resume.yaml creative --output resume.typ
-```
-
-**Best features:**
-- Visually distinctive
-- Modern typography
-- Colored header stands out
-- Hyperlinked contact info
+- Clean and easy to read
+- Subtle design shows restraint
+- Works well printed in B&W
 
 ## Customization Examples
 
-### Example 1: Change Color (Modern Template)
+### Example 1: Change Colors
 
-**Edit:** `assets/templates/typst/modern.typ.j2` color definitions
-
-```typst
-// Before (default blue theme)
-#let headerblue = rgb("#0066cc")
-#let dateblue = rgb("#0066cc")
-#let subtextgray = rgb("#787878")
-
-// After (try different accent colors)
-#let headerblue = rgb("#009933")    // Green accents
-#let dateblue = rgb("#009933")
-// Or
-#let headerblue = rgb("#663399")    // Purple accents
-#let dateblue = rgb("#663399")
-```
-
-### Example 2: Change Color (Creative Template)
-
-**Edit:** `assets/templates/typst/creative.typ.j2` color definitions
+**Edit:** `assets/templates/typst/executive.typ.j2` color definitions
 
 ```typst
-// Before
-#let primary = rgb("#0066cc")    // Blue
-#let accent = rgb("#333333")      // Dark grey
+// Before (navy theme)
+#let primary = rgb("#1e3a5f")
+#let accent = rgb("#0369a1")
 
-// After - Professional purple
-#let primary = rgb("#663399")    // Purple
-#let accent = rgb("#333333")      // Dark grey
-
-// Or - Tech green
-#let primary = rgb("#009933")    // Green
-#let accent = rgb("#333333")      // Dark grey
+// After (teal theme)
+#let primary = rgb("#0f766e")
+#let accent = rgb("#14b8a6")
 ```
 
-### Example 3: Adjust Font Size
+### Example 2: Adjust Font Size
 
 **Edit:** Any template, text settings
 
 ```typst
-// Before (10pt - default)
-#set text(font: "Inter", size: 10pt)
-
-// After (9pt - smaller, fits more content)
+// Before (9pt - default)
 #set text(font: "Inter", size: 9pt)
 
-// Or (11pt - larger, more readable)
-#set text(font: "Inter", size: 11pt)
+// After (8.5pt - smaller, fits more content)
+#set text(font: "Inter", size: 8.5pt)
 ```
 
-**Result:** Regenerate PDF to see changes
-```bash
-uv run scripts/compile_typst.py resume.typ
-```
-
-### Example 4: Adjust Margins
+### Example 3: Adjust Margins
 
 **All templates** - Edit page settings:
 
 ```typst
 // Before
-#set page(margin: (top: 0.4in, bottom: 0.3in, left: 0.5in, right: 0.5in))
+#set page(margin: (top: 0.4in, bottom: 0.35in, left: 0.5in, right: 0.5in))
 
-// After (wider margins)
-#set page(margin: (top: 0.6in, bottom: 0.5in, left: 0.7in, right: 0.7in))
-
-// Or (narrower margins, more content)
-#set page(margin: (top: 0.3in, bottom: 0.3in, left: 0.4in, right: 0.4in))
+// After (tighter margins)
+#set page(margin: (top: 0.35in, bottom: 0.3in, left: 0.45in, right: 0.45in))
 ```
 
-### Example 5: Custom Template Workflow
+### Example 4: Custom Template Workflow
 
-**Goal:** Create custom template based on modern
+**Goal:** Create custom template based on executive
 
 ```bash
-# Step 1: Copy modern template
-cp assets/templates/typst/modern.typ.j2 \
+# Step 1: Copy executive template
+cp assets/templates/typst/executive.typ.j2 \
    assets/templates/typst/custom.typ.j2
 
 # Step 2: Edit custom.typ.j2
@@ -294,97 +224,54 @@ uv run scripts/compile_typst.py resume_custom.typ
 
 ## Common Use Cases
 
-### Use Case 1: Tech Startup Application
+### Use Case 1: Tech Role Application
 
-**Profile:** Software Engineer, 5 years experience, applying to startup
+**Profile:** Software Engineer, 5 years experience
 
-**Template choice:** Modern
-
-**Why:** Clean, professional, tech-friendly, ATS-compatible
+**Template choice:** Executive
 
 ```bash
 uv run scripts/yaml_to_typst.py \
-  resume.yaml modern --output resume.typ
+  resume.yaml executive --output resume.typ
 uv run scripts/compile_typst.py resume.typ \
   --output john_doe_software_engineer.pdf
 ```
 
-### Use Case 2: Finance/Consulting Application
+### Use Case 2: Senior Role with Extensive History
 
-**Profile:** Data Analyst, 3 years experience, applying to McKinsey
+**Profile:** Staff Engineer, 12 years experience, many roles
 
-**Template choice:** Classic
-
-**Why:** Conservative, traditional, maximum ATS compatibility
+**Template choice:** Compact
 
 ```bash
 uv run scripts/yaml_to_typst.py \
-  resume.yaml classic --output resume.typ
+  resume.yaml compact --output resume.typ
 uv run scripts/compile_typst.py resume.typ \
-  --output jane_smith_analyst.pdf
+  --output jane_smith_staff_engineer.pdf
 ```
 
-### Use Case 3: Academic Position
+### Use Case 3: Design-Adjacent Role
 
-**Profile:** PhD, 10 publications, applying for postdoc
+**Profile:** Technical PM, wants clean presentation
 
-**Template choice:** Academic
-
-**Why:** Emphasis on publications, research-focused
+**Template choice:** Minimal
 
 ```bash
 uv run scripts/yaml_to_typst.py \
-  cv.yaml academic --output cv.typ
-uv run scripts/compile_typst.py cv.typ \
-  --output robert_johnson_cv.pdf
-```
-
-### Use Case 4: Design/Creative Role
-
-**Profile:** UX Designer, 4 years experience, applying to design agency
-
-**Template choice:** Creative
-
-**Why:** Visually distinctive, shows design sensibility
-
-```bash
-uv run scripts/yaml_to_typst.py \
-  resume.yaml creative --output resume.typ
+  resume.yaml minimal --output resume.typ
 uv run scripts/compile_typst.py resume.typ \
-  --output sarah_williams_ux_designer.pdf
+  --output bob_jones_pm.pdf
 ```
 
-### Use Case 5: Multiple Applications
-
-**Scenario:** Applying to different types of companies
-
-```bash
-# For tech companies - modern template
-uv run scripts/yaml_to_typst.py \
-  resume_tech_focused.yaml modern \
-  --output resume_tech.typ
-uv run scripts/compile_typst.py resume_tech.typ \
-  --output resume_tech_companies.pdf
-
-# For consulting - classic template
-uv run scripts/yaml_to_typst.py \
-  resume_consulting_focused.yaml classic \
-  --output resume_consulting.typ
-uv run scripts/compile_typst.py resume_consulting.typ \
-  --output resume_consulting.pdf
-
-# Maintain multiple YAML versions tailored for different roles
-```
-
-### Use Case 6: ATS Testing
+### Use Case 4: ATS Testing
 
 **Goal:** Ensure resume passes ATS systems
 
 ```bash
-# Generate with classic template (best ATS compatibility)
+# Generate PDF
 uv run scripts/yaml_to_typst.py \
-  resume.yaml classic --output resume_ats.typ
-uv run scripts/compile_typst.py resume_ats.typ \
+  resume.yaml executive --output resume.typ
+uv run scripts/compile_typst.py resume.typ \
   --output resume_ats_test.pdf
 
 # Test text extraction
@@ -407,18 +294,12 @@ cat extracted.txt
 ```bash
 # Professional, clear
 firstname_lastname_resume.pdf
-brent_skoumal_resume.pdf
 
 # With target company
-firstname_lastname_company.pdf
-jane_smith_google.pdf
+firstname_lastname_google.pdf
 
 # With role
-firstname_lastname_role.pdf
-john_doe_senior_engineer.pdf
-
-# With date (for tracking versions)
-firstname_lastname_resume_2024.pdf
+firstname_lastname_senior_engineer.pdf
 ```
 
 ### Poor Naming Examples
@@ -428,27 +309,21 @@ firstname_lastname_resume_2024.pdf
 resume.pdf                    # Too generic
 resume_final.pdf              # Not specific
 cv_final_v3_FINAL.pdf        # Confusing
-my_resume_updated.pdf         # Unprofessional
-JohnDoeRESUME.pdf            # Inconsistent case
 ```
 
 ## Quick Reference Commands
 
 ```bash
-# Generate modern template
-uv run scripts/yaml_to_typst.py RESUME.yaml modern -o out.typ && \
+# Generate executive template
+uv run scripts/yaml_to_typst.py RESUME.yaml executive -o out.typ && \
 uv run scripts/compile_typst.py out.typ
 
-# Generate classic template
-uv run scripts/yaml_to_typst.py RESUME.yaml classic -o out.typ && \
+# Generate compact template
+uv run scripts/yaml_to_typst.py RESUME.yaml compact -o out.typ && \
 uv run scripts/compile_typst.py out.typ
 
-# Generate academic template
-uv run scripts/yaml_to_typst.py RESUME.yaml academic -o out.typ && \
-uv run scripts/compile_typst.py out.typ
-
-# Generate creative template
-uv run scripts/yaml_to_typst.py RESUME.yaml creative -o out.typ && \
+# Generate minimal template
+uv run scripts/yaml_to_typst.py RESUME.yaml minimal -o out.typ && \
 uv run scripts/compile_typst.py out.typ
 
 # Test ATS compatibility

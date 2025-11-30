@@ -2,27 +2,26 @@
 
 ## Overview
 
-The resume-formatter skill includes 4 professionally designed Typst templates, each optimized for different industries and personal styles.
+The resume-formatter skill includes 3 professionally designed Typst templates, each optimized for different use cases.
 
 ## Available Themes
 
-### 1. Modern (`modern`)
+### 1. Executive (`executive`)
 
-**Best for:** Tech, startups, creative industries
-**Style:** Clean, professional, Inter font typography
+**Best for:** Most professional roles, senior positions
+**Style:** Clean hierarchy with navy/blue accents
 **Features:**
-- Modern layout with blue accents
-- Blue accent color with gray subtext
-- Professional section headers with thin underlines
-- Two-column skills layout
-- Hyperlinked email and contact info
+- Professional layout with clear visual hierarchy
+- Navy section headers with subtle underline
+- Blue accent for dates and links
+- Inline skills format (no pills/tags)
+- Single-column, ATS-friendly
 
 **Pros:**
-- Most ATS-friendly template
-- Professional yet contemporary
-- Great for tech roles
-- Compact (fits more content)
-- Fast compilation with Typst
+- Professional and contemporary
+- Great balance of density and whitespace
+- ATS-compatible
+- Works for most industries
 
 **Cons:**
 - Requires Inter font (or edit for fallback)
@@ -31,135 +30,107 @@ The resume-formatter skill includes 4 professionally designed Typst templates, e
 - Software Engineers
 - Data Scientists
 - Product Managers
-- Tech industry roles
+- Senior/Staff roles
+- Most tech and business roles
 
 ---
 
-### 2. Classic (`classic`)
+### 2. Compact (`compact`)
 
-**Best for:** Finance, consulting, law, traditional industries
-**Style:** Traditional, conservative, minimal formatting
+**Best for:** Extensive experience, dense content
+**Style:** Maximum density without sacrificing readability
 **Features:**
-- Simple single-column layout
-- No colors or graphics (black/white)
-- Traditional section headers with horizontal rules
-- Maximum readability
-- New Computer Modern font
+- Tighter margins and spacing
+- Smaller fonts (8-9pt)
+- Gray section header badges
+- Inline skills format
+- Square bullet points
 
 **Pros:**
-- Maximum ATS compatibility
-- Professional and conservative
-- Easy to customize
-- Works with any font
+- Fits more content per page
+- Great for 10+ years experience
+- Still ATS-compatible
+- Clean despite density
+
+**Cons:**
+- May be too dense for some readers
+- Smaller text may be harder to read
+
+**Recommended for:**
+- Senior/Staff+ engineers with extensive history
+- Consultants with many projects
+- Anyone with 10+ years relevant experience
+- Roles requiring comprehensive skill lists
+
+---
+
+### 3. Minimal (`minimal`)
+
+**Best for:** Clean, understated presentation
+**Style:** Monochromatic with single blue accent
+**Features:**
+- Generous whitespace
+- Subtle hierarchy (light gray accents)
+- Clean section headers with thin lines
+- Inline skills format
+- Understated bullet points
+
+**Pros:**
+- Clean and professional
+- Easy to read
+- Works well printed in B&W
+- Subtle and not distracting
 
 **Cons:**
 - Less visually distinctive
-- May appear bland for creative roles
+- May appear plain for creative roles
 
 **Recommended for:**
-- Finance roles
-- Consulting positions
-- Legal professions
-- Government/military
-- Traditional corporate environments
-
----
-
-### 3. Academic (`academic`)
-
-**Best for:** Research, academia, scientific roles
-**Style:** Formal, publication-focused
-**Features:**
-- Emphasis on education and publications sections
-- Numbered publication lists
-- Research interests section
-- Page numbers
-- Multi-page support
-
-**Pros:**
-- Designed for academic conventions
-- Highlights research and publications
-- Multi-page friendly with page numbers
-- Clear hierarchy
-
-**Cons:**
-- Too formal for most industry roles
-- Not optimized for brevity
-
-**Recommended for:**
-- Academic positions (faculty, postdoc)
-- Research scientist roles
-- PhD candidates
-- Roles emphasizing publications
-
----
-
-### 4. Creative (`creative`)
-
-**Best for:** Design, marketing, creative industries
-**Style:** Bold, modern, color-accented
-**Features:**
-- Colored header bar
-- Blue and gray color scheme
-- Visual section separators
-- Modern Inter typography
-- Hyperlinked contact info
-
-**Pros:**
-- Visually distinctive
-- Shows design sensibility
-- Modern and engaging
-- Good for portfolio roles
-
-**Cons:**
-- Colors may not print well in B&W
-- Some ATS systems struggle with graphics
-- Less conservative
-
-**Recommended for:**
-- UX/UI Designers
-- Marketing roles
-- Creative positions
-- Startups
-- Roles emphasizing visual design
+- Design-adjacent roles (shows restraint)
+- Roles where content speaks for itself
+- When you want clean over flashy
+- Print-heavy application processes
 
 ## Choosing the Right Template
 
 **Decision tree:**
 
 ```
-Are you applying to academia or research roles?
-  └─ YES → Use Academic
+Do you have extensive experience (10+ years with many roles)?
+  └─ YES → Use Compact
   └─ NO  → Continue
 
-Is the industry traditional/conservative (finance, law, consulting)?
-  └─ YES → Use Classic
-  └─ NO  → Continue
-
-Is the role creative (design, marketing, UX)?
-  └─ YES → Use Creative
-  └─ NO  → Use Modern (default for tech/general)
+Do you want clean/understated look?
+  └─ YES → Use Minimal
+  └─ NO  → Use Executive (default)
 ```
 
 ## Customization
 
 ### Color Changes
 
-**Modern template:**
-Edit color definitions in `modern.typ.j2`:
+**Executive template:**
+Edit color definitions in `executive.typ.j2`:
 ```typst
-#let headerblue = rgb("#0066cc")
-#let dateblue = rgb("#0066cc")
-#let subtextgray = rgb("#787878")
-#let linegray = rgb("#c8c8c8")
+#let primary = rgb("#1e3a5f")    // Navy - headers
+#let accent = rgb("#0369a1")     // Blue - dates, links
+#let muted = rgb("#64748b")      // Gray - secondary text
 ```
 
-**Creative template:**
-Edit color definitions in `creative.typ.j2`:
+**Compact template:**
+Edit color definitions in `compact.typ.j2`:
 ```typst
-#let primary = rgb("#0066cc")    // Main accent color
-#let accent = rgb("#333333")      // Secondary color
-#let lightgray = rgb("#f0f0f0")   // Background accents
+#let ink = rgb("#0f0f0f")        // Near-black
+#let blue = rgb("#1d4ed8")       // Blue accent
+#let cloud = rgb("#f3f4f6")      // Light gray backgrounds
+```
+
+**Minimal template:**
+Edit color definitions in `minimal.typ.j2`:
+```typst
+#let black = rgb("#171717")      // Headers
+#let accent = rgb("#2563eb")     // Blue accent
+#let light = rgb("#a3a3a3")      // Muted elements
 ```
 
 ### Font Changes
@@ -167,7 +138,7 @@ Edit color definitions in `creative.typ.j2`:
 **All templates:**
 Change font and size in `#set text()`:
 ```typst
-#set text(font: "Inter", size: 10pt)  // Change size to 9pt, 11pt, etc.
+#set text(font: "Inter", size: 9pt)  // Change size to 8pt, 10pt, etc.
 ```
 
 Alternative fonts:
@@ -175,7 +146,6 @@ Alternative fonts:
 #set text(font: "Helvetica")      // macOS default
 #set text(font: "Arial")          // Windows default
 #set text(font: "Liberation Sans") // Linux default
-#set text(font: "New Computer Modern") // TeX-like serif
 ```
 
 ### Margin Adjustments
@@ -184,21 +154,21 @@ Alternative fonts:
 ```typst
 #set page(
   paper: "us-letter",
-  margin: (top: 0.5in, bottom: 0.5in, left: 0.6in, right: 0.6in)
+  margin: (top: 0.4in, bottom: 0.35in, left: 0.5in, right: 0.5in)
 )
 ```
 
 ### Section Order
 
 Templates render sections in this order (if present in YAML):
-1. Professional Summary / Profile / Research Interests
-2. Professional Experience / Experience
-3. Skills / Core Competencies / Technical Skills
+1. Professional Summary / Profile
+2. Experience
+3. Skills
 4. Education
 5. Certifications (if present)
-6. Projects / Research Projects (if present)
+6. Projects (if present)
 7. Publications (if present)
-8. Awards & Honors (if present)
+8. Awards (if present)
 9. Languages (if present)
 
 To change order, edit the template file section blocks.
@@ -226,12 +196,8 @@ sudo mv typst-x86_64-unknown-linux-musl/typst /usr/local/bin/
 
 ### Windows
 
-Download from GitHub releases:
-- https://github.com/typst/typst/releases
-
-Or via cargo:
 ```bash
-cargo install typst-cli
+winget install --id Typst.Typst
 ```
 
 ## Troubleshooting
@@ -249,19 +215,8 @@ cargo install typst-cli
 **Symptom:** Special characters causing errors
 **Solution:** The yaml_to_typst.py script escapes special Typst characters automatically. If you see errors, check for unescaped `#`, `@`, `\`, `<`, `>` in your YAML.
 
-**Symptom:** "expected ... found ..." syntax error
-**Solution:** Check for unclosed brackets or wrong content/code mode usage.
-
 **Symptom:** Content cut off or overlapping
 **Solution:** Reduce content length, decrease font size, or adjust margins.
-
-### PDF Generation Issues
-
-**Symptom:** PDF not generated
-**Solution:** Check Typst error output. Typst compiles in single pass.
-
-**Symptom:** Fonts look wrong
-**Solution:** Ensure fonts are installed on system. Run `typst fonts` to see available fonts.
 
 ## Best Practices
 
@@ -274,16 +229,13 @@ cargo install typst-cli
 
 ## Template Comparison Matrix
 
-| Feature | Modern | Classic | Academic | Creative |
-|---------|--------|---------|----------|----------|
-| ATS-Friendly | ★★★★★ | ★★★★★ | ★★★★☆ | ★★★☆☆ |
-| Visual Appeal | ★★★★☆ | ★★☆☆☆ | ★★★☆☆ | ★★★★★ |
-| Conservative | ★★★☆☆ | ★★★★★ | ★★★★★ | ★☆☆☆☆ |
-| Content Density | ★★★★★ | ★★★★☆ | ★★★☆☆ | ★★★★☆ |
-| Easy Customization | ★★★★☆ | ★★★★★ | ★★★★☆ | ★★★★☆ |
-| Compilation Speed | ★★★★★ | ★★★★★ | ★★★★★ | ★★★★★ |
-| Print Quality | ★★★★★ | ★★★★★ | ★★★★★ | ★★★★☆ |
-| Digital Quality | ★★★★★ | ★★★★☆ | ★★★★★ | ★★★★★ |
+| Feature | Executive | Compact | Minimal |
+|---------|-----------|---------|---------|
+| ATS-Friendly | ★★★★★ | ★★★★★ | ★★★★★ |
+| Content Density | ★★★★☆ | ★★★★★ | ★★★☆☆ |
+| Visual Appeal | ★★★★☆ | ★★★☆☆ | ★★★★☆ |
+| Print Quality | ★★★★★ | ★★★★★ | ★★★★★ |
+| Best For | Most roles | Dense experience | Clean look |
 
 ## Advanced Customization
 

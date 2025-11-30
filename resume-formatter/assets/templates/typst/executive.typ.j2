@@ -1,0 +1,284 @@
+// Executive Resume Template
+// Design: Clean, professional, content-dense - targets 2 pages max
+// Typography: Inter with clear hierarchy
+// ATS: Fully compatible
+
+#set page(
+  paper: "us-letter",
+  margin: (top: 0.4in, bottom: 0.35in, left: 0.5in, right: 0.5in),
+)
+
+#set text(font: "Inter", size: 9pt, fill: rgb("#1a1a1a"))
+#set par(justify: false, leading: 0.5em)
+
+// Colors
+#let primary = rgb("#1e3a5f")
+#let secondary = rgb("#475569")
+#let muted = rgb("#64748b")
+#let accent = rgb("#0369a1")
+#let divider = rgb("#cbd5e1")
+
+// Spacing
+#let xs = 2pt
+#let sm = 4pt
+#let md = 6pt
+#let lg = 10pt
+
+// Section header
+#let section(title) = {
+  v(lg)
+  text(size: 10pt, weight: "semibold", fill: primary, tracking: 0.3pt)[#upper(title)]
+  v(-1pt)
+  line(length: 100%, stroke: 0.6pt + divider)
+  v(sm)
+}
+
+// Job entry
+#let job-entry(title, company, location: none, dates) = {
+  grid(
+    columns: (1fr, auto),
+    column-gutter: md,
+    [
+      #text(size: 9.5pt, weight: "semibold", fill: primary)[#title]
+      #h(sm)
+      #text(size: 9pt, weight: "medium", fill: secondary)[#company]
+      #if location != none [#text(size: 8.5pt, fill: muted)[, #location]]
+    ],
+    align(right, text(size: 8.5pt, weight: "medium", fill: accent)[#dates])
+  )
+  v(xs)
+}
+
+// Education entry
+#let edu-entry(degree, institution, year) = {
+  grid(
+    columns: (1fr, auto),
+    [
+      #text(weight: "semibold", fill: primary)[#degree]
+      #h(sm)
+      #text(fill: muted)[—]
+      #h(sm)
+      #text(fill: secondary)[#institution]
+    ],
+    text(size: 8.5pt, weight: "medium", fill: accent)[#year]
+  )
+}
+
+// Achievement bullets
+#let achievements(items) = {
+  set list(
+    marker: text(fill: accent, size: 6pt)[●],
+    indent: 0em,
+    body-indent: md,
+    spacing: xs + 1pt,
+  )
+  set text(size: 9pt)
+  for item in items [- #item]
+}
+
+// ============================================================================
+// HEADER
+// ============================================================================
+
+#align(center)[
+  #text(size: 20pt, weight: "bold", fill: primary, tracking: 0.5pt)[{{ contact.name | typst_escape }}]
+  {% if contact.title %}
+  #v(xs)
+  #text(size: 10.5pt, weight: "medium", fill: secondary)[{{ contact.title | typst_escape }}]
+  {% endif %}
+]
+
+#v(md)
+
+#align(center)[
+  #set text(size: 8.5pt)
+  {% if contact.location %}#text(fill: muted)[{{ contact.location | typst_escape }}]{% endif %}
+  {% if contact.phone %}#h(md) #text(fill: divider)[|] #h(md) #text(fill: muted)[{{ contact.phone | typst_escape }}]{% endif %}
+  {% if contact.email %}#h(md) #text(fill: divider)[|] #h(md) #link("mailto:{{ contact.email }}")[#text(fill: accent)[{{ contact.email | typst_escape }}]]{% endif %}
+  {% if contact.linkedin %}#h(md) #text(fill: divider)[|] #h(md) #link("https://{{ contact.linkedin }}")[#text(fill: accent)[LinkedIn]]{% endif %}
+  {% if contact.github %}#h(md) #text(fill: divider)[|] #h(md) #link("https://{{ contact.github }}")[#text(fill: accent)[GitHub]]{% endif %}
+]
+
+// ============================================================================
+// SUMMARY
+// ============================================================================
+
+{% if summary %}
+#section("Summary")
+#text(size: 9pt, fill: secondary)[{{ summary | typst_escape }}]
+{% endif %}
+
+// ============================================================================
+// EXPERIENCE
+// ============================================================================
+
+{% if experience %}
+#section("Experience")
+{% for job in experience %}
+{% for position in job.positions %}
+#job-entry(
+  [{{ position.title | typst_escape }}],
+  [{{ job.company | typst_escape }}],
+  {% if job.location %}location: [{{ job.location | typst_escape }}],{% endif %}
+  [{{ position.dates | typst_escape }}],
+)
+{% if position.achievements %}
+#achievements((
+  {% for achievement in position.achievements %}
+  [{{ achievement | typst_escape }}],
+  {% endfor %}
+))
+{% endif %}
+#v(md)
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// SKILLS - Inline text format (no pills/tags)
+// ============================================================================
+
+{% if skills %}
+#section("Skills")
+#set text(size: 8.5pt)
+{% for category, skill_list in skills.items() %}
+#text(weight: "semibold", fill: primary)[{{ category | typst_escape }}]
+#h(sm)
+{% if skill_list is iterable and skill_list is not string %}
+#text(fill: secondary)[{{ skill_list | join(' · ') | typst_escape }}]
+{% else %}
+#text(fill: secondary)[{{ skill_list | typst_escape }}]
+{% endif %}
+#v(sm)
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// EDUCATION
+// ============================================================================
+
+{% if education %}
+#section("Education")
+{% for edu in education %}
+#edu-entry(
+  [{{ edu.degree | typst_escape }}],
+  [{{ edu.institution | typst_escape }}],
+  [{{ edu.graduation_year }}],
+)
+{% if not loop.last %}#v(xs){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// CERTIFICATIONS
+// ============================================================================
+
+{% if certifications %}
+#section("Certifications")
+{% for cert in certifications %}
+#grid(
+  columns: (1fr, auto),
+  [
+    #text(weight: "semibold", fill: primary)[{{ cert.name | typst_escape }}]
+    #h(sm)
+    #text(fill: muted)[—]
+    #h(sm)
+    #text(fill: secondary)[{{ cert.issuer | typst_escape }}]
+  ],
+  text(size: 8.5pt, weight: "medium", fill: accent)[{{ cert.date | typst_escape }}],
+)
+{% if not loop.last %}#v(xs){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// PROJECTS
+// ============================================================================
+
+{% if projects %}
+#section("Projects")
+{% for project in projects %}
+#grid(
+  columns: (1fr, auto),
+  [
+    #text(weight: "semibold", fill: primary)[{{ project.name | typst_escape }}]
+    {% if project.technologies %}
+    #h(sm)
+    #text(size: 8pt, fill: muted)[{{ project.technologies | join(', ') | typst_escape }}]
+    {% endif %}
+  ],
+  text(size: 8.5pt, weight: "medium", fill: accent)[{{ project.dates | typst_escape }}],
+)
+{% if project.description or project.achievements %}
+#v(xs)
+#achievements((
+  {% if project.description %}[{{ project.description | typst_escape }}],{% endif %}
+  {% if project.achievements %}{% for a in project.achievements %}[{{ a | typst_escape }}],{% endfor %}{% endif %}
+))
+{% endif %}
+{% if not loop.last %}#v(md){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// PUBLICATIONS
+// ============================================================================
+
+{% if publications %}
+#section("Publications")
+{% for pub in publications %}
+#text(fill: secondary)[{{ pub.authors | typst_escape }}.] #emph[{{ pub.title | typst_escape }}.] #text(fill: muted)[{{ pub.venue | typst_escape }}, {{ pub.date | typst_escape }}.] {% if pub.url %}#link("{{ pub.url }}")[#text(fill: accent, size: 8pt)[Link]]{% endif %}
+{% if not loop.last %}#v(xs){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// AWARDS
+// ============================================================================
+
+{% if awards %}
+#section("Awards")
+{% for award in awards %}
+#grid(
+  columns: (1fr, auto),
+  [
+    #text(weight: "semibold", fill: primary)[{{ award.name | typst_escape }}]
+    #h(sm)
+    #text(fill: muted)[—]
+    #h(sm)
+    #text(fill: secondary)[{{ award.issuer | typst_escape }}]
+  ],
+  text(size: 8.5pt, weight: "medium", fill: accent)[{{ award.date | typst_escape }}],
+)
+{% if not loop.last %}#v(xs){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// LANGUAGES
+// ============================================================================
+
+{% if languages %}
+#section("Languages")
+#set text(size: 9pt)
+{% for lang in languages %}#text(weight: "medium", fill: primary)[{{ lang.language | typst_escape }}] #text(fill: muted)[({{ lang.proficiency | typst_escape }})]{% if not loop.last %} #h(md) #text(fill: divider)[|] #h(md) {% endif %}{% endfor %}
+{% endif %}
+
+// ============================================================================
+// VOLUNTEER
+// ============================================================================
+
+{% if volunteer %}
+#section("Volunteer")
+{% for vol in volunteer %}
+#job-entry(
+  [{{ vol.role | typst_escape }}],
+  [{{ vol.organization | typst_escape }}],
+  [{{ vol.dates | typst_escape }}],
+)
+{% if vol.description %}
+#text(size: 9pt, fill: secondary)[{{ vol.description | typst_escape }}]
+{% endif %}
+{% if not loop.last %}#v(md){% endif %}
+{% endfor %}
+{% endif %}

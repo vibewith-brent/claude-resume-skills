@@ -7,13 +7,13 @@ description: Convert resume YAML to professionally formatted PDF using Typst tem
 
 ## Overview
 
-Transform resume YAML files into professionally formatted PDF documents using Typst templates. Choose from 4 theme options optimized for different industries and personal styles.
+Transform resume YAML files into professionally formatted PDF documents using Typst templates. Choose from 3 templates optimized for different use cases.
 
 ## Quick Start
 
 ```bash
 # Step 1: Convert YAML to Typst
-uv run scripts/yaml_to_typst.py resume.yaml modern --output resume.typ
+uv run scripts/yaml_to_typst.py resume.yaml executive --output resume.typ
 
 # Step 2: Compile to PDF
 uv run scripts/compile_typst.py resume.typ
@@ -26,38 +26,29 @@ uv run scripts/compile_typst.py resume.typ
 ### Template Selection Guide
 
 ```
-Role type?
-├─ Academia/Research → Use Academic
-├─ Finance/Law/Consulting → Use Classic
-├─ Design/Marketing/UX → Use Creative
-└─ Tech/General → Use Modern (default)
+Need?
+├─ Professional default → Executive
+├─ Extensive experience → Compact
+└─ Clean/understated → Minimal
 ```
 
-**Modern** (default)
-- Best for: Tech, startups, general professional roles
-- Style: Clean, professional, blue accents, ATS-friendly
+**Executive** (default)
+- Best for: Most professional roles, senior positions
+- Style: Clean hierarchy, navy/blue accents
 - Font: Inter
-- Features: Professional icons, compact layout
+- Features: Professional layout, good whitespace balance
 
-**Classic**
-- Best for: Finance, consulting, law, traditional industries
-- Style: Conservative, minimal formatting, black/white
-- Font: New Computer Modern (serif)
-- Features: Maximum ATS compatibility, no graphics
-
-**Academic**
-- Best for: Research positions, academia, scientific roles
-- Style: Formal, publication-focused
-- Font: New Computer Modern (serif)
-- Features: Numbered publications, multi-page with page numbers
-
-**Creative**
-- Best for: Design, marketing, UX, creative industries
-- Style: Bold, modern, visually distinctive
+**Compact**
+- Best for: Extensive experience, dense content
+- Style: Maximum density without sacrificing readability
 - Font: Inter
-- Features: Colored header bar, modern typography
+- Features: Tight spacing, small section headers
 
-**Detailed comparison:** [Theme Guide](references/theme_guide.md)
+**Minimal**
+- Best for: Clean, understated presentation
+- Style: Monochromatic with single blue accent
+- Font: Inter
+- Features: Generous whitespace, subtle hierarchy
 
 ## Workflow
 
@@ -67,21 +58,18 @@ Role type?
 uv run scripts/yaml_to_typst.py <yaml_file> <template> --output <output.typ>
 ```
 
-**Templates:** `modern`, `classic`, `academic`, `creative`
+**Templates:** `executive`, `compact`, `minimal`
 
 **Examples:**
 ```bash
-# Modern template (tech/startup)
-uv run scripts/yaml_to_typst.py resume.yaml modern --output resume_modern.typ
+# Executive template (default)
+uv run scripts/yaml_to_typst.py resume.yaml executive --output resume_executive.typ
 
-# Classic template (finance/consulting)
-uv run scripts/yaml_to_typst.py resume.yaml classic --output resume_classic.typ
+# Compact template (dense)
+uv run scripts/yaml_to_typst.py resume.yaml compact --output resume_compact.typ
 
-# Academic template (research)
-uv run scripts/yaml_to_typst.py resume.yaml academic --output resume_academic.typ
-
-# Creative template (design)
-uv run scripts/yaml_to_typst.py resume.yaml creative --output resume_creative.typ
+# Minimal template (clean)
+uv run scripts/yaml_to_typst.py resume.yaml minimal --output resume_minimal.typ
 ```
 
 ### Compile Typst to PDF
@@ -92,11 +80,11 @@ uv run scripts/compile_typst.py <typ_file> [--output <output.pdf>]
 
 **Example:**
 ```bash
-uv run scripts/compile_typst.py resume_modern.typ
-# Creates: resume_modern.pdf
+uv run scripts/compile_typst.py resume_executive.typ
+# Creates: resume_executive.pdf
 
 # Or specify custom output name:
-uv run scripts/compile_typst.py resume_modern.typ --output brent_skoumal_resume.pdf
+uv run scripts/compile_typst.py resume_executive.typ --output brent_skoumal_resume.pdf
 ```
 
 Typst compiles in a single pass with no auxiliary files to clean up.
@@ -150,19 +138,19 @@ typst --version
 
 ## Quick Customization
 
-### Change Colors (Modern/Creative)
+### Change Colors
 
 Edit the color definitions at the top of the template:
 ```typst
-#let headerblue = rgb("#0066cc")    // Header and section color
-#let subtextgray = rgb("#787878")   // Subtext color
+#let primary = rgb("#1e3a5f")    // Header and section color
+#let accent = rgb("#0369a1")     // Links, dates
 ```
 
 ### Change Font
 
 All templates, near the top:
 ```typst
-#set text(font: "Inter", size: 10pt)  // Change font name
+#set text(font: "Inter", size: 9pt)  // Change font name
 ```
 
 Common alternatives: "Helvetica", "Arial", "Source Sans Pro", "Roboto"
@@ -170,10 +158,8 @@ Common alternatives: "Helvetica", "Arial", "Source Sans Pro", "Roboto"
 ### Change Margins
 
 ```typst
-#set page(margin: (top: 0.5in, bottom: 0.5in, left: 0.6in, right: 0.6in))
+#set page(margin: (top: 0.4in, bottom: 0.35in, left: 0.5in, right: 0.5in))
 ```
-
-**Detailed customization:** [Theme Guide](references/theme_guide.md)
 
 ## Tips for Best Results
 
@@ -184,10 +170,9 @@ Common alternatives: "Helvetica", "Arial", "Source Sans Pro", "Roboto"
 4. Ensure all required YAML fields present
 
 **Template selection:**
-1. Match template to industry norms
-2. When in doubt, choose Modern or Classic
-3. Test ATS compatibility for target companies
-4. Generate PDFs with multiple templates to compare
+1. Executive for most cases
+2. Compact if you have 10+ years of detailed experience
+3. Minimal for creative/design-adjacent roles
 
 **PDF generation:**
 1. Always review PDF before submitting
@@ -207,12 +192,12 @@ Avoid: resume.pdf, cv_final_v3.pdf
 ```bash
 # Starting from YAML resume:
 
-# 1. Convert to Typst with modern template
-uv run scripts/yaml_to_typst.py resume.yaml modern \
-  --output resume_modern.typ
+# 1. Convert to Typst with executive template
+uv run scripts/yaml_to_typst.py resume.yaml executive \
+  --output resume_executive.typ
 
 # 2. Compile to PDF
-uv run scripts/compile_typst.py resume_modern.typ \
+uv run scripts/compile_typst.py resume_executive.typ \
   --output final_resume.pdf
 
 # 3. Review PDF
@@ -221,10 +206,10 @@ open final_resume.pdf  # macOS
 xdg-open final_resume.pdf  # Linux
 
 # 4. (Optional) Generate alternative template for comparison
-uv run scripts/yaml_to_typst.py resume.yaml classic \
-  --output resume_classic.typ
-uv run scripts/compile_typst.py resume_classic.typ \
-  --output final_resume_classic.pdf
+uv run scripts/yaml_to_typst.py resume.yaml compact \
+  --output resume_compact.typ
+uv run scripts/compile_typst.py resume_compact.typ \
+  --output final_resume_compact.pdf
 ```
 
 ## Integration with Other Skills
@@ -237,9 +222,3 @@ uv run scripts/compile_typst.py resume_classic.typ \
 4. **Iterate:** Make updates in YAML and regenerate
 
 This workflow keeps resume data in editable YAML format while producing professional PDF output.
-
-## Reference Documentation
-
-- [Theme Guide](references/theme_guide.md) - Template comparison and customization
-- [Troubleshooting](references/troubleshooting.md) - Common issues and solutions
-- [Examples](references/examples.md) - Complete workflow examples and use cases

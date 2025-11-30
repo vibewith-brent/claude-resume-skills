@@ -49,7 +49,7 @@ typst --version
    fc-list : family
    ```
 
-2. **Install Inter font** (used by modern template):
+2. **Install Inter font** (used by all templates):
    - macOS: Download from Google Fonts, double-click to install
    - Linux: `sudo apt-get install fonts-inter` or download from Google Fonts
 
@@ -102,7 +102,7 @@ comment: "Issue \\#123"
    #text(fill: red)[content]  // Correct
    ```
 
-3. **Try different template** (e.g., classic instead of modern)
+3. **Try different template** (e.g., compact instead of executive)
 
 ### Content cut off or overlapping
 
@@ -120,7 +120,7 @@ comment: "Issue \\#123"
    ```typst
    #set page(margin: (top: 0.4in, bottom: 0.3in, left: 0.5in, right: 0.5in))
    ```
-4. **Switch to different template** (academic template handles multi-page better)
+4. **Switch to different template** (compact template handles dense content better)
 
 ### Page overflow error
 
@@ -133,7 +133,7 @@ comment: "Issue \\#123"
    ```typst
    #set page(height: auto)  // Auto-extend pages
    ```
-3. **Use multi-page template** (academic)
+3. **Use compact template** for dense content
 4. **Remove sections** or reduce bullets per role
 
 ## PDF Quality Issues
@@ -166,7 +166,7 @@ comment: "Issue \\#123"
 1. **Preview in grayscale** before printing:
    - Most PDF viewers have grayscale preview option
 
-2. **Use Classic template** for maximum print compatibility (no colors)
+2. **Use Minimal template** for best print compatibility (near-monochrome)
 
 3. **Adjust colors for print** in template:
    ```typst
@@ -188,9 +188,8 @@ comment: "Issue \\#123"
    ```
 
 2. **Use ATS-friendly templates:**
-   - Classic (best)
-   - Modern (good)
-   - Avoid Creative or heavily formatted templates for ATS submission
+   - All 3 templates (executive, compact, minimal) are ATS-optimized
+   - Single-column layouts parse correctly
 
 3. **Regenerate PDF** if extraction fails:
    ```bash
@@ -336,7 +335,7 @@ typst compile resume.typ 2>&1 | head -50
 rm -f resume.typ resume.pdf
 
 # Regenerate Typst from YAML
-uv run scripts/yaml_to_typst.py resume.yaml modern --output resume.typ
+uv run scripts/yaml_to_typst.py resume.yaml executive --output resume.typ
 
 # Recompile
 uv run scripts/compile_typst.py resume.typ

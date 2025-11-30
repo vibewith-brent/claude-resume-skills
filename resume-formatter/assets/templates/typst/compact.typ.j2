@@ -1,0 +1,242 @@
+// Compact Resume Template
+// Design: Maximum density without sacrificing readability - targets 2 pages
+// Typography: Tight spacing, clear hierarchy
+// ATS: Fully compatible
+
+#set page(
+  paper: "us-letter",
+  margin: (top: 0.3in, bottom: 0.25in, left: 0.4in, right: 0.4in),
+)
+
+#set text(font: "Inter", size: 8.5pt, fill: rgb("#1f1f1f"))
+#set par(justify: false, leading: 0.45em)
+
+// Colors
+#let ink = rgb("#0f0f0f")
+#let charcoal = rgb("#374151")
+#let steel = rgb("#6b7280")
+#let silver = rgb("#9ca3af")
+#let smoke = rgb("#d1d5db")
+#let cloud = rgb("#f3f4f6")
+#let blue = rgb("#1d4ed8")
+
+// Spacing
+#let xxs = 1pt
+#let xs = 2pt
+#let sm = 3pt
+#let md = 5pt
+#let lg = 8pt
+
+// Section header
+#let section(title) = {
+  v(lg)
+  box(
+    fill: cloud,
+    radius: 2pt,
+    inset: (x: 5pt, y: 2pt),
+    text(size: 7.5pt, weight: "bold", fill: charcoal, tracking: 0.6pt)[#upper(title)]
+  )
+  h(sm)
+  box(width: 1fr, line(length: 100%, stroke: 0.4pt + smoke))
+  v(md)
+}
+
+// Job header
+#let job(title, company, location: none, dates) = {
+  text(size: 9pt, weight: "bold", fill: ink)[#title]
+  h(sm)
+  text(size: 8pt, fill: steel)[#company#if location != none [, #location]]
+  h(1fr)
+  text(size: 7.5pt, weight: "semibold", fill: blue)[#dates]
+  v(xxs)
+}
+
+// Education
+#let edu(degree, school, year) = {
+  text(weight: "bold", fill: ink)[#degree]
+  h(sm)
+  text(fill: silver)[—]
+  h(sm)
+  text(fill: steel)[#school]
+  h(1fr)
+  text(size: 7.5pt, weight: "semibold", fill: blue)[#year]
+}
+
+// Bullets
+#let bullets(items) = {
+  set list(
+    marker: text(fill: blue, size: 4pt)[■],
+    indent: 0pt,
+    body-indent: md,
+    spacing: xxs,
+  )
+  set text(size: 8pt, fill: charcoal)
+  for item in items [- #item]
+}
+
+// ============================================================================
+// HEADER
+// ============================================================================
+
+#grid(
+  columns: (auto, 1fr),
+  column-gutter: lg,
+  [
+    #text(size: 16pt, weight: "bold", fill: ink)[{{ contact.name | typst_escape }}]
+    {% if contact.title %}
+    #h(sm)
+    #text(size: 9pt, fill: steel)[{{ contact.title | typst_escape }}]
+    {% endif %}
+  ],
+  align(right + horizon)[
+    #set text(size: 7.5pt, fill: steel)
+    {% if contact.email %}#link("mailto:{{ contact.email }}")[#text(fill: blue)[{{ contact.email | typst_escape }}]]{% endif %}
+    {% if contact.phone %}#h(md) {{ contact.phone | typst_escape }}{% endif %}
+    {% if contact.location %}#h(md) {{ contact.location | typst_escape }}{% endif %}
+    {% if contact.linkedin %}#h(md) #link("https://{{ contact.linkedin }}")[#text(fill: blue)[LinkedIn]]{% endif %}
+  ]
+)
+
+#v(xxs)
+#line(length: 100%, stroke: 0.4pt + smoke)
+
+// ============================================================================
+// SUMMARY
+// ============================================================================
+
+{% if summary %}
+#section("Summary")
+#text(size: 8pt, fill: charcoal)[{{ summary | typst_escape }}]
+{% endif %}
+
+// ============================================================================
+// EXPERIENCE
+// ============================================================================
+
+{% if experience %}
+#section("Experience")
+{% for exp in experience %}
+{% for position in exp.positions %}
+#job(
+  [{{ position.title | typst_escape }}],
+  [{{ exp.company | typst_escape }}],
+  {% if exp.location %}location: [{{ exp.location | typst_escape }}],{% endif %}
+  [{{ position.dates | typst_escape }}],
+)
+{% if position.achievements %}
+#bullets((
+  {% for a in position.achievements %}
+  [{{ a | typst_escape }}],
+  {% endfor %}
+))
+{% endif %}
+#v(md)
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// SKILLS - Inline text (no tags)
+// ============================================================================
+
+{% if skills %}
+#section("Skills")
+#set text(size: 7.5pt)
+{% for category, items in skills.items() %}
+#text(weight: "bold", fill: ink)[{{ category | typst_escape }}:]#h(xs){% if items is iterable and items is not string %}#text(fill: charcoal)[{{ items | join(' · ') | typst_escape }}]{% else %}#text(fill: charcoal)[{{ items | typst_escape }}]{% endif %}
+#v(sm)
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// EDUCATION
+// ============================================================================
+
+{% if education %}
+#section("Education")
+{% for e in education %}
+#edu([{{ e.degree | typst_escape }}], [{{ e.institution | typst_escape }}], [{{ e.graduation_year }}])
+{% if not loop.last %}#v(xxs){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// CERTIFICATIONS
+// ============================================================================
+
+{% if certifications %}
+#section("Certifications")
+{% for cert in certifications %}
+#text(weight: "bold", fill: ink)[{{ cert.name | typst_escape }}]
+#h(sm)
+#text(fill: silver)[—]
+#h(sm)
+#text(fill: steel)[{{ cert.issuer | typst_escape }}]
+#h(1fr)
+#text(size: 7.5pt, weight: "semibold", fill: blue)[{{ cert.date | typst_escape }}]
+{% if not loop.last %}#v(xxs){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// PROJECTS
+// ============================================================================
+
+{% if projects %}
+#section("Projects")
+{% for project in projects %}
+#text(weight: "bold", fill: ink)[{{ project.name | typst_escape }}]
+{% if project.technologies %}#h(sm)#text(size: 7pt, fill: silver)[{{ project.technologies | join(' · ') | typst_escape }}]{% endif %}
+#h(1fr)
+#text(size: 7.5pt, weight: "semibold", fill: blue)[{{ project.dates | typst_escape }}]
+{% if project.description or project.achievements %}
+#v(xxs)
+#bullets((
+  {% if project.description %}[{{ project.description | typst_escape }}],{% endif %}
+  {% if project.achievements %}{% for a in project.achievements %}[{{ a | typst_escape }}],{% endfor %}{% endif %}
+))
+{% endif %}
+{% if not loop.last %}#v(md){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// PUBLICATIONS
+// ============================================================================
+
+{% if publications %}
+#section("Publications")
+#set text(size: 8pt)
+{% for pub in publications %}
+#text(fill: charcoal)[{{ pub.authors | typst_escape }}.] #emph[{{ pub.title | typst_escape }}.] #text(fill: steel)[{{ pub.venue | typst_escape }}, {{ pub.date | typst_escape }}.] {% if pub.url %}#link("{{ pub.url }}")[#text(fill: blue)[↗]]{% endif %}
+{% if not loop.last %}#v(xxs){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// AWARDS
+// ============================================================================
+
+{% if awards %}
+#section("Awards")
+{% for award in awards %}
+#text(weight: "bold", fill: ink)[{{ award.name | typst_escape }}]
+#h(sm)
+#text(fill: silver)[—]
+#h(sm)
+#text(fill: steel)[{{ award.issuer | typst_escape }}]
+#h(1fr)
+#text(size: 7.5pt, weight: "semibold", fill: blue)[{{ award.date | typst_escape }}]
+{% if not loop.last %}#v(xxs){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// LANGUAGES
+// ============================================================================
+
+{% if languages %}
+#section("Languages")
+#set text(size: 8pt)
+{% for lang in languages %}#text(weight: "semibold", fill: ink)[{{ lang.language | typst_escape }}] #text(fill: silver)[({{ lang.proficiency | typst_escape }})]{% if not loop.last %}#h(lg){% endif %}{% endfor %}
+{% endif %}

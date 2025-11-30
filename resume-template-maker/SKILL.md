@@ -9,7 +9,7 @@ Create distinctive, professional Typst resume templates using structured design 
 
 ## When to Use
 
-- User wants a custom template beyond the 4 built-in options
+- User wants a custom template beyond the 3 built-in options
 - User wants to modify an existing template significantly
 - User describes a specific aesthetic ("minimalist with bold headers", "elegant serif")
 - User wants industry-specific styling not covered by defaults
@@ -100,10 +100,9 @@ For rapid customization, start from the closest existing template:
 
 | Starting Point | Use When |
 |----------------|----------|
-| `modern.typ.j2` | Clean, contemporary, tech-adjacent |
-| `classic.typ.j2` | Traditional, conservative, formal |
-| `academic.typ.j2` | Research-focused, education-heavy |
-| `creative.typ.j2` | Bold, visual, design-forward |
+| `executive.typ.j2` | Professional default, clean hierarchy |
+| `compact.typ.j2` | Maximum density, extensive experience |
+| `minimal.typ.j2` | Clean, understated, monochromatic |
 
 ## References
 

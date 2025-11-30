@@ -20,7 +20,7 @@ brew install typst
 | **resume-state** | Version control and project management |
 | **resume-extractor** | PDF/DOCX → structured YAML |
 | **resume-optimizer** | ATS optimization, metrics, keyword alignment |
-| **resume-formatter** | YAML → Typst → PDF (5 templates) |
+| **resume-formatter** | YAML → Typst → PDF (3 templates) |
 | **resume-reviewer** | Visual QA for compiled PDFs |
 | **resume-template-maker** | Create custom templates |
 
@@ -28,11 +28,9 @@ brew install typst
 
 | Template | Use Case |
 |----------|----------|
-| modern | Tech, startups, general |
-| modern-tech | Tech with teal accents, side-line headers |
-| classic | Finance, law, consulting |
-| academic | Research, academia |
-| creative | Design, marketing |
+| executive | Professional, clean hierarchy (default) |
+| compact | Maximum density for extensive experience |
+| minimal | Clean, understated, monochromatic |
 
 ## Usage
 
@@ -42,7 +40,7 @@ Talk to Claude naturally:
 "Extract my resume from resume.pdf"
 "Optimize for ATS and add metrics"
 "Tailor for this job: [URL]"
-"Generate PDF with modern-tech template"
+"Generate PDF with executive template"
 "Review the PDF for issues"
 ```
 
@@ -59,7 +57,7 @@ uv run .claude/skills/resume-state/scripts/list_versions.py
 uv run .claude/skills/resume-extractor/scripts/extract_pdf.py resume.pdf
 
 # PDF generation
-uv run .claude/skills/resume-formatter/scripts/yaml_to_typst.py resume.yaml modern-tech -o resume.typ
+uv run .claude/skills/resume-formatter/scripts/yaml_to_typst.py resume.yaml executive -o resume.typ
 uv run .claude/skills/resume-formatter/scripts/compile_typst.py resume.typ -o resume.pdf
 ```
 
