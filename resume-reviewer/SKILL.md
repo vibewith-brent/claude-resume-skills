@@ -1,12 +1,7 @@
 ---
 name: resume-reviewer
-description: Visual QA and critique for compiled resume PDFs. Evaluate layout, typography, spacing, and content presentation. Use after compiling a resume PDF to check for issues before finalizing.
-license: MIT
-metadata:
-  version: 1.0.0
-allowed-tools:
-  - Read
-  - Write
+description: Visual QA for compiled resume PDFs. Evaluate layout, typography, spacing. Use after compiling a PDF to check for issues before finalizing.
+version: 1.0.0
 ---
 
 # Resume Reviewer Skill

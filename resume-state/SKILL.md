@@ -1,13 +1,7 @@
 ---
 name: resume-state
-description: ALWAYS use this skill first when working with resumes. Initialize projects before extraction, import PDFs/DOCXs to track originals, create versions before making changes. Use when user provides a resume file, starts a new resume project, wants to save progress, or needs to manage multiple resume variants for different roles.
-license: MIT
-metadata:
-  version: 1.0.0
-allowed-tools:
-  - Bash(uv run:*)
-  - Read
-  - Write
+description: Use first when working with resumes. Initialize projects, import PDFs/DOCXs, create versions before changes. Manages multiple resume variants for different roles.
+version: 1.0.0
 ---
 
 # Resume State Manager
