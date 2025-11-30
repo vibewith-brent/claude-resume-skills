@@ -9,6 +9,7 @@ Professional resume management suite for Claude Code: extract from PDF/DOCX, opt
 - **Format**: Generate professional PDFs with 4 industry-optimized LaTeX templates
 - **Review**: Visual QA for compiled PDFs with structured feedback
 - **Template Maker**: Create custom templates with design vectors for typography, layout, whitespace, and color
+- **State**: Version control and project management for tracking resume iterations across multiple target roles
 
 ## Quick Start
 
@@ -65,7 +66,7 @@ Install the resume skills bundle:
 /plugin install resume-skills
 ```
 
-All five skills are now available globally in any Claude Code project.
+All six skills are now available globally in any Claude Code project.
 
 ### Option 2: Local Development
 
@@ -88,6 +89,7 @@ unzip resume-optimizer.skill -d ~/Library/Application\ Support/Claude/skills/res
 unzip resume-formatter.skill -d ~/Library/Application\ Support/Claude/skills/resume-formatter
 unzip resume-reviewer.skill -d ~/Library/Application\ Support/Claude/skills/resume-reviewer
 unzip resume-template-maker.skill -d ~/Library/Application\ Support/Claude/skills/resume-template-maker
+unzip resume-state.skill -d ~/Library/Application\ Support/Claude/skills/resume-state
 ```
 
 ## Usage
@@ -166,6 +168,21 @@ Talk to Claude Code in natural language. Skills activate automatically based on 
 3. LaTeX template generated
 4. Compiled and reviewed in iteration loop
 5. Custom template ready for use
+
+### Manage Resume Versions
+
+```
+"Initialize a project for ML Engineer applications"
+"Import my current resume and create a new version tailored for Google"
+"List all my resume versions"
+"Switch to version v2"
+```
+
+**What happens:**
+1. Project initialized with target role context
+2. Resume imported and versions tracked
+3. YAML snapshots preserved for each iteration
+4. Easy switching between role-specific versions
 
 ## Templates
 
@@ -250,6 +267,33 @@ uv run .claude/skills/resume-formatter/scripts/yaml_to_latex.py resume.yaml mode
 uv run .claude/skills/resume-formatter/scripts/compile_latex.py resume.tex -o resume.pdf
 ```
 
+### Version Management
+```bash
+# Initialize a project for target role
+uv run .claude/skills/resume-state/scripts/init_project.py ml_engineer
+
+# Import existing resume
+uv run .claude/skills/resume-state/scripts/import_resume.py resume.pdf
+
+# Create new version from active
+uv run .claude/skills/resume-state/scripts/create_version.py --tag google --notes "Tailored for Google"
+
+# List all versions
+uv run .claude/skills/resume-state/scripts/list_versions.py
+
+# Switch active version
+uv run .claude/skills/resume-state/scripts/switch_version.py v2
+
+# Get active YAML path
+uv run .claude/skills/resume-state/scripts/get_active.py
+
+# Export version to directory
+uv run .claude/skills/resume-state/scripts/export_version.py v2 ~/Desktop/applications/
+
+# Compare versions
+uv run .claude/skills/resume-state/scripts/diff_versions.py v1 v2
+```
+
 ## Repository Structure
 
 ```
@@ -262,7 +306,8 @@ claude-resume-skills/
 │   ├── resume-optimizer -> ../../resume-optimizer
 │   ├── resume-formatter -> ../../resume-formatter
 │   ├── resume-reviewer -> ../../resume-reviewer
-│   └── resume-template-maker -> ../../resume-template-maker
+│   ├── resume-template-maker -> ../../resume-template-maker
+│   └── resume-state -> ../../resume-state
 │
 ├── resume-extractor/                 # Extractor source (canonical)
 │   ├── SKILL.md
@@ -315,11 +360,24 @@ claude-resume-skills/
 │       ├── latex_patterns.md         # Code snippets
 │       └── iteration_workflow.md     # Generate-compile-review loop
 │
+├── resume-state/                     # State/version management source
+│   ├── SKILL.md
+│   └── scripts/
+│       ├── init_project.py           # Initialize project
+│       ├── import_resume.py          # Import PDF/DOCX
+│       ├── create_version.py         # Create new version
+│       ├── list_versions.py          # List all versions
+│       ├── switch_version.py         # Switch active version
+│       ├── get_active.py             # Get active YAML path
+│       ├── export_version.py         # Export version to directory
+│       └── diff_versions.py          # Compare versions
+│
 ├── resume-extractor.skill            # Packaged skills (ZIP)
 ├── resume-optimizer.skill
 ├── resume-formatter.skill
 ├── resume-reviewer.skill
 ├── resume-template-maker.skill
+├── resume-state.skill
 │
 ├── README.md
 ├── LICENSE
@@ -333,7 +391,7 @@ claude-resume-skills/
 **Verify directory structure:**
 ```bash
 pwd                    # Should show: .../claude-resume-skills
-ls .claude/skills/     # Should list all 5 skills
+ls .claude/skills/     # Should list all 6 skills
 ```
 
 **Restart Claude Code:**
@@ -468,6 +526,18 @@ uv run .claude/skills/resume-optimizer/scripts/validate_yaml.py resume.yaml
 **Report issues**: [Open an issue on GitHub](https://github.com/vibewith-brent/claude-resume-skills/issues)
 
 ## Version History
+
+### v1.3.0
+
+- Added **resume-state** skill for version and project management
+  - Initialize projects for target roles
+  - Import resumes and track versions
+  - Switch between role-specific versions
+  - Export versions for submission
+  - Compare versions with diff
+- Improved **modern template** formatting
+  - Tighter section header spacing
+  - Optional attribution footer support
 
 ### v1.2.0
 
