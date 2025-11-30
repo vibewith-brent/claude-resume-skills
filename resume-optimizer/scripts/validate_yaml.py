@@ -3,7 +3,7 @@
 Validate resume YAML structure and content quality.
 
 Usage:
-    uv run --with pyyaml scripts/validate_yaml.py resume.yaml
+    uv run scripts/validate_yaml.py resume.yaml
 """
 
 import sys
@@ -196,7 +196,7 @@ def validate_resume(filepath):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: uv run --with pyyaml scripts/validate_yaml.py resume.yaml")
+        print("Usage: uv run scripts/validate_yaml.py resume.yaml")
         sys.exit(1)
 
     filepath = sys.argv[1]

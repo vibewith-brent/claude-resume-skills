@@ -9,22 +9,22 @@ The resume-formatter skill includes 4 professionally designed LaTeX templates, e
 ### 1. Modern (`modern`)
 
 **Best for:** Tech, startups, creative industries
-**Style:** Clean, professional, uses moderncv package
+**Style:** Clean, professional, TeX Gyre Heros (Helvetica-like) typography
 **Features:**
-- Banking-style layout (clean, compact)
-- Blue accent color
-- Professional section headers
-- Compact bullet lists
-- Contact icons
+- Article-based layout (clean, compact)
+- Blue accent color with gray subtext
+- Professional section headers with thin underlines
+- Two-column skills layout
+- Hyperlinked email and contact info
 
 **Pros:**
 - Most ATS-friendly template
 - Professional yet contemporary
 - Great for tech roles
 - Compact (fits more content)
+- Uses standard LaTeX packages (no extra dependencies)
 
 **Cons:**
-- Requires `texlive-latex-extra` for moderncv package
 - Less customization without LaTeX knowledge
 
 **Recommended for:**
@@ -146,9 +146,12 @@ Is the role creative (design, marketing, UX)?
 ### Color Changes
 
 **Modern template:**
-Edit line 6 in `modern.tex.j2`:
+Edit lines 15-18 in `modern.tex.j2`:
 ```latex
-\moderncvcolor{blue}  % Options: blue, orange, green, red, purple, grey, black
+\definecolor{headerblue}{RGB}{0,102,204}
+\definecolor{dateblue}{RGB}{0,102,204}
+\definecolor{subtextgray}{RGB}{120,120,120}
+\definecolor{linegray}{RGB}{200,200,200}
 ```
 
 **Creative template:**
@@ -237,12 +240,12 @@ Download and install MiKTeX or TeX Live:
 
 ### Missing Package Errors
 
-If you get errors like `! LaTeX Error: File 'moderncv.cls' not found`:
+If you get package errors, install the missing packages:
 
 **macOS:**
 ```bash
 sudo tlmgr update --self
-sudo tlmgr install moderncv
+sudo tlmgr install <package-name>
 ```
 
 **Linux:**
@@ -287,14 +290,14 @@ sudo apt-get install texlive-latex-extra
 | Conservative | ★★★☆☆ | ★★★★★ | ★★★★★ | ★☆☆☆☆ |
 | Content Density | ★★★★★ | ★★★★☆ | ★★★☆☆ | ★★★★☆ |
 | Easy Customization | ★★★☆☆ | ★★★★★ | ★★★★☆ | ★★★☆☆ |
-| Package Requirements | High | Low | Medium | Medium |
+| Package Requirements | Low | Low | Medium | Medium |
 | Print Quality | ★★★★★ | ★★★★★ | ★★★★★ | ★★★★☆ |
 | Digital Quality | ★★★★★ | ★★★★☆ | ★★★★★ | ★★★★★ |
 
 ## Advanced Customization
 
 For more extensive template modifications, see LaTeX documentation:
-- moderncv: https://ctan.org/pkg/moderncv
 - titlesec: https://ctan.org/pkg/titlesec
 - geometry: https://ctan.org/pkg/geometry
 - color/xcolor: https://ctan.org/pkg/xcolor
+- enumitem: https://ctan.org/pkg/enumitem

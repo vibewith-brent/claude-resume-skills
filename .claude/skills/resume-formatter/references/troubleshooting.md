@@ -37,24 +37,6 @@ sudo apt-get install texlive-latex-base texlive-latex-extra
 pdflatex --version
 ```
 
-### "File 'moderncv.cls' not found" (Modern template)
-
-**Problem:** moderncv package not installed
-
-**Solution:**
-
-**macOS:**
-```bash
-sudo tlmgr install moderncv
-```
-
-**Linux:**
-```bash
-sudo apt-get install texlive-latex-extra
-```
-
-If `tlmgr` is not found on macOS, you may need the full MacTeX installation.
-
 ### "Package not found" errors
 
 **Problem:** Missing LaTeX package
@@ -273,7 +255,7 @@ company: "AT\\&T"
 
 3. **Check for YAML syntax errors:**
    ```bash
-   uv run --with pyyaml -c "import yaml; yaml.safe_load(open('resume.yaml'))"
+   uv run -c "import yaml; yaml.safe_load(open('resume.yaml'))"
    ```
 
 4. **Try different template** (some templates handle missing sections differently)
@@ -371,7 +353,7 @@ cat resume.aux
 rm -f resume.aux resume.log resume.out resume.pdf
 
 # Regenerate LaTeX from YAML
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml modern --output resume.tex
+uv run scripts/yaml_to_latex.py resume.yaml modern --output resume.tex
 
 # Recompile
 uv run scripts/compile_latex.py resume.tex

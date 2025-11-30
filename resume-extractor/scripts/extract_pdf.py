@@ -3,11 +3,11 @@
 Extract text and structure from PDF resumes.
 
 Usage:
-    uv run --with pdfplumber scripts/extract_pdf.py <pdf_path> [--output <output_file>]
+    uv run scripts/extract_pdf.py <pdf_path> [--output <output_file>]
 
 Examples:
-    uv run --with pdfplumber scripts/extract_pdf.py resume.pdf
-    uv run --with pdfplumber scripts/extract_pdf.py resume.pdf --output extracted.txt
+    uv run scripts/extract_pdf.py resume.pdf
+    uv run scripts/extract_pdf.py resume.pdf --output extracted.txt
 """
 
 import argparse
@@ -20,7 +20,7 @@ def extract_pdf_text(pdf_path: Path) -> str:
     try:
         import pdfplumber
     except ImportError:
-        print("Error: pdfplumber not available. Run with: uv run --with pdfplumber", file=sys.stderr)
+        print("Error: pdfplumber not available. Run: uv sync", file=sys.stderr)
         sys.exit(1)
 
     text_content = []

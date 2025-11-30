@@ -20,7 +20,7 @@ Transform resume YAML files into professionally formatted PDF documents using La
 
 ```bash
 # Step 1: Convert YAML to LaTeX
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml modern --output resume.tex
+uv run scripts/yaml_to_latex.py resume.yaml modern --output resume.tex
 
 # Step 2: Compile to PDF
 uv run scripts/compile_latex.py resume.tex
@@ -67,7 +67,7 @@ Role type?
 ### Convert YAML to LaTeX
 
 ```bash
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py <yaml_file> <template> --output <output.tex>
+uv run scripts/yaml_to_latex.py <yaml_file> <template> --output <output.tex>
 ```
 
 **Templates:** `modern`, `classic`, `academic`, `creative`
@@ -75,16 +75,16 @@ uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py <yaml_file> <template> --ou
 **Examples:**
 ```bash
 # Modern template (tech/startup)
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml modern --output resume_modern.tex
+uv run scripts/yaml_to_latex.py resume.yaml modern --output resume_modern.tex
 
 # Classic template (finance/consulting)
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml classic --output resume_classic.tex
+uv run scripts/yaml_to_latex.py resume.yaml classic --output resume_classic.tex
 
 # Academic template (research)
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml academic --output resume_academic.tex
+uv run scripts/yaml_to_latex.py resume.yaml academic --output resume_academic.tex
 
 # Creative template (design)
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml creative --output resume_creative.tex
+uv run scripts/yaml_to_latex.py resume.yaml creative --output resume_creative.tex
 ```
 
 ### Compile LaTeX to PDF
@@ -155,9 +155,11 @@ pdflatex --version
 
 ### Change Colors (Modern)
 
-Edit template line 6:
+Edit template lines 15-18:
 ```latex
-\moderncvcolor{blue}  % Options: blue, orange, green, red, purple, grey, black
+\definecolor{headerblue}{RGB}{0,102,204}    % Header and section color
+\definecolor{dateblue}{RGB}{0,102,204}      % Date text color
+\definecolor{subtextgray}{RGB}{120,120,120} % Subtext color
 ```
 
 ### Change Colors (Creative)
@@ -222,7 +224,7 @@ Avoid: resume.pdf, cv_final_v3.pdf
 # Starting from YAML resume:
 
 # 1. Convert to LaTeX with modern template
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml modern \
+uv run scripts/yaml_to_latex.py resume.yaml modern \
   --output resume_modern.tex
 
 # 2. Compile to PDF
@@ -235,7 +237,7 @@ open final_resume.pdf  # macOS
 xdg-open final_resume.pdf  # Linux
 
 # 4. (Optional) Generate alternative template for comparison
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml classic \
+uv run scripts/yaml_to_latex.py resume.yaml classic \
   --output resume_classic.tex
 uv run scripts/compile_latex.py resume_classic.tex \
   --output final_resume_classic.pdf

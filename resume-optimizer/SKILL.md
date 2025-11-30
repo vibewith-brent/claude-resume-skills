@@ -65,7 +65,7 @@ Do you have a target job description?
 
 **Fetch from URL:**
 ```bash
-uv run --with requests,beautifulsoup4 scripts/fetch_job_posting.py "<job_url>" --output job_description.txt
+uv run scripts/fetch_job_posting.py "<job_url>" --output job_description.txt
 ```
 
 **Or use pasted text:**

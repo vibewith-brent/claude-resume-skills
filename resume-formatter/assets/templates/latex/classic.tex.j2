@@ -45,8 +45,8 @@
 {% if experience %}
 \section{Professional Experience}
 {% for job in experience %}
-{% for position in job.positions %}
-\textbf{{ '{' }}{{ position.title | latex_escape }}{{ '}' }} \hfill {{ position.dates | latex_escape }}\\
+{% for position in position.positions if job.positions else [job] %}
+\textbf{{ '{' }}{{ position.title if position.title else job.title | latex_escape }}{{ '}' }} \hfill {{ position.dates if position.dates else job.dates | latex_escape }}\\
 \textit{{ '{' }}{{ job.company | latex_escape }}{{ '}' }}{% if job.location %}, {{ job.location | latex_escape }}{% endif %}
 {% if position.achievements %}
 \begin{itemize}[topsep=2pt]

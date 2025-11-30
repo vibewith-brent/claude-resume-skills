@@ -8,11 +8,10 @@
 \usepackage{titlesec}
 \usepackage{tikz}
 
-% Define colors - Updated for better visual appeal
-\definecolor{primarycolor}{RGB}{0,116,217}
-\definecolor{accentcolor}{RGB}{37,37,37}
-\definecolor{lightgray}{RGB}{245,245,245}
-\definecolor{headerbg}{RGB}{0,102,204}
+% Define colors
+\definecolor{primarycolor}{RGB}{0,102,204}
+\definecolor{accentcolor}{RGB}{51,51,51}
+\definecolor{lightgray}{RGB}{240,240,240}
 
 % Hyperlink colors
 \hypersetup{
@@ -27,42 +26,39 @@
 
 % Section formatting with colored bar
 \titleformat{\section}{
-  \color{primarycolor}\Large\bfseries}{}{0em}{}[{\titlerule[1.5pt]}]
-\titlespacing{\section}{0pt}{10pt}{6pt}
+  \color{primarycolor}\large\bfseries}{}{0em}{}[{\titlerule[2pt]}]
+\titlespacing{\section}{0pt}{12pt}{8pt}
 
 % No paragraph indentation
 \setlength{\parindent}{0pt}
 
-% Compact lists with better bullets
-\setlist{nosep, leftmargin=1.5em, itemsep=2pt, topsep=4pt}
-\renewcommand{\labelitemi}{$\circ$}
+% Compact lists
+\setlist{nosep, leftmargin=*, itemsep=3pt}
 
 % Custom command for job entries
-{% raw %}
 \newcommand{\jobentry}[4]{
   \textbf{\color{accentcolor}#1} \hfill {\color{primarycolor}#2}\\
-  \textit{#3}
+  \textit{#3}{% if #4 %}, #4{% endif %}
 }
-{% endraw %}
 
 \begin{document}
 
-% Header with color accent - optimized for space
+% Header with color accent
 \begin{tikzpicture}[remember picture,overlay]
-  \fill[headerbg] (current page.north west) rectangle ([yshift=-1.6cm]current page.north east);
+  \fill[primarycolor] (current page.north west) rectangle ([yshift=-2cm]current page.north east);
 \end{tikzpicture}
+
+\vspace{0.5cm}
+
+{\color{white}\Huge\bfseries {{ contact.name | latex_escape }}}
 
 \vspace{0.3cm}
 
-{\color{white}\huge\bfseries {{ contact.name | latex_escape }}}
-
-\vspace{0.15cm}
-
 {% if contact.title %}
-{\color{white}\large {{ contact.title | latex_escape }}}
+{\color{white}\Large {{ contact.title | latex_escape }}}
 {% endif %}
 
-\vspace{0.9cm}
+\vspace{1.2cm}
 
 % Contact info
 \begin{center}
@@ -95,7 +91,7 @@
 {% endfor %}
 \end{itemize}
 {% endif %}
-{% if not loop.last %}\vspace{5pt}{% endif %}
+\vspace{6pt}
 
 {% endfor %}
 {% endfor %}
@@ -120,7 +116,7 @@
 \textbf{\color{accentcolor}{{ edu.degree | latex_escape }}} \hfill {\color{primarycolor}{{ edu.graduation_year | latex_escape }}}\\
 {{ edu.institution | latex_escape }}{% if edu.location %}, {{ edu.location | latex_escape }}{% endif %}{% if edu.gpa %} -- GPA: {{ edu.gpa | latex_escape }}{% endif %}{% if edu.honors %} ({{ edu.honors | latex_escape }}){% endif %}
 {% if edu.minor %}\\Minor: {{ edu.minor | latex_escape }}{% endif %}
-{% if not loop.last %}\vspace{5pt}{% endif %}
+{% if not loop.last %}\vspace{6pt}{% endif %}
 
 {% endfor %}
 {% endif %}

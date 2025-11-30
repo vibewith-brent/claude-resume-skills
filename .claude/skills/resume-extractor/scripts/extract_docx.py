@@ -3,11 +3,11 @@
 Extract text and structure from DOCX resumes.
 
 Usage:
-    uv run --with python-docx scripts/extract_docx.py <docx_path> [--output <output_file>]
+    uv run scripts/extract_docx.py <docx_path> [--output <output_file>]
 
 Examples:
-    uv run --with python-docx scripts/extract_docx.py resume.docx
-    uv run --with python-docx scripts/extract_docx.py resume.docx --output extracted.txt
+    uv run scripts/extract_docx.py resume.docx
+    uv run scripts/extract_docx.py resume.docx --output extracted.txt
 """
 
 import argparse
@@ -20,7 +20,7 @@ def extract_docx_text(docx_path: Path) -> str:
     try:
         from docx import Document
     except ImportError:
-        print("Error: python-docx not available. Run with: uv run --with python-docx", file=sys.stderr)
+        print("Error: python-docx not available. Run: uv sync", file=sys.stderr)
         sys.exit(1)
 
     doc = Document(docx_path)

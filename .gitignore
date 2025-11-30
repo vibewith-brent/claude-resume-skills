@@ -35,3 +35,6 @@ Thumbs.db
 /*resume*.yml
 .claude/**/*.yaml
 .claude/**/*.yml
+
+# Latex files
+*.tex

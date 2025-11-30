@@ -1,0 +1,13 @@
+[project]
+name = "resume-helper"
+version = "0.1.0"
+description = "Resume management skills suite: extract, optimize, format"
+requires-python = ">=3.10"
+dependencies = [
+    "beautifulsoup4",
+    "jinja2",
+    "pdfplumber",
+    "python-docx",
+    "pyyaml",
+    "requests",
+]

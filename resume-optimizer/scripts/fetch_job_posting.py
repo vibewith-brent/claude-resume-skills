@@ -3,11 +3,11 @@
 Fetch and extract job posting content from URLs.
 
 Usage:
-    uv run --with requests,beautifulsoup4 scripts/fetch_job_posting.py <url> [--output <output_file>]
+    uv run scripts/fetch_job_posting.py <url> [--output <output_file>]
 
 Examples:
-    uv run --with requests,beautifulsoup4 scripts/fetch_job_posting.py "https://linkedin.com/jobs/view/12345"
-    uv run --with requests,beautifulsoup4 scripts/fetch_job_posting.py "https://indeed.com/..." --output job_desc.txt
+    uv run scripts/fetch_job_posting.py "https://linkedin.com/jobs/view/12345"
+    uv run scripts/fetch_job_posting.py "https://indeed.com/..." --output job_desc.txt
 """
 
 import argparse
@@ -21,7 +21,7 @@ def fetch_job_posting(url: str) -> str:
         import requests
         from bs4 import BeautifulSoup
     except ImportError:
-        print("Error: Required packages not available. Run with: uv run --with requests,beautifulsoup4", file=sys.stderr)
+        print("Error: Required packages not available. Run: uv sync", file=sys.stderr)
         sys.exit(1)
 
     try:

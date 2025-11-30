@@ -13,7 +13,7 @@
 Fetch job posting content from URL (LinkedIn, Indeed, company career pages):
 
 ```bash
-uv run --with requests,beautifulsoup4 scripts/fetch_job_posting.py "<job_url>" --output job_description.txt
+uv run scripts/fetch_job_posting.py "<job_url>" --output job_description.txt
 ```
 
 Review the extracted content to ensure it captured the job description (not just navigation/boilerplate).

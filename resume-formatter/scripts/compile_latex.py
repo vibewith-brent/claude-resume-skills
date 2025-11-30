@@ -22,31 +22,35 @@ from pathlib import Path
 import shutil
 
 
-def check_pdflatex():
-    """Check if pdflatex is available."""
-    # On macOS, add common MacTeX paths if pdflatex not in PATH
-    if not shutil.which("pdflatex"):
-        import os
-        mactex_paths = [
-            "/Library/TeX/texbin",
-            "/usr/local/texlive/2025/bin/universal-darwin",
-            "/usr/local/texlive/2024/bin/universal-darwin",
-        ]
-        for path in mactex_paths:
-            if Path(path).exists():
-                os.environ["PATH"] = f"{path}:{os.environ.get('PATH', '')}"
-                break
+def find_pdflatex() -> str:
+    """Find pdflatex executable, checking common installation paths."""
+    # Check PATH first
+    pdflatex = shutil.which("pdflatex")
+    if pdflatex:
+        return pdflatex
 
-    if not shutil.which("pdflatex"):
-        print("Error: pdflatex not found.", file=sys.stderr)
-        print("", file=sys.stderr)
-        print("Install instructions:", file=sys.stderr)
-        print("  macOS:  brew install --cask mactex-no-gui", file=sys.stderr)
-        print("  Linux:  sudo apt-get install texlive-latex-base texlive-latex-extra", file=sys.stderr)
-        sys.exit(1)
+    # Check common macOS TeX Live locations
+    macos_paths = [
+        "/Library/TeX/texbin/pdflatex",
+        "/usr/local/texlive/2025/bin/universal-darwin/pdflatex",
+        "/usr/local/texlive/2024/bin/universal-darwin/pdflatex",
+        "/usr/local/texlive/2023/bin/universal-darwin/pdflatex",
+    ]
+
+    for path in macos_paths:
+        if Path(path).exists():
+            return path
+
+    # Not found
+    print("Error: pdflatex not found.", file=sys.stderr)
+    print("", file=sys.stderr)
+    print("Install instructions:", file=sys.stderr)
+    print("  macOS:  brew install --cask mactex-no-gui", file=sys.stderr)
+    print("  Linux:  sudo apt-get install texlive-latex-base texlive-latex-extra", file=sys.stderr)
+    sys.exit(1)
 
 
-def compile_latex(tex_file: Path, output_pdf: Path = None) -> Path:
+def compile_latex(tex_file: Path, output_pdf: Path = None, pdflatex_path: str = "pdflatex") -> Path:
     """Compile LaTeX file to PDF."""
     if not tex_file.exists():
         print(f"Error: File not found: {tex_file}", file=sys.stderr)
@@ -62,7 +66,7 @@ def compile_latex(tex_file: Path, output_pdf: Path = None) -> Path:
     for run in [1, 2]:
         print(f"  Run {run}/2...", file=sys.stderr)
         result = subprocess.run(
-            ["pdflatex", "-interaction=nonstopmode", "-halt-on-error", str(tex_file)],
+            [pdflatex_path, "-interaction=nonstopmode", "-halt-on-error", str(tex_file)],
             cwd=tex_file.parent,
             capture_output=True,
             text=True
@@ -99,8 +103,8 @@ def main():
 
     args = parser.parse_args()
 
-    check_pdflatex()
-    output_pdf = compile_latex(args.tex_file, args.output)
+    pdflatex_path = find_pdflatex()
+    output_pdf = compile_latex(args.tex_file, args.output, pdflatex_path)
 
     print(f"\n✓ Successfully compiled to: {output_pdf}", file=sys.stderr)
 

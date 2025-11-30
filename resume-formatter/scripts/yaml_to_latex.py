@@ -3,7 +3,7 @@
 Convert resume YAML to LaTeX format using specified template.
 
 Usage:
-    uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py <yaml_file> <template> [--output <output_file>]
+    uv run scripts/yaml_to_latex.py <yaml_file> <template> [--output <output_file>]
 
 Templates:
     modern    - Clean, modern professional template
@@ -12,8 +12,8 @@ Templates:
     creative  - Bold, design-forward template
 
 Examples:
-    uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml modern
-    uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml modern --output resume.tex
+    uv run scripts/yaml_to_latex.py resume.yaml modern
+    uv run scripts/yaml_to_latex.py resume.yaml modern --output resume.tex
 """
 
 import argparse
@@ -26,7 +26,7 @@ def load_yaml(yaml_path: Path) -> dict:
     try:
         import yaml
     except ImportError:
-        print("Error: pyyaml not available. Run with: uv run --with pyyaml,jinja2", file=sys.stderr)
+        print("Error: pyyaml not available. Run: uv sync", file=sys.stderr)
         sys.exit(1)
 
     try:
@@ -42,7 +42,7 @@ def render_latex(resume_data: dict, template_name: str, script_dir: Path) -> str
     try:
         from jinja2 import Environment, FileSystemLoader
     except ImportError:
-        print("Error: jinja2 not available. Run with: uv run --with pyyaml,jinja2", file=sys.stderr)
+        print("Error: jinja2 not available. Run: uv sync", file=sys.stderr)
         sys.exit(1)
 
     # Template directory is ../assets/templates/latex/ relative to script
@@ -57,7 +57,7 @@ def render_latex(resume_data: dict, template_name: str, script_dir: Path) -> str
 
     if not template_path.exists():
         print(f"Error: Template not found: {template_file}", file=sys.stderr)
-        print(f"Available templates: modern (modern_custom), classic, academic, creative", file=sys.stderr)
+        print(f"Available templates: modern, classic, academic, creative", file=sys.stderr)
         sys.exit(1)
 
     env = Environment(loader=FileSystemLoader(template_dir))
@@ -73,23 +73,21 @@ def latex_escape(text: str) -> str:
     if not isinstance(text, str):
         return str(text)
 
-    # IMPORTANT: Backslash must be escaped FIRST, before other characters
-    # that introduce backslashes in their replacements
-    text = text.replace('\\', r'\textbackslash{}')
+    # Order matters: backslash must be first to avoid double-escaping
+    replacements = [
+        ('\\', r'\textbackslash{}'),
+        ('&', r'\&'),
+        ('%', r'\%'),
+        ('$', r'\$'),
+        ('#', r'\#'),
+        ('_', r'\_'),
+        ('{', r'\{'),
+        ('}', r'\}'),
+        ('~', r'\textasciitilde{}'),
+        ('^', r'\textasciicircum{}'),
+    ]
 
-    replacements = {
-        '&': r'\&',
-        '%': r'\%',
-        '$': r'\$',
-        '#': r'\#',
-        '_': r'\_',
-        '{': r'\{',
-        '}': r'\}',
-        '~': r'\textasciitilde{}',
-        '^': r'\textasciicircum{}',
-    }
-
-    for old, new in replacements.items():
+    for old, new in replacements:
         text = text.replace(old, new)
 
     return text
@@ -112,11 +110,7 @@ def main():
     script_dir = Path(__file__).parent
 
     resume_data = load_yaml(args.yaml_file)
-
-    # Map modern to modern_custom (the improved custom template)
-    template_name = "modern_custom" if args.template == "modern" else args.template
-
-    latex_output = render_latex(resume_data, template_name, script_dir)
+    latex_output = render_latex(resume_data, args.template, script_dir)
 
     if args.output:
         args.output.write_text(latex_output)

@@ -16,7 +16,7 @@
 
 ```bash
 # Step 1: Convert YAML to LaTeX
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py brent_resume.yaml modern \
+uv run scripts/yaml_to_latex.py brent_resume.yaml modern \
   --output brent_resume_modern.tex
 
 # Step 2: Compile to PDF
@@ -37,25 +37,25 @@ xdg-open brent_skoumal_resume.pdf  # Linux
 
 ```bash
 # Generate modern template
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml modern \
+uv run scripts/yaml_to_latex.py resume.yaml modern \
   --output resume_modern.tex
 uv run scripts/compile_latex.py resume_modern.tex \
   --output resume_modern.pdf
 
 # Generate classic template
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml classic \
+uv run scripts/yaml_to_latex.py resume.yaml classic \
   --output resume_classic.tex
 uv run scripts/compile_latex.py resume_classic.tex \
   --output resume_classic.pdf
 
 # Generate academic template
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml academic \
+uv run scripts/yaml_to_latex.py resume.yaml academic \
   --output resume_academic.tex
 uv run scripts/compile_latex.py resume_academic.tex \
   --output resume_academic.pdf
 
 # Generate creative template
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml creative \
+uv run scripts/yaml_to_latex.py resume.yaml creative \
   --output resume_creative.tex
 uv run scripts/compile_latex.py resume_creative.tex \
   --output resume_creative.pdf
@@ -73,7 +73,7 @@ ls -lh resume_*.pdf
 # Input: brent_resume_staff_ai_engineer.yaml
 
 # Step 1: Generate PDF with modern template (for tech role)
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py \
+uv run scripts/yaml_to_latex.py \
   brent_resume_staff_ai_engineer.yaml modern \
   --output brent_resume_staff_ai.tex
 
@@ -93,7 +93,7 @@ pdftotext brent_skoumal_staff_ai_engineer.pdf - | head -50
 
 ```bash
 # Initial generation
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml modern \
+uv run scripts/yaml_to_latex.py resume.yaml modern \
   --output resume.tex
 uv run scripts/compile_latex.py resume.tex
 
@@ -101,7 +101,7 @@ uv run scripts/compile_latex.py resume.tex
 # Edit resume.yaml (add metrics, improve bullets, etc.)
 
 # Regenerate from updated YAML
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml modern \
+uv run scripts/yaml_to_latex.py resume.yaml modern \
   --output resume.tex
 uv run scripts/compile_latex.py resume.tex
 
@@ -114,7 +114,7 @@ uv run scripts/compile_latex.py resume.tex
 
 ```bash
 # Step 1: Extract from PDF
-uv run --with pdfplumber scripts/extract_pdf.py original_resume.pdf \
+uv run scripts/extract_pdf.py original_resume.pdf \
   --output extracted_text.txt
 
 # (Manual: Parse extracted text to YAML)
@@ -125,7 +125,7 @@ uv run --with pdfplumber scripts/extract_pdf.py original_resume.pdf \
 # Result: resume_optimized.yaml
 
 # Step 3: Format to PDF
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py \
+uv run scripts/yaml_to_latex.py \
   resume_optimized.yaml modern --output resume.tex
 uv run scripts/compile_latex.py resume.tex \
   --output final_resume.pdf
@@ -152,7 +152,7 @@ uv run scripts/compile_latex.py resume.tex \
 **Modern Template:**
 ```bash
 # Use for: Software Engineer, Data Scientist, Product Manager, Tech roles
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml modern --output resume.tex
+uv run scripts/yaml_to_latex.py resume.yaml modern --output resume.tex
 ```
 
 **Best features:**
@@ -164,7 +164,7 @@ uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml modern --output
 **Classic Template:**
 ```bash
 # Use for: Finance, Consulting, Law, Government, Traditional industries
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml classic --output resume.tex
+uv run scripts/yaml_to_latex.py resume.yaml classic --output resume.tex
 ```
 
 **Best features:**
@@ -176,7 +176,7 @@ uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml classic --outpu
 **Academic Template:**
 ```bash
 # Use for: Research positions, Postdocs, Faculty, Scientific roles
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml academic --output resume.tex
+uv run scripts/yaml_to_latex.py resume.yaml academic --output resume.tex
 ```
 
 **Best features:**
@@ -188,7 +188,7 @@ uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml academic --outp
 **Creative Template:**
 ```bash
 # Use for: Design, UX, Marketing, Creative industries
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml creative --output resume.tex
+uv run scripts/yaml_to_latex.py resume.yaml creative --output resume.tex
 ```
 
 **Best features:**
@@ -201,17 +201,20 @@ uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml creative --outp
 
 ### Example 1: Change Color (Modern Template)
 
-**Edit:** `assets/templates/latex/modern.tex.j2` line 6
+**Edit:** `assets/templates/latex/modern.tex.j2` lines 15-18
 
 ```latex
-% Before
-\moderncvcolor{blue}
+% Before (default blue theme)
+\definecolor{headerblue}{RGB}{0,102,204}
+\definecolor{dateblue}{RGB}{0,102,204}
+\definecolor{subtextgray}{RGB}{120,120,120}
 
-% After (try different colors)
-\moderncvcolor{green}   % Green accents
-\moderncvcolor{purple}  % Purple accents
-\moderncvcolor{red}     % Red accents
-\moderncvcolor{grey}    % Grey accents (more conservative)
+% After (try different accent colors)
+\definecolor{headerblue}{RGB}{0,153,76}    % Green accents
+\definecolor{dateblue}{RGB}{0,153,76}
+% Or
+\definecolor{headerblue}{RGB}{102,51,153}  % Purple accents
+\definecolor{dateblue}{RGB}{102,51,153}
 ```
 
 ### Example 2: Change Color (Creative Template)
@@ -238,13 +241,13 @@ uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml creative --outp
 
 ```latex
 % Before (11pt - default)
-\documentclass[11pt,a4paper,sans]{moderncv}
+\documentclass[11pt,letterpaper]{article}
 
 % After (10pt - smaller, fits more content)
-\documentclass[10pt,a4paper,sans]{moderncv}
+\documentclass[10pt,letterpaper]{article}
 
 % Or (12pt - larger, more readable)
-\documentclass[12pt,a4paper,sans]{moderncv}
+\documentclass[12pt,letterpaper]{article}
 ```
 
 **Result:** Regenerate PDF to see changes
@@ -295,7 +298,7 @@ cp assets/templates/latex/modern.tex.j2 \
 # - Modify fonts
 
 # Step 3: Generate PDF with custom template
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py \
+uv run scripts/yaml_to_latex.py \
   resume.yaml custom --output resume_custom.tex
 uv run scripts/compile_latex.py resume_custom.tex
 
@@ -313,7 +316,7 @@ uv run scripts/compile_latex.py resume_custom.tex
 **Why:** Clean, professional, tech-friendly, ATS-compatible
 
 ```bash
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py \
+uv run scripts/yaml_to_latex.py \
   resume.yaml modern --output resume.tex
 uv run scripts/compile_latex.py resume.tex \
   --output john_doe_software_engineer.pdf
@@ -328,7 +331,7 @@ uv run scripts/compile_latex.py resume.tex \
 **Why:** Conservative, traditional, maximum ATS compatibility
 
 ```bash
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py \
+uv run scripts/yaml_to_latex.py \
   resume.yaml classic --output resume.tex
 uv run scripts/compile_latex.py resume.tex \
   --output jane_smith_analyst.pdf
@@ -343,7 +346,7 @@ uv run scripts/compile_latex.py resume.tex \
 **Why:** Emphasis on publications, research-focused
 
 ```bash
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py \
+uv run scripts/yaml_to_latex.py \
   cv.yaml academic --output cv.tex
 uv run scripts/compile_latex.py cv.tex \
   --output robert_johnson_cv.pdf
@@ -358,7 +361,7 @@ uv run scripts/compile_latex.py cv.tex \
 **Why:** Visually distinctive, shows design sensibility
 
 ```bash
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py \
+uv run scripts/yaml_to_latex.py \
   resume.yaml creative --output resume.tex
 uv run scripts/compile_latex.py resume.tex \
   --output sarah_williams_ux_designer.pdf
@@ -370,14 +373,14 @@ uv run scripts/compile_latex.py resume.tex \
 
 ```bash
 # For tech companies - modern template
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py \
+uv run scripts/yaml_to_latex.py \
   resume_tech_focused.yaml modern \
   --output resume_tech.tex
 uv run scripts/compile_latex.py resume_tech.tex \
   --output resume_tech_companies.pdf
 
 # For consulting - classic template
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py \
+uv run scripts/yaml_to_latex.py \
   resume_consulting_focused.yaml classic \
   --output resume_consulting.tex
 uv run scripts/compile_latex.py resume_consulting.tex \
@@ -392,7 +395,7 @@ uv run scripts/compile_latex.py resume_consulting.tex \
 
 ```bash
 # Generate with classic template (best ATS compatibility)
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py \
+uv run scripts/yaml_to_latex.py \
   resume.yaml classic --output resume_ats.tex
 uv run scripts/compile_latex.py resume_ats.tex \
   --output resume_ats_test.pdf
@@ -446,19 +449,19 @@ JohnDoeRESUME.pdf            # Inconsistent case
 
 ```bash
 # Generate modern template
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py RESUME.yaml modern -o out.tex && \
+uv run scripts/yaml_to_latex.py RESUME.yaml modern -o out.tex && \
 uv run scripts/compile_latex.py out.tex
 
 # Generate classic template
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py RESUME.yaml classic -o out.tex && \
+uv run scripts/yaml_to_latex.py RESUME.yaml classic -o out.tex && \
 uv run scripts/compile_latex.py out.tex
 
 # Generate academic template
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py RESUME.yaml academic -o out.tex && \
+uv run scripts/yaml_to_latex.py RESUME.yaml academic -o out.tex && \
 uv run scripts/compile_latex.py out.tex
 
 # Generate creative template
-uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py RESUME.yaml creative -o out.tex && \
+uv run scripts/yaml_to_latex.py RESUME.yaml creative -o out.tex && \
 uv run scripts/compile_latex.py out.tex
 
 # Test ATS compatibility

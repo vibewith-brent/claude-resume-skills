@@ -3,7 +3,7 @@
 Convert resume YAML to LaTeX format using specified template.
 
 Usage:
-    uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py <yaml_file> <template> [--output <output_file>]
+    uv run scripts/yaml_to_latex.py <yaml_file> <template> [--output <output_file>]
 
 Templates:
     modern    - Clean, modern professional template
@@ -12,8 +12,8 @@ Templates:
     creative  - Bold, design-forward template
 
 Examples:
-    uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml modern
-    uv run --with pyyaml,jinja2 scripts/yaml_to_latex.py resume.yaml modern --output resume.tex
+    uv run scripts/yaml_to_latex.py resume.yaml modern
+    uv run scripts/yaml_to_latex.py resume.yaml modern --output resume.tex
 """
 
 import argparse
@@ -26,7 +26,7 @@ def load_yaml(yaml_path: Path) -> dict:
     try:
         import yaml
     except ImportError:
-        print("Error: pyyaml not available. Run with: uv run --with pyyaml,jinja2", file=sys.stderr)
+        print("Error: pyyaml not available. Run: uv sync", file=sys.stderr)
         sys.exit(1)
 
     try:
@@ -42,7 +42,7 @@ def render_latex(resume_data: dict, template_name: str, script_dir: Path) -> str
     try:
         from jinja2 import Environment, FileSystemLoader
     except ImportError:
-        print("Error: jinja2 not available. Run with: uv run --with pyyaml,jinja2", file=sys.stderr)
+        print("Error: jinja2 not available. Run: uv sync", file=sys.stderr)
         sys.exit(1)
 
     # Template directory is ../assets/templates/latex/ relative to script
@@ -73,20 +73,21 @@ def latex_escape(text: str) -> str:
     if not isinstance(text, str):
         return str(text)
 
-    replacements = {
-        '&': r'\&',
-        '%': r'\%',
-        '$': r'\$',
-        '#': r'\#',
-        '_': r'\_',
-        '{': r'\{',
-        '}': r'\}',
-        '~': r'\textasciitilde{}',
-        '^': r'\textasciicircum{}',
-        '\\': r'\textbackslash{}',
-    }
+    # Order matters: backslash must be first to avoid double-escaping
+    replacements = [
+        ('\\', r'\textbackslash{}'),
+        ('&', r'\&'),
+        ('%', r'\%'),
+        ('$', r'\$'),
+        ('#', r'\#'),
+        ('_', r'\_'),
+        ('{', r'\{'),
+        ('}', r'\}'),
+        ('~', r'\textasciitilde{}'),
+        ('^', r'\textasciicircum{}'),
+    ]
 
-    for old, new in replacements.items():
+    for old, new in replacements:
         text = text.replace(old, new)
 
     return text

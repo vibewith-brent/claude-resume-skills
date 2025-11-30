@@ -24,13 +24,13 @@ Extract resume content from PDF or DOCX files and convert to structured YAML for
 Run the PDF extraction script to extract all text content:
 
 ```bash
-uv run --with pdfplumber scripts/extract_pdf.py resume.pdf
+uv run scripts/extract_pdf.py resume.pdf
 ```
 
 Save extracted text to a file for further processing:
 
 ```bash
-uv run --with pdfplumber scripts/extract_pdf.py resume.pdf --output extracted_text.txt
+uv run scripts/extract_pdf.py resume.pdf --output extracted_text.txt
 ```
 
 **For DOCX resumes:**
@@ -38,13 +38,13 @@ uv run --with pdfplumber scripts/extract_pdf.py resume.pdf --output extracted_te
 Run the DOCX extraction script:
 
 ```bash
-uv run --with python-docx scripts/extract_docx.py resume.docx
+uv run scripts/extract_docx.py resume.docx
 ```
 
 Save extracted text:
 
 ```bash
-uv run --with python-docx scripts/extract_docx.py resume.docx --output extracted_text.txt
+uv run scripts/extract_docx.py resume.docx --output extracted_text.txt
 ```
 
 ### 2. Parse Extracted Text to YAML

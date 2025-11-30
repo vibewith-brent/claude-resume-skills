@@ -42,7 +42,7 @@ brew install --cask mactex
 ### Auto-Installed
 
 - **uv** - Python package manager (installed by Claude Code)
-- **Python packages** - Installed automatically when using skills:
+- **Python packages** - Defined in `pyproject.toml`, installed automatically via `uv sync`:
   - `pdfplumber`, `python-docx` (extractor)
   - `pyyaml`, `requests`, `beautifulsoup4` (optimizer)
   - `jinja2`, `pyyaml` (formatter)
@@ -142,7 +142,7 @@ Talk to Claude Code in natural language. Skills activate automatically based on 
 
 | Template | Best For | Style |
 |----------|----------|-------|
-| **modern** | Tech, AI/ML, Software Engineering | Clean sans-serif, blue accents, Source Sans Pro typography |
+| **modern** | Tech, AI/ML, Software Engineering | Clean sans-serif, blue accents, TeX Gyre Heros typography |
 | **creative** | Design, Marketing, Startups | Bold blue header, colorful section dividers |
 | **classic** | Finance, Law, Consulting | Traditional serif, conservative black/white |
 | **academic** | Research, Academia, Science | Education-first, publication-focused |
@@ -184,34 +184,31 @@ For users who prefer CLI over conversational interface:
 
 ### Extract PDF to YAML
 ```bash
-uv run --with pdfplumber resume-extractor/scripts/extract_pdf.py resume.pdf
+uv run resume-extractor/scripts/extract_pdf.py resume.pdf
 ```
 
 ### Extract DOCX to YAML
 ```bash
-uv run --with python-docx resume-extractor/scripts/extract_docx.py resume.docx
+uv run resume-extractor/scripts/extract_docx.py resume.docx
 ```
 
 ### Validate YAML Structure
 ```bash
-uv run --with pyyaml resume-optimizer/scripts/validate_yaml.py resume.yaml
+uv run resume-optimizer/scripts/validate_yaml.py resume.yaml
 ```
 
 ### Generate PDF from YAML
 ```bash
 # Step 1: Convert YAML to LaTeX
-uv run --with jinja2 --with pyyaml \
-  resume-formatter/scripts/yaml_to_latex.py \
-  resume.yaml modern -o resume.tex
+uv run resume-formatter/scripts/yaml_to_latex.py resume.yaml modern -o resume.tex
 
 # Step 2: Compile LaTeX to PDF
-uv run resume-formatter/scripts/compile_latex.py \
-  resume.tex -o resume.pdf
+uv run resume-formatter/scripts/compile_latex.py resume.tex -o resume.pdf
 ```
 
 ### One-Liner PDF Generation
 ```bash
-uv run --with jinja2 --with pyyaml resume-formatter/scripts/yaml_to_latex.py resume.yaml modern -o resume.tex && \
+uv run resume-formatter/scripts/yaml_to_latex.py resume.yaml modern -o resume.tex && \
 uv run resume-formatter/scripts/compile_latex.py resume.tex -o resume.pdf
 ```
 
@@ -258,7 +255,7 @@ claude-resume-skills/
 │   │   ├── troubleshooting.md
 │   │   └── examples.md
 │   └── assets/templates/latex/
-│       ├── modern_custom.tex.j2      # Source Sans Pro, modern design
+│       ├── modern.tex.j2             # TeX Gyre Heros, modern design
 │       ├── creative.tex.j2           # Bold blue header
 │       ├── classic.tex.j2            # Traditional serif
 │       └── academic.tex.j2           # Research-focused
@@ -332,14 +329,14 @@ brew install --cask mactex
 - Prioritize most impactful achievements
 
 **Font errors with modern template:**
-- Source Sans Pro is included with full MacTeX
+- TeX Gyre Heros is included with standard MacTeX installation
 - If issues persist, use `classic` template (standard fonts only)
 
 ### YAML Validation Errors
 
 **Validate structure:**
 ```bash
-uv run --with pyyaml resume-optimizer/scripts/validate_yaml.py resume.yaml
+uv run resume-optimizer/scripts/validate_yaml.py resume.yaml
 ```
 
 **Common issues:**
@@ -368,7 +365,7 @@ uv run --with pyyaml resume-optimizer/scripts/validate_yaml.py resume.yaml
 
 ### Template Selection
 
-- **Tech/AI/ML/Software**: Modern (contemporary, Source Sans Pro)
+- **Tech/AI/ML/Software**: Modern (contemporary, clean sans-serif)
 - **Finance/Consulting/Law**: Classic (traditional, conservative)
 - **Design/Marketing/UX**: Creative (bold, visual hierarchy)
 - **Academia/Research**: Academic (education-first, publications)
@@ -404,18 +401,24 @@ uv run --with pyyaml resume-optimizer/scripts/validate_yaml.py resume.yaml
 
 **Validate YAML**: Use validation script before formatting:
 ```bash
-uv run --with pyyaml resume-optimizer/scripts/validate_yaml.py resume.yaml
+uv run resume-optimizer/scripts/validate_yaml.py resume.yaml
 ```
 
 **Report issues**: [Open an issue on GitHub](https://github.com/vibewith-brent/claude-resume-skills/issues)
 
 ## Version History
 
+### v1.1.0
+
+- Simplified modern template using TeX Gyre Heros (Helvetica-like) typography
+- Removed moderncv dependency for easier installation
+- Improved pdflatex path detection on macOS
+- Updated documentation and examples
+- All templates use standard LaTeX packages
+
 ### v1.0.0
 
-- Modern custom template with Source Sans Pro typography
-- Enhanced color palette and font weight hierarchy
-- 4 templates fully functional and ATS-compatible
+- Initial release with 4 templates
 - MacTeX PATH auto-detection for macOS
 - Plugin marketplace support
 - Comprehensive reference documentation
