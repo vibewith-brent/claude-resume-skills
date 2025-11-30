@@ -1,12 +1,14 @@
 # Resume Helper Skills for Claude Code
 
-Professional resume management suite for Claude Code: extract from PDF/DOCX, optimize for ATS and target roles, format to professional PDFs with 4 designer templates.
+Professional resume management suite for Claude Code: extract from PDF/DOCX, optimize for ATS and target roles, format to professional PDFs, review for quality, and create custom templates.
 
 ## Features
 
 - **Extract**: Convert PDF/DOCX resumes to structured, editable YAML format
 - **Optimize**: Enhance content with ATS compatibility, quantifiable metrics, and keyword alignment
 - **Format**: Generate professional PDFs with 4 industry-optimized LaTeX templates
+- **Review**: Visual QA for compiled PDFs with structured feedback
+- **Template Maker**: Create custom templates with design vectors for typography, layout, whitespace, and color
 
 ## Quick Start
 
@@ -63,7 +65,7 @@ Install the resume skills bundle:
 /plugin install resume-skills
 ```
 
-All three skills are now available globally in any Claude Code project.
+All five skills are now available globally in any Claude Code project.
 
 ### Option 2: Local Development
 
@@ -138,6 +140,31 @@ Talk to Claude Code in natural language. Skills activate automatically based on 
 2. Compiled to PDF with pdflatex
 3. Professional resume ready to submit
 
+### Review Compiled PDF
+
+```
+"Review my resume PDF and check for layout issues"
+```
+
+**What happens:**
+1. PDF evaluated against visual QA checklist
+2. Layout, typography, whitespace, alignment checked
+3. Issues identified with specific fixes
+4. Structured feedback provided for iteration
+
+### Create Custom Template
+
+```
+"Create a custom template for a fintech startup role"
+```
+
+**What happens:**
+1. Industry theme selected (startup + finance blend)
+2. Design vectors defined (typography, layout, whitespace, color)
+3. LaTeX template generated
+4. Compiled and reviewed in iteration loop
+5. Custom template ready for use
+
 ## Templates
 
 | Template | Best For | Style |
@@ -158,11 +185,17 @@ Talk to Claude Code in natural language. Skills activate automatically based on 
 
 # Get template recommendation
 "Which template is best for AI engineering roles?"
+
+# Create custom template
+"Create a minimal template with lots of whitespace for an executive resume"
+
+# Review after generation
+"Generate PDF with modern template, then review it for issues"
 ```
 
 ## Complete Workflow
 
-End-to-end example: PDF resume → optimized → tailored → formatted PDF
+End-to-end example: PDF resume → optimized → tailored → formatted → reviewed
 
 ```
 1. "Extract my resume from old_resume.pdf"
@@ -176,6 +209,9 @@ End-to-end example: PDF resume → optimized → tailored → formatted PDF
 
 4. "Generate PDF with modern template"
    → Creates tailored_resume.pdf
+
+5. "Review the PDF for any layout or formatting issues"
+   → Visual QA feedback, fixes if needed
 ```
 
 ## Direct Commands
@@ -221,8 +257,10 @@ claude-resume-skills/
 │
 ├── .claude/skills/                   # Skills for local development
 │   ├── resume-extractor/
+│   ├── resume-optimizer/
 │   ├── resume-formatter/
-│   └── resume-optimizer/
+│   ├── resume-reviewer/
+│   └── resume-template-maker/
 │
 ├── resume-extractor/                 # Extractor source
 │   ├── SKILL.md
@@ -260,6 +298,21 @@ claude-resume-skills/
 │       ├── classic.tex.j2            # Traditional serif
 │       └── academic.tex.j2           # Research-focused
 │
+├── resume-reviewer/                  # Reviewer source
+│   ├── SKILL.md
+│   └── references/
+│       ├── visual_qa_checklist.md    # 7-category evaluation
+│       ├── common_issues.md          # LaTeX fixes
+│       └── feedback_format.md        # Structured output
+│
+├── resume-template-maker/            # Template maker source
+│   ├── SKILL.md
+│   └── references/
+│       ├── design_vectors.md         # Typography, layout, whitespace, color
+│       ├── industry_themes.md        # 11 industry configurations
+│       ├── latex_patterns.md         # Code snippets
+│       └── iteration_workflow.md     # Generate-compile-review loop
+│
 ├── resume-extractor.skill            # Packaged skills (ZIP)
 ├── resume-optimizer.skill
 ├── resume-formatter.skill
@@ -276,7 +329,7 @@ claude-resume-skills/
 **Verify directory structure:**
 ```bash
 pwd                    # Should show: .../claude-resume-skills
-ls .claude/skills/     # Should list: resume-extractor, resume-formatter, resume-optimizer
+ls .claude/skills/     # Should list all 5 skills
 ```
 
 **Restart Claude Code:**
@@ -398,6 +451,10 @@ uv run resume-optimizer/scripts/validate_yaml.py resume.yaml
 - Job tailoring strategies
 - Template selection guide
 - Troubleshooting tips
+- Visual QA checklist
+- Design vectors (typography, layout, whitespace, color)
+- Industry-specific themes (11 industries)
+- LaTeX code patterns
 
 **Validate YAML**: Use validation script before formatting:
 ```bash
@@ -407,6 +464,19 @@ uv run resume-optimizer/scripts/validate_yaml.py resume.yaml
 **Report issues**: [Open an issue on GitHub](https://github.com/vibewith-brent/claude-resume-skills/issues)
 
 ## Version History
+
+### v1.2.0
+
+- Added **resume-reviewer** skill for visual QA of compiled PDFs
+  - 7-category evaluation checklist (layout, typography, whitespace, alignment, color, content, ATS)
+  - Common LaTeX issues with specific fixes
+  - Structured feedback formats for iteration
+- Added **resume-template-maker** skill for custom template creation
+  - Multi-dimensional design vectors (typography, layout, whitespace, color)
+  - 11 industry-specific theme configurations
+  - LaTeX code patterns library
+  - Iteration workflow: generate → compile → review → adjust
+- Design approach inspired by [Anthropic's frontend design research](https://www.claude.com/blog/improving-frontend-design-through-skills)
 
 ### v1.1.0
 
