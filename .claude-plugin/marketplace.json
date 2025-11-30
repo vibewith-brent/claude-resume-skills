@@ -1,0 +1,24 @@
+{
+  "name": "resume-helper-skills",
+  "owner": {
+    "name": "Brent Skoumal",
+    "email": "brent.skoumal@gmail.com"
+  },
+  "metadata": {
+    "description": "Professional resume management suite for extracting, optimizing, and formatting resumes",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "resume-skills",
+      "description": "Complete resume workflow: extract from PDF/DOCX, optimize for ATS and target roles, format to professional PDFs with 4 designer templates",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./resume-extractor",
+        "./resume-optimizer",
+        "./resume-formatter"
+      ]
+    }
+  ]
+}

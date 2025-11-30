@@ -1,0 +1,148 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[margin=0.6in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{tabularx}
+
+% Modern font setup
+\usepackage[T1]{fontenc}
+\usepackage{sourcesanspro}  % Modern, clean sans-serif for body
+\usepackage{sourcecodepro}  % Monospaced font
+\renewcommand{\familydefault}{\sfdefault}  % Use sans-serif as default
+
+% Define modern color palette - refined blues and grays
+\definecolor{accentcolor}{RGB}{0,112,210}      % Vibrant modern blue
+\definecolor{darktext}{RGB}{28,28,30}          % Almost black for contrast
+\definecolor{lighttext}{RGB}{108,117,125}      % Professional gray
+\definecolor{sectionline}{RGB}{233,236,239}    % Subtle separator
+
+% Hyperlink setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=accentcolor,
+    urlcolor=accentcolor,
+    citecolor=accentcolor
+}
+
+% Remove page numbers
+\pagestyle{empty}
+
+% Section formatting - minimal with accent line and modern typography
+\titleformat{\section}{
+  \color{accentcolor}\Large\fontseries{sb}\selectfont}{}{0em}{}[{\color{sectionline}\titlerule[0.8pt]}]
+\titlespacing{\section}{0pt}{16pt}{10pt}
+
+% No paragraph indentation
+\setlength{\parindent}{0pt}
+
+% Compact lists
+\setlist{nosep, leftmargin=1.2em, itemsep=2pt, topsep=3pt}
+\renewcommand{\labelitemi}{\textcolor{accentcolor}{\textbullet}}
+
+% Custom command for experience entries with refined typography
+{% raw %}
+\newcommand{\experienceentry}[4]{
+  \noindent{\fontseries{sb}\selectfont\color{darktext}#1} \hfill {\fontseries{m}\selectfont\color{accentcolor}#2}\\
+  {\fontseries{l}\selectfont\color{lighttext}#3}#4
+}
+{% endraw %}
+
+\begin{document}
+
+% Header - clean and modern with font weight hierarchy
+\begin{center}
+  {\Huge\bfseries\color{darktext}{{ contact.name | latex_escape }}}\\[8pt]
+  {% if contact.title %}
+  {\Large\fontseries{l}\selectfont\color{lighttext}{{ contact.title | latex_escape }}}\\[6pt]
+  {% endif %}
+  \color{lighttext}
+  {% if contact.phone %}{{ contact.phone | latex_escape }}{% endif %}
+  {% if contact.email %}{% if contact.phone %} \textbar{} {% endif %}\href{mailto:{{ contact.email | latex_escape }}}{{ '{' }}{{ contact.email | latex_escape }}{{ '}' }}{% endif %}
+  {% if contact.location %}{% if contact.phone or contact.email %} \textbar{} {% endif %}{{ contact.location | latex_escape }}{% endif %}
+  {% if contact.linkedin or contact.github or contact.website %}\\[4pt]
+  {% if contact.linkedin %}\href{https://{{ contact.linkedin | latex_escape }}}{{ '{' }}{{ contact.linkedin | latex_escape }}{{ '}' }}{% endif %}
+  {% if contact.github %}{% if contact.linkedin %} \textbar{} {% endif %}\href{https://{{ contact.github | latex_escape }}}{{ '{' }}{{ contact.github | latex_escape }}{{ '}' }}{% endif %}
+  {% if contact.website %}{% if contact.linkedin or contact.github %} \textbar{} {% endif %}\href{https://{{ contact.website | latex_escape }}}{{ '{' }}{{ contact.website | latex_escape }}{{ '}' }}{% endif %}
+  {% endif %}
+\end{center}
+
+\vspace{10pt}
+
+{% if summary %}
+\section{Professional Summary}
+{{ summary | latex_escape }}
+{% endif %}
+
+{% if experience %}
+\section{Experience}
+{% for job in experience %}
+{% for position in job.positions %}
+\experienceentry{{ '{' }}{{ position.title | latex_escape }}{{ '}' }}{{ '{' }}{{ position.dates | latex_escape }}{{ '}' }}{{ '{' }}{{ job.company | latex_escape }}{{ '}' }}{{ '{' }}{% if job.location %} \textbar{} \color{lighttext}{{ job.location | latex_escape }}{% endif %}{{ '}' }}
+{% if position.achievements %}
+\begin{itemize}
+{% for achievement in position.achievements %}
+  \item {{ achievement | latex_escape }}
+{% endfor %}
+\end{itemize}
+{% endif %}
+{% if not loop.last %}\vspace{6pt}{% endif %}
+
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+{% if skills %}
+\section{Skills}
+\begin{itemize}[label={},leftmargin=0pt]
+{% for category, skill_list in skills.items() %}
+{% if skill_list is iterable and skill_list is not string %}
+  \item {\fontseries{sb}\selectfont\color{accentcolor}{{ category | latex_escape }}:} {{ skill_list | join(', ') | latex_escape }}
+{% else %}
+  \item {\fontseries{sb}\selectfont\color{accentcolor}{{ category | latex_escape }}:} {{ skill_list | latex_escape }}
+{% endif %}
+{% endfor %}
+\end{itemize}
+{% endif %}
+
+{% if education %}
+\section{Education}
+{% for edu in education %}
+\noindent{\fontseries{sb}\selectfont\color{darktext}{{ edu.degree | latex_escape }}} \hfill {\color{accentcolor}{{ edu.graduation_year | latex_escape }}}\\
+{\color{lighttext}{{ edu.institution | latex_escape }}}{% if edu.location %}, {{ edu.location | latex_escape }}{% endif %}{% if edu.gpa %} \textbar{} GPA: {{ edu.gpa | latex_escape }}{% endif %}{% if edu.honors %} \textbar{} {{ edu.honors | latex_escape }}{% endif %}
+{% if edu.minor %}\\{\small\color{lighttext} Minor: {{ edu.minor | latex_escape }}}{% endif %}
+
+{% if not loop.last %}\vspace{6pt}{% endif %}
+
+{% endfor %}
+{% endif %}
+
+{% if certifications %}
+\section{Certifications}
+{% for cert in certifications %}
+\noindent\textbf{{ '{' }}{{ cert.name | latex_escape }}{{ '}' }} \textbar{} {{ cert.issuer | latex_escape }} \hfill \textcolor{accentcolor}{{ '{' }}{{ cert.date | latex_escape }}{{ '}' }}
+{% if not loop.last %}\\[3pt]{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if projects %}
+\section{Projects}
+{% for project in projects %}
+\noindent\textbf{\color{darktext}{{ project.name | latex_escape }}} \hfill \textcolor{accentcolor}{{ '{' }}{{ project.dates | latex_escape }}{{ '}' }}
+{% if project.description %}\\{{ project.description | latex_escape }}{% endif %}
+{% if project.achievements %}
+\begin{itemize}
+{% for achievement in project.achievements %}
+  \item {{ achievement | latex_escape }}
+{% endfor %}
+\end{itemize}
+{% endif %}
+{% if not loop.last %}\vspace{4pt}{% endif %}
+
+{% endfor %}
+{% endif %}
+
+\end{document}

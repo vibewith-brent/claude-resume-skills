@@ -1,0 +1,128 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titlesec}
+
+% Remove page numbers
+\pagestyle{empty}
+
+% Section formatting
+\titleformat{\section}{\large\bfseries\uppercase}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{12pt}{6pt}
+
+% No paragraph indentation
+\setlength{\parindent}{0pt}
+
+% Compact lists
+\setlist{nosep, leftmargin=*}
+
+\begin{document}
+
+% Header
+\begin{center}
+  {\LARGE\bfseries {{ contact.name | latex_escape }}}\\[4pt]
+  {% if contact.title %}{{ contact.title | latex_escape }}\\[4pt]{% endif %}
+  {% if contact.phone %}{{ contact.phone | latex_escape }} $\cdot$ {% endif %}
+  {% if contact.email %}\href{mailto:{{ contact.email | latex_escape }}}{{ '{' }}{{ contact.email | latex_escape }}{{ '}' }}{% endif %}
+  {% if contact.location %} $\cdot$ {{ contact.location | latex_escape }}{% endif %}\\
+  {% if contact.linkedin or contact.github or contact.website %}
+  {% if contact.linkedin %}\href{https://{{ contact.linkedin | latex_escape }}}{{ '{' }}LinkedIn{{ '}' }}{% endif %}
+  {% if contact.github %}{% if contact.linkedin %} $\cdot$ {% endif %}\href{https://{{ contact.github | latex_escape }}}{{ '{' }}GitHub{{ '}' }}{% endif %}
+  {% if contact.website %}{% if contact.linkedin or contact.github %} $\cdot$ {% endif %}\href{https://{{ contact.website | latex_escape }}}{{ '{' }}Website{{ '}' }}{% endif %}
+  {% endif %}
+\end{center}
+
+\vspace{6pt}
+
+{% if summary %}
+\section{Professional Summary}
+{{ summary | latex_escape }}
+{% endif %}
+
+{% if experience %}
+\section{Professional Experience}
+{% for job in experience %}
+{% for position in job.positions %}
+\textbf{{ '{' }}{{ position.title | latex_escape }}{{ '}' }} \hfill {{ position.dates | latex_escape }}\\
+\textit{{ '{' }}{{ job.company | latex_escape }}{{ '}' }}{% if job.location %}, {{ job.location | latex_escape }}{% endif %}
+{% if position.achievements %}
+\begin{itemize}[topsep=2pt]
+{% for achievement in position.achievements %}
+  \item {{ achievement | latex_escape }}
+{% endfor %}
+\end{itemize}
+{% endif %}
+\vspace{4pt}
+
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+{% if skills %}
+\section{Skills}
+{% for category, skill_list in skills.items() %}
+{% if skill_list is iterable and skill_list is not string %}
+\textbf{{ '{' }}{{ category | latex_escape }}:{{ '}' }} {{ skill_list | join(', ') | latex_escape }}\\
+{% else %}
+\textbf{{ '{' }}{{ category | latex_escape }}:{{ '}' }} {{ skill_list | latex_escape }}\\
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if education %}
+\section{Education}
+{% for edu in education %}
+\textbf{{ '{' }}{{ edu.degree | latex_escape }}{{ '}' }} \hfill {{ edu.graduation_year | latex_escape }}\\
+{{ edu.institution | latex_escape }}{% if edu.location %}, {{ edu.location | latex_escape }}{% endif %}{% if edu.gpa %} -- GPA: {{ edu.gpa | latex_escape }}{% endif %}{% if edu.honors %} ({{ edu.honors | latex_escape }}){% endif %}
+{% if edu.minor %}\\Minor: {{ edu.minor | latex_escape }}{% endif %}
+\vspace{4pt}
+
+{% endfor %}
+{% endif %}
+
+{% if certifications %}
+\section{Certifications}
+{% for cert in certifications %}
+\textbf{{ '{' }}{{ cert.name | latex_escape }}{{ '}' }} -- {{ cert.issuer | latex_escape }} \hfill {{ cert.date | latex_escape }}
+{% if not loop.last %}\\[2pt]{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if projects %}
+\section{Projects}
+{% for project in projects %}
+\textbf{{ '{' }}{{ project.name | latex_escape }}{{ '}' }} \hfill {{ project.dates | latex_escape }}
+{% if project.description %}\\{{ project.description | latex_escape }}{% endif %}
+{% if project.achievements %}
+\begin{itemize}[topsep=2pt]
+{% for achievement in project.achievements %}
+  \item {{ achievement | latex_escape }}
+{% endfor %}
+\end{itemize}
+{% endif %}
+\vspace{4pt}
+
+{% endfor %}
+{% endif %}
+
+{% if publications %}
+\section{Publications}
+{% for pub in publications %}
+{{ pub.authors | latex_escape }}. ``{{ pub.title | latex_escape }}.'' \textit{{ '{' }}{{ pub.venue | latex_escape }}{{ '}' }}, {{ pub.date | latex_escape }}.
+{% if not loop.last %}\\[4pt]{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if awards %}
+\section{Awards \& Honors}
+{% for award in awards %}
+\textbf{{ '{' }}{{ award.name | latex_escape }}{{ '}' }} -- {{ award.issuer | latex_escape }} \hfill {{ award.date | latex_escape }}
+{% if award.description %}\\{{ award.description | latex_escape }}{% endif %}
+{% if not loop.last %}\\[2pt]{% endif %}
+{% endfor %}
+{% endif %}
+
+\end{document}

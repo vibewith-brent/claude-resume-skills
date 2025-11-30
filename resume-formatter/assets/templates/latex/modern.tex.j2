@@ -1,0 +1,125 @@
+\documentclass[11pt,a4paper,sans]{moderncv}
+
+% ModernCV theme
+\moderncvstyle{casual}
+\moderncvcolor{blue}
+
+% Character encoding
+\usepackage[utf8]{inputenc}
+
+% Page margins
+\usepackage[scale=0.85]{geometry}
+
+% Reduce vertical spacing
+\setlength{\hintscolumnwidth}{3cm}
+
+% Personal data
+{% set first_name = contact.name.split()[0] %}
+{% set last_name = contact.name.split()[1:] | join(' ') %}
+\name{{ '{' }}{{ first_name | latex_escape }}{{ '}' }}{{ '{' }}{{ last_name | latex_escape }}{{ '}' }}
+{% if contact.title %}\title{{ '{' }}{{ contact.title | latex_escape }}{{ '}' }}{% endif %}
+{% if contact.phone %}\phone[mobile]{{ '{' }}{{ contact.phone | latex_escape }}{{ '}' }}{% endif %}
+{% if contact.email %}\email{{ '{' }}{{ contact.email | latex_escape }}{{ '}' }}{% endif %}
+{% if contact.linkedin %}\social[linkedin]{{ '{' }}{{ contact.linkedin | replace('linkedin.com/in/', '') | latex_escape }}{{ '}' }}{% endif %}
+{% if contact.github %}\social[github]{{ '{' }}{{ contact.github | replace('github.com/', '') | latex_escape }}{{ '}' }}{% endif %}
+{% if contact.website %}\homepage{{ '{' }}{{ contact.website | replace('https://', '') | replace('http://', '') | latex_escape }}{{ '}' }}{% endif %}
+
+\begin{document}
+\makecvtitle
+
+{% if summary %}
+% Professional Summary
+\section{Professional Summary}
+{{ summary | latex_escape }}
+{% endif %}
+
+{% if experience %}
+% Professional Experience
+\section{Professional Experience}
+{% for job in experience %}
+{% for position in job.positions %}
+\cventry{{ '{' }}{{ position.dates | latex_escape }}{{ '}' }}{{ '{' }}{{ position.title | latex_escape }}{{ '}' }}{{ '{' }}{{ job.company | latex_escape }}{{ '}' }}{{ '{' }}{% if job.location %}{{ job.location | latex_escape }}{% endif %}{{ '}' }}{{ '{}{}' }}
+{% if position.achievements %}
+\begin{itemize}
+{% for achievement in position.achievements %}
+\item {{ achievement | latex_escape }}
+{% endfor %}
+\end{itemize}
+{% endif %}
+
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+{% if skills %}
+% Skills
+\section{Core Competencies}
+{% for category, skill_list in skills.items() %}
+{% if skill_list is iterable and skill_list is not string %}
+\cvitem{{ '{' }}{{ category | latex_escape }}{{ '}' }}{{ '{' }}{{ skill_list | join(', ') | latex_escape }}{{ '}' }}
+{% else %}
+\cvitem{{ '{' }}{{ category | latex_escape }}{{ '}' }}{{ '{' }}{{ skill_list | latex_escape }}{{ '}' }}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if education %}
+% Education
+\section{Education}
+{% for edu in education %}
+\cventry{{ '{' }}{{ edu.graduation_year | latex_escape }}{{ '}' }}{{ '{' }}{{ edu.degree | latex_escape }}{{ '}' }}{{ '{' }}{{ edu.institution | latex_escape }}{{ '}' }}{{ '{' }}{% if edu.location %}{{ edu.location | latex_escape }}{% endif %}{{ '}' }}{{ '{' }}{% if edu.gpa %}GPA: {{ edu.gpa | latex_escape }}{% endif %}{{ '}' }}{{ '{' }}{% if edu.honors %}{{ edu.honors | latex_escape }}{% endif %}{% if edu.minor %}. Minor: {{ edu.minor | latex_escape }}{% endif %}{{ '}' }}
+{% endfor %}
+{% endif %}
+
+{% if certifications %}
+% Certifications
+\section{Certifications}
+{% for cert in certifications %}
+\cvitem{{ '{' }}{{ cert.date | latex_escape }}{{ '}' }}{{ '{' }}\textbf{{ '{' }}{{ cert.name | latex_escape }}{{ '}' }} -- {{ cert.issuer | latex_escape }}{% if cert.credential_id %} ({{ cert.credential_id | latex_escape }}){% endif %}{{ '}' }}
+{% endfor %}
+{% endif %}
+
+{% if projects %}
+% Projects
+\section{Projects}
+{% for project in projects %}
+\cventry{{ '{' }}{{ project.dates | latex_escape }}{{ '}' }}{{ '{' }}{{ project.name | latex_escape }}{{ '}' }}{{ '{' }}{% if project.technologies %}{{ project.technologies | join(', ') | latex_escape }}{% endif %}{{ '}' }}{{ '{}{}{}' }}
+\begin{itemize}
+{% if project.description %}
+\item {{ project.description | latex_escape }}
+{% endif %}
+{% if project.achievements %}
+{% for achievement in project.achievements %}
+\item {{ achievement | latex_escape }}
+{% endfor %}
+{% endif %}
+\end{itemize}
+
+{% endfor %}
+{% endif %}
+
+{% if publications %}
+% Publications
+\section{Publications}
+{% for pub in publications %}
+\cvitem{{ '{' }}{{ pub.date | latex_escape }}{{ '}' }}{{ '{' }}{{ pub.authors | latex_escape }}. ``{{ pub.title | latex_escape }}.'' \textit{{ '{' }}{{ pub.venue | latex_escape }}{{ '}' }}{{ '}' }}
+{% endfor %}
+{% endif %}
+
+{% if awards %}
+% Awards & Honors
+\section{Awards \& Honors}
+{% for award in awards %}
+\cvitem{{ '{' }}{{ award.date | latex_escape }}{{ '}' }}{{ '{' }}\textbf{{ '{' }}{{ award.name | latex_escape }}{{ '}' }} -- {{ award.issuer | latex_escape }}{% if award.description %}. {{ award.description | latex_escape }}{% endif %}{{ '}' }}
+{% endfor %}
+{% endif %}
+
+{% if languages %}
+% Languages
+\section{Languages}
+{% for lang in languages %}
+\cvitem{{ '{' }}{{ lang.language | latex_escape }}{{ '}' }}{{ '{' }}{{ lang.proficiency | latex_escape }}{{ '}' }}
+{% endfor %}
+{% endif %}
+
+\end{document}
