@@ -5,7 +5,28 @@ Six skills for resume management: extract PDF/DOCX → optimize content → form
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skills-blue)](https://claude.com/code)
 
-## Installation
+## Quick Install via Plugin Marketplace
+
+Register this repo as a plugin marketplace, then install:
+
+```
+/plugin marketplace add vibewith-brent/claude-resume-skills
+/plugin install resume-skills@resume-helper-skills
+```
+
+Or browse available plugins after registering:
+
+1. Run `/plugin marketplace add vibewith-brent/claude-resume-skills`
+2. Select **Browse and install plugins**
+3. Select **resume-helper-skills**
+4. Select **resume-skills**
+5. Select **Install now**
+
+After installation, use skills by natural language (e.g., "Extract my resume from resume.pdf").
+
+**Prerequisite:** [Typst](https://typst.app) must be installed (`brew install typst`).
+
+## Installation (Alternative Methods)
 
 ### Project Skills (Recommended)
 
