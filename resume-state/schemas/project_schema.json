@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://claude-resume-skills/project.schema.json",
+  "title": "Resume Project State",
+  "description": "Project state with version history and metadata",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "default": "1.0.0"
+    },
+    "name": {
+      "type": "string",
+      "description": "Project name (lowercase, underscores, hyphens)",
+      "pattern": "^[a-z0-9_-]+$",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Project creation timestamp (ISO 8601)"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last update timestamp (ISO 8601)"
+    },
+    "active_version": {
+      "type": ["string", "null"],
+      "description": "Currently active version ID",
+      "pattern": "^v\\d+$"
+    },
+    "versions": {
+      "type": "array",
+      "description": "List of version entries",
+      "items": {
+        "$ref": "#/$defs/version"
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional project metadata",
+      "additionalProperties": true
+    }
+  },
+  "required": ["version", "name", "created_at", "versions"],
+  "additionalProperties": false,
+  "$defs": {
+    "version": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Version ID (v1, v2, ...)",
+          "pattern": "^v\\d+$"
+        },
+        "tag": {
+          "type": ["string", "null"],
+          "description": "Optional tag for version (e.g., 'google', 'shortened')",
+          "pattern": "^[a-z0-9_-]*$"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Version creation timestamp"
+        },
+        "source": {
+          "type": "object",
+          "description": "Version source information",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["import", "derived"],
+              "description": "How this version was created"
+            },
+            "file": {
+              "type": "string",
+              "description": "Source filename (for imports)"
+            },
+            "original_name": {
+              "type": "string",
+              "description": "Original filename before copying"
+            },
+            "operation": {
+              "type": "string",
+              "description": "Operation type (for derived versions)"
+            }
+          },
+          "required": ["type"]
+        },
+        "parent": {
+          "type": ["string", "null"],
+          "description": "Parent version ID (null for imported versions)",
+          "pattern": "^v\\d+$"
+        },
+        "notes": {
+          "type": ["string", "null"],
+          "description": "User notes about this version"
+        }
+      },
+      "required": ["id", "created_at", "source"],
+      "additionalProperties": false
+    }
+  }
+}

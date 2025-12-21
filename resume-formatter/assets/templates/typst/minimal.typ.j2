@@ -90,8 +90,8 @@
   #set text(size: 8pt, fill: medium)
   {% if contact.location %}{{ contact.location | typst_escape }}{% endif %}
   {% if contact.phone %}#h(lg) {{ contact.phone | typst_escape }}{% endif %}
-  {% if contact.email %}#h(lg) #link("mailto:{{ contact.email }}")[#text(fill: accent)[{{ contact.email | typst_escape }}]]{% endif %}
-  {% if contact.linkedin %}#h(lg) #link("https://{{ contact.linkedin }}")[#text(fill: accent)[{{ contact.linkedin | typst_escape }}]]{% endif %}
+  {% if contact.email %}#h(lg) #link("mailto:{{ contact.email | url_escape }}")[#text(fill: accent)[{{ contact.email | typst_escape }}]]{% endif %}
+  {% if contact.linkedin %}#h(lg) #link("https://{{ contact.linkedin | url_escape }}")[#text(fill: accent)[{{ contact.linkedin | typst_escape }}]]{% endif %}
 ]
 
 // ============================================================================
@@ -203,7 +203,7 @@
 {% if publications %}
 #section("Publications")
 {% for pub in publications %}
-#text(fill: dark)[{{ pub.authors | typst_escape }}.] #emph[{{ pub.title | typst_escape }}.] #text(fill: medium)[{{ pub.venue | typst_escape }}, {{ pub.date | typst_escape }}.] {% if pub.url %}#link("{{ pub.url }}")[#text(fill: accent, size: 8pt)[↗]]{% endif %}
+#text(fill: dark)[{{ pub.authors | typst_escape }}.] #emph[{{ pub.title | typst_escape }}.] #text(fill: medium)[{{ pub.venue | typst_escape }}, {{ pub.date | typst_escape }}.] {% if pub.url %}#link("{{ pub.url | url_escape }}")[#text(fill: accent, size: 8pt)[↗]]{% endif %}
 {% if not loop.last %}#v(xs){% endif %}
 {% endfor %}
 {% endif %}

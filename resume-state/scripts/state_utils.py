@@ -2,10 +2,14 @@
 
 import json
 import os
+import re
 import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
+
+# Regex pattern for valid version IDs (v1, v2, v3, ...)
+VERSION_ID_PATTERN = re.compile(r"^v(\d+)$")
 
 STORE_DIR = ".resume_versions"
 CONFIG_FILE = "config.json"
@@ -134,12 +138,66 @@ def resolve_project(project: Optional[str], store_path: Optional[Path] = None) -
     return active
 
 
+def parse_version_id(version_id: str) -> int:
+    """Parse a version ID and return its numeric component.
+
+    Args:
+        version_id: Version ID string (e.g., 'v1', 'v2')
+
+    Returns:
+        The numeric part of the version ID
+
+    Raises:
+        ValueError: If the version ID format is invalid
+    """
+    match = VERSION_ID_PATTERN.match(version_id)
+    if not match:
+        raise ValueError(
+            f"Invalid version ID format: '{version_id}'. "
+            f"Expected format: v1, v2, v3, ..."
+        )
+    return int(match.group(1))
+
+
+def validate_version_id(version_id: str) -> bool:
+    """Check if a version ID is valid.
+
+    Args:
+        version_id: Version ID string to validate
+
+    Returns:
+        True if valid, False otherwise
+    """
+    return VERSION_ID_PATTERN.match(version_id) is not None
+
+
 def get_next_version_id(state: dict) -> str:
-    """Get the next version ID (v1, v2, v3, ...)."""
+    """Get the next version ID (v1, v2, v3, ...).
+
+    Args:
+        state: Project state dictionary
+
+    Returns:
+        Next version ID string
+
+    Raises:
+        ValueError: If existing version IDs have invalid format
+    """
     versions = state.get("versions", [])
     if not versions:
         return "v1"
-    max_num = max(int(v["id"][1:]) for v in versions)
+
+    max_num = 0
+    for v in versions:
+        vid = v.get("id", "")
+        try:
+            num = parse_version_id(vid)
+            max_num = max(max_num, num)
+        except ValueError:
+            # Skip malformed version IDs but log warning
+            import sys
+            print(f"Warning: Skipping malformed version ID: {vid}", file=sys.stderr)
+
     return f"v{max_num + 1}"
 
 

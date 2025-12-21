@@ -57,8 +57,9 @@ def render_typst(resume_data: dict, template_name: str, script_dir: Path) -> str
         sys.exit(1)
 
     env = Environment(loader=FileSystemLoader(template_dir))
-    # Add Typst-safe filter
-    env.filters['typst_escape'] = typst_escape
+    # Add Typst-safe filters
+    env.filters["typst_escape"] = typst_escape
+    env.filters["url_escape"] = url_escape
 
     template = env.get_template(template_file)
     return template.render(**resume_data)
@@ -67,30 +68,61 @@ def render_typst(resume_data: dict, template_name: str, script_dir: Path) -> str
 def typst_escape(text: str) -> str:
     r"""Escape special Typst characters in text.
 
-    Typst requires escaping fewer characters than LaTeX:
+    Typst special characters that need escaping:
+    - \ is escape character (must be first)
     - # starts function calls
     - $ starts math mode
     - @ starts references
-    - \ is escape character
-    - < > for raw blocks (rarely needed in content)
+    - < > for raw blocks
+    - _ for subscript
+    - * for bold/emphasis
+    - ` for raw/code
+    - ~ for non-breaking space
+    - ^ for superscript
     """
     if not isinstance(text, str):
         return str(text)
 
     # Order matters: backslash must be first to avoid double-escaping
     replacements = [
-        ('\\', '\\\\'),
-        ('#', '\\#'),
-        ('$', '\\$'),
-        ('@', '\\@'),
-        ('<', '\\<'),
-        ('>', '\\>'),
+        ("\\", "\\\\"),
+        ("#", "\\#"),
+        ("$", "\\$"),
+        ("@", "\\@"),
+        ("<", "\\<"),
+        (">", "\\>"),
+        ("_", "\\_"),
+        ("*", "\\*"),
+        ("`", "\\`"),
+        ("~", "\\~"),
+        ("^", "\\^"),
     ]
 
     for old, new in replacements:
         text = text.replace(old, new)
 
     return text
+
+
+def url_escape(url: str) -> str:
+    r"""Escape special characters in URLs for Typst #link() calls.
+
+    URLs need fewer escapes than regular text since they're inside quotes,
+    but certain characters can still break Typst syntax.
+    """
+    if not isinstance(url, str):
+        return str(url)
+
+    # URLs inside #link("...") need these escaped
+    replacements = [
+        ("\\", "\\\\"),
+        ('"', '\\"'),  # Quotes break the string literal
+    ]
+
+    for old, new in replacements:
+        url = url.replace(old, new)
+
+    return url
 
 
 def get_available_templates(script_dir: Path) -> list[str]:

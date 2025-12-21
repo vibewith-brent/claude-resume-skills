@@ -94,9 +94,9 @@
   #set text(size: 8.5pt)
   {% if contact.location %}#text(fill: muted)[{{ contact.location | typst_escape }}]{% endif %}
   {% if contact.phone %}#h(md) #text(fill: divider)[|] #h(md) #text(fill: muted)[{{ contact.phone | typst_escape }}]{% endif %}
-  {% if contact.email %}#h(md) #text(fill: divider)[|] #h(md) #link("mailto:{{ contact.email }}")[#text(fill: accent)[{{ contact.email | typst_escape }}]]{% endif %}
-  {% if contact.linkedin %}#h(md) #text(fill: divider)[|] #h(md) #link("https://{{ contact.linkedin }}")[#text(fill: accent)[LinkedIn]]{% endif %}
-  {% if contact.github %}#h(md) #text(fill: divider)[|] #h(md) #link("https://{{ contact.github }}")[#text(fill: accent)[GitHub]]{% endif %}
+  {% if contact.email %}#h(md) #text(fill: divider)[|] #h(md) #link("mailto:{{ contact.email | url_escape }}")[#text(fill: accent)[{{ contact.email | typst_escape }}]]{% endif %}
+  {% if contact.linkedin %}#h(md) #text(fill: divider)[|] #h(md) #link("https://{{ contact.linkedin | url_escape }}")[#text(fill: accent)[LinkedIn]]{% endif %}
+  {% if contact.github %}#h(md) #text(fill: divider)[|] #h(md) #link("https://{{ contact.github | url_escape }}")[#text(fill: accent)[GitHub]]{% endif %}
 ]
 
 // ============================================================================
@@ -227,7 +227,7 @@
 {% if publications %}
 #section("Publications")
 {% for pub in publications %}
-#text(fill: secondary)[{{ pub.authors | typst_escape }}.] #emph[{{ pub.title | typst_escape }}.] #text(fill: muted)[{{ pub.venue | typst_escape }}, {{ pub.date | typst_escape }}.] {% if pub.url %}#link("{{ pub.url }}")[#text(fill: accent, size: 8pt)[Link]]{% endif %}
+#text(fill: secondary)[{{ pub.authors | typst_escape }}.] #emph[{{ pub.title | typst_escape }}.] #text(fill: muted)[{{ pub.venue | typst_escape }}, {{ pub.date | typst_escape }}.] {% if pub.url %}#link("{{ pub.url | url_escape }}")[#text(fill: accent, size: 8pt)[Link]]{% endif %}
 {% if not loop.last %}#v(xs){% endif %}
 {% endfor %}
 {% endif %}

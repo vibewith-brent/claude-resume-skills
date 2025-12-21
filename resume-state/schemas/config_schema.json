@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://claude-resume-skills/config.schema.json",
+  "title": "Resume Versions Config",
+  "description": "Global configuration for resume version management",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "default": "1.0.0"
+    },
+    "active_project": {
+      "type": ["string", "null"],
+      "description": "Currently active project name",
+      "pattern": "^[a-z0-9_-]+$"
+    }
+  },
+  "required": ["version"],
+  "additionalProperties": false
+}

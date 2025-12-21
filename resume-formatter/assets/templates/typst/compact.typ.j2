@@ -90,10 +90,10 @@
   ],
   align(right + horizon)[
     #set text(size: 7.5pt, fill: steel)
-    {% if contact.email %}#link("mailto:{{ contact.email }}")[#text(fill: blue)[{{ contact.email | typst_escape }}]]{% endif %}
+    {% if contact.email %}#link("mailto:{{ contact.email | url_escape }}")[#text(fill: blue)[{{ contact.email | typst_escape }}]]{% endif %}
     {% if contact.phone %}#h(md) {{ contact.phone | typst_escape }}{% endif %}
     {% if contact.location %}#h(md) {{ contact.location | typst_escape }}{% endif %}
-    {% if contact.linkedin %}#h(md) #link("https://{{ contact.linkedin }}")[#text(fill: blue)[LinkedIn]]{% endif %}
+    {% if contact.linkedin %}#h(md) #link("https://{{ contact.linkedin | url_escape }}")[#text(fill: blue)[LinkedIn]]{% endif %}
   ]
 )
 
@@ -208,7 +208,7 @@
 #section("Publications")
 #set text(size: 8pt)
 {% for pub in publications %}
-#text(fill: charcoal)[{{ pub.authors | typst_escape }}.] #emph[{{ pub.title | typst_escape }}.] #text(fill: steel)[{{ pub.venue | typst_escape }}, {{ pub.date | typst_escape }}.] {% if pub.url %}#link("{{ pub.url }}")[#text(fill: blue)[↗]]{% endif %}
+#text(fill: charcoal)[{{ pub.authors | typst_escape }}.] #emph[{{ pub.title | typst_escape }}.] #text(fill: steel)[{{ pub.venue | typst_escape }}, {{ pub.date | typst_escape }}.] {% if pub.url %}#link("{{ pub.url | url_escape }}")[#text(fill: blue)[↗]]{% endif %}
 {% if not loop.last %}#v(xxs){% endif %}
 {% endfor %}
 {% endif %}

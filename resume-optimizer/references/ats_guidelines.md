@@ -1,5 +1,7 @@
 # ATS (Applicant Tracking System) Optimization Guidelines
 
+> **Canonical Source**: This is the single source of truth for ATS guidelines across all resume skills. Other skills should reference this document rather than duplicating content.
+
 ## Overview
 
 ATS systems parse and rank resumes based on keyword matching, formatting compatibility, and content structure. Optimizing for ATS increases the likelihood of human review.

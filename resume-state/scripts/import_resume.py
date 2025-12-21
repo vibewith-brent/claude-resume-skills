@@ -2,6 +2,7 @@
 """Import a PDF/DOCX resume as a new version."""
 
 import argparse
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -20,8 +21,60 @@ from state_utils import (
     save_project_state,
 )
 
-# Path to extractor scripts (relative to project root)
-EXTRACTOR_SCRIPTS = Path(__file__).parent.parent.parent / "resume-extractor" / "scripts"
+
+def find_extractor_scripts() -> Path:
+    """Find the resume-extractor scripts directory.
+
+    Search order:
+    1. RESUME_EXTRACTOR_PATH environment variable
+    2. Sibling directory: ../resume-extractor/scripts (for development)
+    3. Symlinked skills: ../.claude/skills/resume-extractor/scripts
+    4. Parent directories: search upward for resume-extractor
+    5. Fallback: ../../resume-extractor/scripts (legacy path)
+
+    Returns:
+        Path to the extractor scripts directory
+
+    Raises:
+        FileNotFoundError: If extractor scripts cannot be found
+    """
+    # Check environment variable first
+    env_path = os.environ.get("RESUME_EXTRACTOR_PATH")
+    if env_path:
+        path = Path(env_path).expanduser()
+        if path.exists():
+            return path
+
+    script_dir = Path(__file__).parent
+    candidates = [
+        # Sibling skill directory (common in development)
+        script_dir.parent.parent / "resume-extractor" / "scripts",
+        # Symlinked via .claude/skills
+        script_dir.parent.parent / ".claude" / "skills" / "resume-extractor" / "scripts",
+        # Legacy hardcoded path (grandparent / resume-extractor)
+        script_dir.parent.parent.parent / "resume-extractor" / "scripts",
+    ]
+
+    for candidate in candidates:
+        if candidate.exists() and (candidate / "extract_pdf.py").exists():
+            return candidate
+
+    # Search upward for resume-extractor
+    current = script_dir
+    for _ in range(10):  # Limit search depth
+        parent = current.parent
+        if parent == current:
+            break
+        candidate = parent / "resume-extractor" / "scripts"
+        if candidate.exists() and (candidate / "extract_pdf.py").exists():
+            return candidate
+        current = parent
+
+    raise FileNotFoundError(
+        "Could not find resume-extractor scripts. "
+        "Set RESUME_EXTRACTOR_PATH environment variable or ensure "
+        "resume-extractor is a sibling directory."
+    )
 
 
 def import_resume(
@@ -29,14 +82,28 @@ def import_resume(
     project: str,
     notes: str = "",
     tag: str | None = None,
+    strict: bool = False,
 ) -> tuple[str, Path]:
     """Import a resume file as a new version.
 
+    Args:
+        file_path: Path to PDF or DOCX file
+        project: Project name
+        notes: Optional notes about this import
+        tag: Optional version tag
+        strict: If True, fail on extraction errors instead of warning
+
     Returns:
         Tuple of (version_id, version_path)
+
+    Raises:
+        RuntimeError: If strict=True and extraction fails
     """
     store_path = get_store_path()
     state = load_project_state(project, store_path)
+
+    # Find extractor scripts
+    extractor_scripts = find_extractor_scripts()
 
     # Determine version ID
     version_id = get_next_version_id(state)
@@ -54,9 +121,9 @@ def import_resume(
     # Extract text using appropriate extractor
     suffix = file_path.suffix.lower()
     if suffix == ".pdf":
-        extractor = EXTRACTOR_SCRIPTS / "extract_pdf.py"
+        extractor = extractor_scripts / "extract_pdf.py"
     elif suffix in (".docx", ".doc"):
-        extractor = EXTRACTOR_SCRIPTS / "extract_docx.py"
+        extractor = extractor_scripts / "extract_docx.py"
     else:
         raise ValueError(f"Unsupported file type: {suffix}")
 
@@ -67,7 +134,11 @@ def import_resume(
         text=True,
     )
     if result.returncode != 0:
-        print(f"Warning: Extraction failed: {result.stderr}", file=sys.stderr)
+        error_msg = f"Extraction failed: {result.stderr}"
+        if strict:
+            raise RuntimeError(error_msg)
+        print(f"Warning: {error_msg}", file=sys.stderr)
+        print("Continuing with import. You may need to manually extract text.", file=sys.stderr)
 
     # Create placeholder YAML
     yaml_path = version_path / "resume.yaml"
@@ -130,6 +201,11 @@ def main():
         "--tag", "-t",
         help="Optional version tag",
     )
+    parser.add_argument(
+        "--strict", "-s",
+        action="store_true",
+        help="Fail on extraction errors instead of warning",
+    )
     args = parser.parse_args()
 
     try:
@@ -143,6 +219,7 @@ def main():
             project,
             notes=args.notes,
             tag=args.tag,
+            strict=args.strict,
         )
         print(f"Imported as {version_id} in project: {project}")
         print(f"  Source: {args.file.name}")
