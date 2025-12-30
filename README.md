@@ -26,6 +26,142 @@ After updating, **restart Claude Code** or start a new conversation to load the 
 
 [Typst](https://typst.app) must be installed (`brew install typst`).
 
+## Workflow Overview
+
+The complete resume workflow with versioning at each stage:
+
+```mermaid
+flowchart TB
+    subgraph init["1. Initialize"]
+        A[PDF/DOCX Resume] --> B[Initialize Project]
+        B --> C[Import Resume]
+        C --> D[v1: Original]
+    end
+
+    subgraph extract["2. Extract"]
+        D --> E[Extract Text]
+        E --> F[Parse to YAML]
+        F --> G[Validate Structure]
+    end
+
+    subgraph optimize["3. Optimize"]
+        G --> H{Target Job?}
+        H -->|Yes| I[Fetch Job Posting]
+        I --> J[Keyword Analysis]
+        J --> K[Tailor Content]
+        H -->|No| L[General Optimization]
+        K --> M[ATS + Metrics]
+        L --> M
+        M --> N[Create Version]
+        N --> O[v2: Optimized]
+    end
+
+    subgraph format["4. Format"]
+        O --> P[Select Template]
+        P --> Q[Compile PDF]
+    end
+
+    subgraph review["5. Review & Fit"]
+        Q --> R{Content Fits?}
+        R -->|No| S[Customize Template]
+        S --> T[Adjust Spacing/Margins]
+        T --> Q
+        R -->|Yes| U{Visual QA Pass?}
+        U -->|No| V[Fix Issues]
+        V --> Q
+    end
+
+    subgraph finalize["6. Finalize"]
+        U -->|Yes| W[Generate Cover Letter]
+        W --> X[Export Package]
+        X --> Y[v3: Final for Company X]
+    end
+
+    style init fill:#e1f5fe
+    style extract fill:#fff3e0
+    style optimize fill:#e8f5e9
+    style format fill:#fce4ec
+    style review fill:#f3e5f5
+    style finalize fill:#e0f2f1
+```
+
+### Core Loop: Content → Template → Fit
+
+Most time is spent in the format/review loop, customizing templates to fit content:
+
+```mermaid
+flowchart LR
+    A[YAML Content] --> B[Choose Template]
+    B --> C[Compile PDF]
+    C --> D{Fits Target Pages?}
+    D -->|No - Too Long| E[Reduce Spacing/Margins]
+    D -->|No - Too Short| F[Increase Spacing]
+    D -->|No - Overflow| G[Reduce Content]
+    E --> C
+    F --> C
+    G --> A
+    D -->|Yes| H{Visual QA?}
+    H -->|Issues| I[Adjust Template]
+    I --> C
+    H -->|Pass| J[Done]
+```
+
+### Skill Responsibilities
+
+```mermaid
+flowchart TB
+    subgraph state["resume-state"]
+        S1[Init Project]
+        S2[Import Files]
+        S3[Create Versions]
+        S4[Switch/Compare]
+    end
+
+    subgraph extract["resume-extractor"]
+        E1[PDF → Text]
+        E2[DOCX → Text]
+        E3[Text → YAML]
+    end
+
+    subgraph optimize["resume-optimizer"]
+        O1[Fetch Job Posting]
+        O2[Keyword Analysis]
+        O3[ATS Optimization]
+        O4[Impact Metrics]
+    end
+
+    subgraph format["resume-formatter"]
+        F1[YAML → Typst]
+        F2[Typst → PDF]
+        F3[5 Templates]
+    end
+
+    subgraph template["resume-template-maker"]
+        T1[Custom Templates]
+        T2[Spacing Tuning]
+        T3[Design Vectors]
+    end
+
+    subgraph review["resume-reviewer"]
+        R1[Visual QA]
+        R2[Fit Check]
+        R3[Issue Detection]
+    end
+
+    subgraph cover["resume-coverletter"]
+        C1[Generate Letter]
+        C2[Match Styling]
+    end
+
+    state --> extract
+    extract --> optimize
+    optimize --> format
+    format --> review
+    review -->|Issues| template
+    template --> format
+    review -->|Pass| cover
+```
+
 ## Skills
 
 | Skill | Purpose |
@@ -36,17 +172,19 @@ After updating, **restart Claude Code** or start a new conversation to load the 
 | **resume-formatter** | Generate PDFs from YAML using Typst templates |
 | **resume-coverletter** | Generate cover letters matching resume template styling |
 | **resume-reviewer** | Visual QA templates — Claude views PDF and fills in checklist |
-| **resume-template-maker** | Create custom Typst templates |
+| **resume-template-maker** | Create custom Typst templates for content fitting |
 
-### Templates
+### Templates (Starting Points)
 
-| Template | Use Case |
-|----------|----------|
-| `executive` | Professional default — clean hierarchy, navy accents |
-| `tech-modern` | Modern/creative — deep lavender, pill skills, Carlito font, single-page optimized |
-| `modern-dense` | Maximum density — categorized inline skills, 20-25 bullets, strategic spacing |
-| `compact` | Dense content — maximum info per page |
-| `minimal` | Understated — monochromatic, generous whitespace |
+Templates are starting points, not final solutions. Most resumes need template customization to fit content on target pages.
+
+| Template | Best For | Key Traits |
+|----------|----------|------------|
+| `executive` | 2-page professional | Clean hierarchy, navy accents, balanced spacing |
+| `tech-modern` | Creative/startup | Lavender palette, pill skills, single-page optimized |
+| `modern-dense` | Extensive experience | Maximum density, inline skills, ~20-25 bullets |
+| `compact` | 1-page constraint | Tight margins, minimal section gaps |
+| `minimal` | Understated | Monochromatic, maximum readability |
 
 ## Usage
 
@@ -57,6 +195,7 @@ Skills auto-select based on your request. Example workflow:
 "Extract to YAML and optimize for ATS"
 "Create version for Google, tailor for this job: [URL]"
 "Generate PDF with executive template"
+"The content overflows - adjust the template to fit on 2 pages"
 "Write a cover letter for this role"
 "Review the PDF"
 ```
@@ -136,9 +275,76 @@ uv run pytest tests/ --cov     # With coverage
 
 See [Skill Authoring Best Practices](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/skills#authoring-best-practices).
 
+## Roadmap & Known Gaps
+
+Current gaps and potential improvements:
+
+### Content Analysis
+| Gap | Description | Priority |
+|-----|-------------|----------|
+| **ATS Scoring** | Automated scoring of resume against job description (keyword match %, format compliance) | High |
+| **Content Analytics** | Word count, keyword density, bullet length analysis, reading level | Medium |
+| **Duplicate Detection** | Flag similar bullets across roles, suggest consolidation | Low |
+
+### Template & Formatting
+| Gap | Description | Priority |
+|-----|-------------|----------|
+| **Template Preview** | Side-by-side preview of all templates with same content | High |
+| **Auto-Fit** | Automatically adjust spacing to hit target page count | High |
+| **Multi-Column Layout** | Two-column and sidebar template variants | Medium |
+| **Dark Mode Templates** | Templates optimized for on-screen viewing | Low |
+
+### Workflow & Integration
+| Gap | Description | Priority |
+|-----|-------------|----------|
+| **Application Tracker** | Track which versions sent to which companies, response status | High |
+| **LinkedIn Import** | Extract resume data from LinkedIn profile URL | Medium |
+| **Job Board Integration** | Direct fetch from LinkedIn, Indeed, Greenhouse job postings | Medium |
+| **Version Comparison PDF** | Visual diff of two resume PDFs side-by-side | Medium |
+
+### AI Enhancements
+| Gap | Description | Priority |
+|-----|-------------|----------|
+| **Content Suggestions** | Proactive suggestions for missing achievements, weak bullets | High |
+| **Industry Benchmarking** | Compare resume against successful examples in same field | Medium |
+| **Interview Prep** | Generate likely interview questions from resume content | Low |
+
+### Contributions Welcome
+
+PRs welcome for any of the above. See [Contributing](#contributing) for guidelines.
+
+```mermaid
+flowchart LR
+    subgraph current["Current Skills"]
+        A[State] --> B[Extract]
+        B --> C[Optimize]
+        C --> D[Format]
+        D --> E[Review]
+        E --> F[Cover Letter]
+    end
+
+    subgraph planned["Planned Additions"]
+        G[ATS Score]
+        H[Auto-Fit]
+        I[App Tracker]
+        J[Template Preview]
+    end
+
+    C -.-> G
+    D -.-> H
+    D -.-> J
+    F -.-> I
+
+    style planned fill:#fff9c4
+```
+
 ## Contributing
 
-PRs welcome. Areas of interest: additional templates, ATS scoring, job board integrations.
+PRs welcome. Priority areas:
+- ATS scoring against job descriptions
+- Auto-fit template spacing
+- Application tracking
+- Additional templates (especially multi-column)
 
 ## License
 
