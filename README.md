@@ -44,8 +44,19 @@ flowchart TB
         F --> G[Validate Structure]
     end
 
-    subgraph optimize["3. Optimize"]
-        G --> H{Target Job?}
+    subgraph expand["3. Expand Content"]
+        G --> G1{Content Complete?}
+        G1 -->|No| G2[Add New Experience]
+        G1 -->|Gaps| G3[Discovery Questions]
+        G2 --> G4[STAR Expansion]
+        G3 --> G4
+        G4 --> G5[Update YAML]
+        G5 --> G1
+        G1 -->|Yes| H
+    end
+
+    subgraph optimize["4. Optimize"]
+        H{Target Job?}
         H -->|Yes| I[Fetch Job Posting]
         I --> J[Keyword Analysis]
         J --> K[Tailor Content]
@@ -56,12 +67,12 @@ flowchart TB
         N --> O[v2: Optimized]
     end
 
-    subgraph format["4. Format"]
+    subgraph format["5. Format"]
         O --> P[Select Template]
         P --> Q[Compile PDF]
     end
 
-    subgraph review["5. Review & Fit"]
+    subgraph review["6. Review & Fit"]
         Q --> R{Content Fits?}
         R -->|No| S[Customize Template]
         S --> T[Adjust Spacing/Margins]
@@ -71,7 +82,7 @@ flowchart TB
         V --> Q
     end
 
-    subgraph finalize["6. Finalize"]
+    subgraph finalize["7. Finalize"]
         U -->|Yes| W[Generate Cover Letter]
         W --> X[Export Package]
         X --> Y[v3: Final for Company X]
@@ -79,6 +90,7 @@ flowchart TB
 
     style init fill:#e1f5fe
     style extract fill:#fff3e0
+    style expand fill:#fff9c4
     style optimize fill:#e8f5e9
     style format fill:#fce4ec
     style review fill:#f3e5f5
@@ -123,6 +135,13 @@ flowchart TB
         E3[Text → YAML]
     end
 
+    subgraph coach["resume-coach"]
+        CO1[Discovery Questions]
+        CO2[STAR Expansion]
+        CO3[Add Experience]
+        CO4[Gap Analysis]
+    end
+
     subgraph optimize["resume-optimizer"]
         O1[Fetch Job Posting]
         O2[Keyword Analysis]
@@ -154,7 +173,8 @@ flowchart TB
     end
 
     state --> extract
-    extract --> optimize
+    extract --> coach
+    coach --> optimize
     optimize --> format
     format --> review
     review -->|Issues| template
@@ -168,6 +188,7 @@ flowchart TB
 |-------|---------|
 | **resume-state** | Version control. Initialize projects, import files, branch versions, compare changes. *Use first.* |
 | **resume-extractor** | Convert PDF/DOCX to structured YAML |
+| **resume-coach** | Discover and expand content through guided questions. Add experience, fill gaps, articulate achievements. *(New)* |
 | **resume-optimizer** | Improve content: ATS optimization, metrics, keyword alignment, job tailoring |
 | **resume-formatter** | Generate PDFs from YAML using Typst templates |
 | **resume-coverletter** | Generate cover letters matching resume template styling |
@@ -279,6 +300,25 @@ See [Skill Authoring Best Practices](https://docs.anthropic.com/en/docs/agents-a
 
 Current gaps and potential improvements:
 
+### Content Discovery & Coaching (High Priority Gap)
+
+The current flow assumes resume content already exists. Missing: helping users discover, create, and expand content.
+
+| Gap | Description | Priority |
+|-----|-------------|----------|
+| **Achievement Discovery** | Interview-style questions to help users remember forgotten accomplishments | High |
+| **Skills Coaxing** | Draw out hidden skills from side projects, hobbies, volunteer work | High |
+| **Content Generation** | Create new bullets from scratch based on role descriptions | High |
+| **Experience Updates** | Guided flow for adding recent work experience | High |
+| **Gap Analysis** | Identify what's missing for target role, help create that content | High |
+| **STAR Expansion** | Take basic bullets and expand with Situation, Task, Action, Result | Medium |
+
+**Example coaching questions:**
+- "What's the biggest problem you solved in this role?"
+- "Did you save time, money, or reduce errors? By how much?"
+- "What tools/technologies did you use that aren't listed?"
+- "Any projects outside work that demonstrate these skills?"
+
 ### Content Analysis
 | Gap | Description | Priority |
 |-----|-------------|----------|
@@ -305,7 +345,6 @@ Current gaps and potential improvements:
 ### AI Enhancements
 | Gap | Description | Priority |
 |-----|-------------|----------|
-| **Content Suggestions** | Proactive suggestions for missing achievements, weak bullets | High |
 | **Industry Benchmarking** | Compare resume against successful examples in same field | Medium |
 | **Interview Prep** | Generate likely interview questions from resume content | Low |
 
@@ -324,16 +363,17 @@ flowchart LR
     end
 
     subgraph planned["Planned Additions"]
-        G[ATS Score]
-        H[Auto-Fit]
-        I[App Tracker]
-        J[Template Preview]
+        G[Content Coach]
+        H[ATS Score]
+        I[Auto-Fit]
+        J[App Tracker]
     end
 
-    C -.-> G
-    D -.-> H
-    D -.-> J
-    F -.-> I
+    B -.-> G
+    G -.-> C
+    C -.-> H
+    D -.-> I
+    F -.-> J
 
     style planned fill:#fff9c4
 ```
@@ -341,10 +381,10 @@ flowchart LR
 ## Contributing
 
 PRs welcome. Priority areas:
-- ATS scoring against job descriptions
-- Auto-fit template spacing
-- Application tracking
-- Additional templates (especially multi-column)
+- **Content coaching** - Interview-style discovery, STAR expansion, gap analysis
+- **ATS scoring** - Keyword match %, format compliance scoring
+- **Auto-fit** - Automatic spacing adjustment to hit target pages
+- **Application tracking** - Track versions sent to companies
 
 ## License
 
