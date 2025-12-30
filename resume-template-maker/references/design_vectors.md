@@ -4,6 +4,60 @@ Multi-dimensional guidance for creating distinctive, professional resume templat
 
 ---
 
+## 0. Content Fitting (Do This First)
+
+Before making aesthetic decisions, ensure content fits the target page count. This is the most important aspect of template customization.
+
+### The Reality
+
+Each person's resume content is unique. A template designed for 15 years of experience won't work for a new grad. Fitting content well requires tuning multiple parameters together.
+
+### Tuning Parameters (Quick Reference)
+
+| Parameter | Typst Location | Typical Range | Effect |
+|-----------|---------------|---------------|--------|
+| Page margins | `#set page(margin: ...)` | 0.5-0.75in | +/- 4-5 lines per 0.1in change |
+| Body font size | `#set text(size: ...)` | 9-10.5pt | Major density change |
+| Line height | `#set par(leading: ...)` | 0.5-0.7em | Subtle density change |
+| Section gap | `#v(...)` between sections | 6-12pt | Cumulative over many sections |
+| List spacing | `#set list(spacing: ...)` | 2-4pt | Adds up with many bullets |
+| Name size | Name text size | 18-24pt | Visual impact vs. space |
+
+### Fitting Strategies
+
+**Too Much Content (Overflow)**
+1. Reduce margins from 0.75in → 0.5in (biggest impact)
+2. Reduce body font from 10pt → 9pt
+3. Reduce section gaps
+4. Reduce line height from 0.7em → 0.5em
+5. Reduce bullets per role (content decision)
+
+**Too Little Content (Sparse)**
+1. Increase margins for executive feel
+2. Increase section gaps for breathing room
+3. Expand skills into categorized groups
+4. Add optional sections (projects, volunteer, certifications)
+
+### Page Break Management
+
+For multi-page resumes:
+```typst
+// Force page break before a section
+#pagebreak(weak: true)
+
+// Keep section together (avoid orphans)
+#block(breakable: false)[
+  // Section content
+]
+```
+
+Rules:
+- Break after complete job entries, never mid-bullets
+- Keep headers with their content (no header at page bottom)
+- Aim for roughly equal density on each page
+
+---
+
 ## 1. Typography
 
 Typography establishes personality before a single word is read. Avoid defaulting to Computer Modern or generic sans-serif.

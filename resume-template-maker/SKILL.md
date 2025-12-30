@@ -1,25 +1,71 @@
 ---
 name: resume-template-maker
-description: Create custom Typst resume templates using structured design principles. Use when user wants a custom template or industry-specific styling.
+description: Create custom Typst resume templates tailored to specific content and page requirements. Use for any resume project that needs to fit content precisely.
 ---
 
 # Resume Template Maker Skill
 
-Create distinctive, professional Typst resume templates using structured design principles. Avoids generic "AI resume" patterns through multi-dimensional design guidance.
+Create personalized Typst resume templates that fit each person's unique content. The built-in templates are starting points—most resume projects need a custom template to fit their content on the desired number of pages.
 
 ## When to Use
 
-- User wants a custom template beyond the 3 built-in options
-- User wants to modify an existing template significantly
-- User describes a specific aesthetic ("minimalist with bold headers", "elegant serif")
-- User wants industry-specific styling not covered by defaults
-- User says "make it look like X" or "I want something more Y"
+**Always consider customization when:**
+- Resume content doesn't fit cleanly on target page count
+- Content overflows onto a partial second page (or leaves awkward whitespace)
+- User has significantly more or less experience than template was designed for
+- Spacing feels too tight or too loose with built-in templates
+- User wants to emphasize different sections than template prioritizes
+
+**Also use for:**
+- Industry-specific styling (finance, creative, tech, academic)
+- Aesthetic preferences ("minimalist", "bold headers", "elegant serif")
+- Major layout changes (sidebar, two-column, skills-forward)
 
 ## Core Philosophy
 
-**Problem**: Without guidance, generated templates converge toward safe, generic patterns—the resume equivalent of "Inter font with purple gradients."
+**Reality**: Each person's resume content is different. A template designed for 15 years of experience won't work for a new grad. A 1-page template won't work for someone with 25 achievements. Fitting content well requires tuning line spacing, margins, section gaps, and font sizes.
 
-**Solution**: Multi-dimensional design vectors that guide toward distinctive, professional output. Each template should have a clear design rationale, not just be "a resume."
+**Approach**: Start from the closest built-in template, then adjust parameters to fit the specific content. Use design vectors for aesthetic decisions, but focus first on making content fit the target page count cleanly.
+
+## Content Fitting (Do This First)
+
+Before aesthetic decisions, ensure content fits the target page count:
+
+### Quick Tuning Parameters
+
+| Too Much Content | Parameter | Too Little Content |
+|------------------|-----------|-------------------|
+| Reduce to 0.5in | **Margins** | Increase to 0.75in |
+| Reduce to 9pt | **Body font** | Increase to 10.5pt |
+| Reduce to 0.5em | **Line height** (`leading`) | Increase to 0.7em |
+| Reduce to 6pt | **Section gap** | Increase to 12pt |
+| Reduce to 2pt | **List spacing** | Increase to 4pt |
+| Reduce to 18pt | **Name size** | Increase to 24pt |
+
+### Content Reduction (When Still Too Long)
+
+If parameter tuning isn't enough:
+1. Reduce bullets per role (4-5 instead of 6-8)
+2. Combine or remove older/less relevant positions
+3. Condense skills into inline format vs. grouped
+4. Shorten summary to 2-3 lines
+5. Remove optional sections (volunteer, languages, publications)
+
+### Whitespace Addition (When Too Short)
+
+If content doesn't fill the page well:
+1. Add a summary section if missing
+2. Expand skills into categorized groups
+3. Add a Projects section for side work
+4. Include certifications, awards, or volunteer work
+5. Increase spacing parameters (generous margins, larger section gaps)
+
+### Page Break Decisions
+
+For 2-page resumes:
+- Break after a complete job entry, never mid-bullets
+- Keep related content together (don't split one job across pages)
+- Aim for roughly equal page density
 
 ## Design Vector Framework
 
@@ -51,58 +97,72 @@ Every template decision maps to four vectors:
 
 ## Workflow
 
-### Step 1: Gather Requirements
+### Step 1: Assess Content and Requirements
 ```
-- Target industry/role
-- Aesthetic preferences (modern, traditional, creative, minimal)
-- Content density (1 page strict, 2 page OK, flexible)
-- Specific requests (sidebar, two-column, specific colors)
-- Reference templates or designs they like
+- How much content? (count: jobs, bullets, skills, education entries)
+- Target page count? (strict 1-page, prefer 1, flexible 2-page)
+- Industry/role context? (affects font choice, formality)
+- Any specific aesthetic preferences?
 ```
 
-### Step 2: Design Template
-Use `references/design_vectors.md` for typography, layout, whitespace, and color decisions.
-Use `references/industry_themes.md` for industry-specific guidance.
-Use `references/typst_patterns.md` for implementation patterns.
+### Step 2: Choose Starting Template
+Pick the closest match based on content volume:
 
-### Step 3: Create .typ.j2 Template
-Output to `.claude/skills/resume-formatter/assets/templates/typst/[name].typ.j2`
+| Content | Recommended Start |
+|---------|-------------------|
+| Light (new grad, 1-2 jobs) | `minimal` or `executive` with increased spacing |
+| Medium (5-10 years) | `executive` or `tech-modern` |
+| Heavy (15+ years, many roles) | `modern-dense` or `compact` |
 
-Template must:
-- Use Jinja2 syntax matching existing templates
-- Include `typst_escape` filter on all user content
-- Handle all YAML schema sections (required + optional)
-- Compile with `typst compile`
-
-### Step 4: Compile and Review
+### Step 3: Compile with Actual Content
 ```bash
-# Generate Typst
-uv run .claude/skills/resume-formatter/scripts/yaml_to_typst.py resume.yaml [template_name] -o test.typ
-
-# Compile to PDF
-uv run .claude/skills/resume-formatter/scripts/compile_typst.py test.typ -o test.pdf
+# Generate with chosen template
+uv run resume-formatter/scripts/yaml_to_typst.py resume.yaml <template> -o test.typ
+uv run resume-formatter/scripts/compile_typst.py test.typ -o test.pdf
 ```
 
-Use **resume-reviewer** skill to evaluate output.
+### Step 4: Evaluate Fit
+Check the PDF:
+- Does content fit target page count?
+- Any orphan lines (single line on new page)?
+- Awkward whitespace at bottom of pages?
+- Sections feel too cramped or too sparse?
 
-### Step 5: Iterate
-Based on reviewer feedback:
-1. Identify specific issues
-2. Adjust template code
-3. Recompile
-4. Re-review
+### Step 5: Create Custom Template
+```bash
+# Copy and customize
+cp resume-formatter/assets/templates/typst/<base>.typ.j2 \
+   resume-formatter/assets/templates/typst/<user>-custom.typ.j2
+```
 
-Continue until reviewer returns all PASS results.
+Adjust parameters per "Content Fitting" section above.
+
+### Step 6: Apply Design Vectors (If Needed)
+For aesthetic changes beyond spacing:
+- Use `references/design_vectors.md` for typography, layout, color decisions
+- Use `references/industry_themes.md` for industry-specific guidance
+- Use `references/typst_patterns.md` for implementation patterns
+
+### Step 7: Iterate
+Use **resume-reviewer** skill to evaluate:
+1. Content fit (primary concern)
+2. Visual hierarchy
+3. Readability
+4. Professional appearance
+
+Continue until content fits well and reviewer passes all checks.
 
 ## Quick Start Templates
 
-For rapid customization, start from the closest existing template:
+Start from the template closest to your needs:
 
-| Starting Point | Use When |
-|----------------|----------|
-| `executive.typ.j2` | Professional default, clean hierarchy |
-| `compact.typ.j2` | Maximum density, extensive experience |
-| `minimal.typ.j2` | Clean, understated, monochromatic |
+| Template | Content Volume | Page Target | Style |
+|----------|---------------|-------------|-------|
+| `executive.typ.j2` | Medium | 1-2 pages | Professional, balanced |
+| `tech-modern.typ.j2` | Medium | 1 page | Modern, creative |
+| `modern-dense.typ.j2` | Heavy | 1-2 pages | Maximum density |
+| `compact.typ.j2` | Heavy | 1 page strict | Minimal spacing |
+| `minimal.typ.j2` | Light-Medium | 1 page | Understated, clean |
 
 ## References
 
@@ -127,10 +187,19 @@ The reviewer provides structured feedback that maps directly to template adjustm
 
 Before considering a template complete:
 
+**Content Fit (Primary)**
+- [ ] Content fits target page count without overflow
+- [ ] No orphan lines or awkward page breaks
+- [ ] No excessive whitespace at page bottoms
+- [ ] Spacing feels balanced throughout
+
+**Technical**
 - [ ] Compiles without errors
 - [ ] Handles all required YAML sections
 - [ ] Handles optional sections gracefully (empty = no output)
 - [ ] Special characters escaped properly
+
+**Quality**
+- [ ] Tested with actual resume content (not sample data)
 - [ ] Reviewer passes all categories
-- [ ] Tested with actual resume content (not just sample)
 - [ ] Consistent with stated design rationale
