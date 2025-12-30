@@ -34,7 +34,7 @@ uv run .claude/skills/resume-extractor/scripts/extract_docx.py <file.docx>
 # Validation
 uv run .claude/skills/resume-optimizer/scripts/validate_yaml.py <resume.yaml>
 
-# PDF generation (templates: executive, compact, minimal)
+# PDF generation (templates: executive, tech-modern, modern-dense, compact, minimal)
 uv run .claude/skills/resume-formatter/scripts/yaml_to_typst.py <resume.yaml> <template> -o <out.typ>
 uv run .claude/skills/resume-formatter/scripts/compile_typst.py <file.typ> -o <out.pdf>
 
@@ -134,6 +134,8 @@ experience:
 | Template | Use Case |
 |----------|----------|
 | executive | Professional, clean hierarchy, navy accents (default) |
+| tech-modern | Modern/creative with deep lavender palette, pill-style skills, Carlito font, single-page optimized |
+| modern-dense | Maximum density with categorized inline skills, strategic spacing, ~20-25 bullets |
 | compact | Maximum density for extensive experience |
 | minimal | Clean, understated, monochromatic |
 

@@ -69,6 +69,8 @@ unzip dist/resume-*.zip -d ~/.claude/skills/
 | Template | Use Case |
 |----------|----------|
 | `executive` | Professional default — clean hierarchy, navy accents |
+| `tech-modern` | Modern/creative — deep lavender, pill skills, Carlito font, single-page optimized |
+| `modern-dense` | Maximum density — categorized inline skills, 20-25 bullets, strategic spacing |
 | `compact` | Dense content — maximum info per page |
 | `minimal` | Understated — monochromatic, generous whitespace |
 

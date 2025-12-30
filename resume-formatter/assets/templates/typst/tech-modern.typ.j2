@@ -1,0 +1,203 @@
+// Tech Modern Resume Template
+// Design: Distinctive geometric modern with mixed typography
+// Fonts: Montserrat (headers) + Source Sans Pro (body)
+// Color: Teal accent, clean modern aesthetic
+// Target: Single page, content-optimized
+
+#set page(
+  paper: "us-letter",
+  margin: (top: 0.35in, bottom: 0.35in, left: 0.45in, right: 0.45in),
+)
+
+#set text(font: "Carlito", size: 9pt, fill: rgb("#1a1a1a"))
+#set par(justify: false, leading: 0.45em)
+
+// Colors - Deep Lavender Professional Palette
+#let lavender-deep = rgb("#6b5b95")
+#let lavender = rgb("#8b7bb8")
+#let lavender-light = rgb("#b8a9d4")
+#let navy = rgb("#374151")
+#let charcoal = rgb("#1f2937")
+#let slate = rgb("#6b7280")
+#let border = rgb("#e5e7eb")
+
+// Typography
+#let header-font = "Carlito"
+
+// Spacing
+#let xs = 1pt
+#let sm = 2pt
+#let md = 4pt
+#let lg = 6pt
+
+// Section header - with subtle lavender underline
+#let section(title) = {
+  v(lg)
+  text(font: header-font, size: 10.5pt, weight: "semibold", fill: lavender-deep, tracking: 0.5pt)[#upper(title)]
+  v(-2pt)
+  line(length: 100%, stroke: 0.5pt + border)
+  v(xs)
+}
+
+// Job entry - clean modern layout
+#let job-entry(title, company, location: none, dates) = {
+  grid(
+    columns: (1fr, auto),
+    column-gutter: md,
+    [
+      #text(font: header-font, size: 10pt, weight: "bold", fill: navy)[#title]
+      #text(size: 9pt, fill: slate)[ | ]#text(size: 9pt, fill: charcoal, weight: "medium")[#company]#if location != none [#text(size: 8.5pt, fill: slate)[, #location]]
+    ],
+    align(right + horizon, text(size: 8.5pt, weight: "medium", fill: lavender)[#dates])
+  )
+  v(xs)
+}
+
+// Bullet styling - lavender circle markers
+#set list(
+  marker: text(fill: lavender, size: 6pt)[•],
+  indent: 0pt,
+  body-indent: md,
+  spacing: 5pt,
+  tight: true,
+)
+
+// ============================================================================
+// HEADER - Bold geometric name with modern contact row
+// ============================================================================
+
+#align(center)[
+  #text(font: header-font, size: 22pt, weight: "bold", fill: navy, tracking: 0.3pt)[{{ contact.name | typst_escape }}]
+
+  #v(sm)
+
+  #set text(size: 8.5pt, fill: slate)
+  {% if contact.location %}{{ contact.location | typst_escape }}{% endif %}
+  {% if contact.phone %} #text(fill: border)[|] {{ contact.phone | typst_escape }}{% endif %}
+  {% if contact.email %} #text(fill: border)[|] #link("mailto:{{ contact.email | url_escape }}")[#text(fill: lavender-deep)[{{ contact.email | typst_escape }}]]{% endif %}
+  {% if contact.linkedin %} #text(fill: border)[|] #link("https://{{ contact.linkedin | url_escape }}")[#text(fill: lavender-deep)[LinkedIn]]{% endif %}
+  {% if contact.github %} #text(fill: border)[|] #link("https://{{ contact.github | url_escape }}")[#text(fill: lavender-deep)[GitHub]]{% endif %}
+]
+
+// ============================================================================
+// SUMMARY
+// ============================================================================
+
+{% if summary %}
+#section("Professional Summary")
+#text(size: 8.5pt, fill: charcoal)[{{ summary | typst_escape }}]
+{% endif %}
+
+// ============================================================================
+// EXPERIENCE
+// ============================================================================
+
+{% if experience %}
+#section("Experience")
+{% for exp in experience %}
+{% for position in exp.positions %}
+#job-entry(
+  [{{ position.title | typst_escape }}],
+  [{{ exp.company | typst_escape }}],
+  {% if exp.location %}location: [{{ exp.location | typst_escape }}],{% endif %}
+  [{{ position.dates | typst_escape }}],
+)
+{% if position.achievements %}
+#set text(size: 8.5pt, fill: charcoal)
+{% for achievement in position.achievements %}
+- {{ achievement | typst_escape }}
+{% endfor %}
+{% endif %}
+{% if not loop.last %}#v(sm){% endif %}
+{% endfor %}
+{% if not loop.last %}#v(sm){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// SKILLS - Condensed inline format
+// ============================================================================
+
+{% if skills %}
+#section("Core Competencies")
+{% for category, items in skills.items() %}
+{% if items is iterable and items is not string %}
+{% set num_cols = [items|length, 5]|min %}
+#grid(
+  columns: (auto,) * {{ num_cols }},
+  column-gutter: 4pt,
+  row-gutter: 2pt,
+  {% for item in items %}
+  box(
+    fill: rgb("#f5f3f7"),
+    inset: (x: 6pt, y: 3pt),
+    radius: 3pt,
+    stroke: 0.5pt + rgb("#d1d5db"),
+    text(size: 7.5pt, weight: "medium", fill: slate)[{{ item | typst_escape }}]
+  ),
+  {% endfor %}
+)
+{% else %}
+#text(fill: charcoal)[{{ items | typst_escape }}]
+{% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// EDUCATION
+// ============================================================================
+
+{% if education %}
+#section("Education")
+{% for e in education %}
+#grid(
+  columns: (1fr, auto),
+  [#text(font: header-font, weight: "semibold", fill: navy)[{{ e.degree | typst_escape }}] #text(fill: charcoal)[— {{ e.institution | typst_escape }}]],
+  align(right)[#text(size: 8.5pt, weight: "medium", fill: teal)[{{ e.graduation_year }}]]
+)
+{% if not loop.last %}#v(xs){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// CERTIFICATIONS
+// ============================================================================
+
+{% if certifications %}
+#section("Certifications")
+{% for cert in certifications %}
+#grid(
+  columns: (1fr, auto),
+  [#text(font: header-font, weight: "semibold", fill: navy)[{{ cert.name | typst_escape }}] #text(fill: charcoal)[— {{ cert.issuer | typst_escape }}]],
+  align(right)[#text(size: 8.5pt, weight: "medium", fill: teal)[{{ cert.date | typst_escape }}]]
+)
+{% if not loop.last %}#v(xs){% endif %}
+{% endfor %}
+{% endif %}
+
+// ============================================================================
+// PROJECTS
+// ============================================================================
+
+{% if projects %}
+#section("Projects")
+{% for project in projects %}
+#grid(
+  columns: (1fr, auto),
+  [#text(font: header-font, weight: "semibold", fill: navy)[{{ project.name | typst_escape }}]{% if project.technologies %} #text(size: 8pt, fill: slate)[({{ project.technologies | join(', ') | typst_escape }})]{% endif %}],
+  align(right)[#text(size: 8.5pt, weight: "medium", fill: teal)[{{ project.dates | typst_escape }}]]
+)
+{% if project.description %}
+#v(xs)
+#text(size: 9pt, fill: charcoal)[{{ project.description | typst_escape }}]
+{% endif %}
+{% if project.achievements %}
+#v(xs)
+#set text(size: 9pt, fill: charcoal)
+{% for achievement in project.achievements %}
+- {{ achievement | typst_escape }}
+{% endfor %}
+{% endif %}
+{% if not loop.last %}#v(md){% endif %}
+{% endfor %}
+{% endif %}

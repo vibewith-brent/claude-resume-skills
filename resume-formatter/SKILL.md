@@ -28,7 +28,8 @@ uv run scripts/compile_typst.py resume.typ
 ```
 Need?
 ├─ Professional default → Executive
-├─ Extensive experience → Compact
+├─ Modern/creative → Tech Modern
+├─ Maximum density → Modern Dense or Compact
 └─ Clean/understated → Minimal
 ```
 
@@ -37,6 +38,18 @@ Need?
 - Style: Clean hierarchy, navy/blue accents
 - Font: Inter
 - Features: Professional layout, good whitespace balance
+
+**Tech Modern** (new)
+- Best for: Modern tech/creative roles, distinctive aesthetic
+- Style: Deep lavender palette, pill-style skills, modern typography
+- Font: Carlito (Calibri alternative)
+- Features: Single-page optimized, creative competency display, professional but contemporary
+
+**Modern Dense** (new)
+- Best for: Extensive experience requiring optimal space usage
+- Style: Categorized inline skills, tight but readable spacing
+- Font: Inter
+- Features: Single-page target, 20-25 bullets + summary + skills, strategic density
 
 **Compact**
 - Best for: Extensive experience, dense content
@@ -58,12 +71,18 @@ Need?
 uv run scripts/yaml_to_typst.py <yaml_file> <template> --output <output.typ>
 ```
 
-**Templates:** `executive`, `compact`, `minimal`
+**Templates:** `executive`, `tech-modern`, `modern-dense`, `compact`, `minimal`
 
 **Examples:**
 ```bash
 # Executive template (default)
 uv run scripts/yaml_to_typst.py resume.yaml executive --output resume_executive.typ
+
+# Tech Modern template (modern/creative)
+uv run scripts/yaml_to_typst.py resume.yaml tech-modern --output resume_tech_modern.typ
+
+# Modern Dense template (maximum density)
+uv run scripts/yaml_to_typst.py resume.yaml modern-dense --output resume_modern_dense.typ
 
 # Compact template (dense)
 uv run scripts/yaml_to_typst.py resume.yaml compact --output resume_compact.typ
