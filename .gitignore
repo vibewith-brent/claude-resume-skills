@@ -3,12 +3,14 @@
 
 # Python cache
 __pycache__/
+.pytest_cache/
 *.py[cod]
 *$py.class
 *.so
 
 # Virtual environments
 venv/
+.venv/
 env/
 ENV/
 
@@ -42,3 +44,6 @@ dist/
 
 # Local skill symlinks (use plugin marketplace instead)
 .claude/skills/
+
+# User resume working directories
+resumes/
