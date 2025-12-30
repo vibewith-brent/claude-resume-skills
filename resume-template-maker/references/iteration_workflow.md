@@ -143,7 +143,7 @@ Design specification:
 Before first compile:
 - [ ] Jinja2 syntax correct
 - [ ] All user content uses `| typst_escape`
-- [ ] All required sections handled (contact, summary, experience, skills, education)
+- [ ] All sections handled (contact required; summary, experience, skills, education recommended)
 - [ ] Optional sections have `{% if ... %}` guards
 - [ ] No hardcoded content (all from YAML)
 - [ ] Consistent spacing values

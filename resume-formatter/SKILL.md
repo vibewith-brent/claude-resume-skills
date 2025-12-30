@@ -7,7 +7,7 @@ description: Convert resume YAML to professionally formatted PDF using Typst tem
 
 ## Overview
 
-Transform resume YAML files into professionally formatted PDF documents using Typst templates. Choose from 3 templates optimized for different use cases.
+Transform resume YAML files into professionally formatted PDF documents using Typst templates. Choose from 5 templates optimized for different use cases.
 
 ## Quick Start
 
@@ -73,6 +73,10 @@ uv run scripts/yaml_to_typst.py <yaml_file> <template> --output <output.typ>
 
 **Templates:** `executive`, `tech-modern`, `modern-dense`, `compact`, `minimal`
 
+**Options:**
+- `--output` / `-o`: Output file path (default: stdout)
+- `--skip-validation`: Skip schema validation for legacy YAML formats
+
 **Examples:**
 ```bash
 # Executive template (default)
@@ -107,6 +111,24 @@ uv run scripts/compile_typst.py resume_executive.typ --output brent_skoumal_resu
 ```
 
 Typst compiles in a single pass with no auxiliary files to clean up.
+
+### Schema Validation
+
+The formatter validates YAML against the resume schema before rendering. This catches structural issues early:
+
+```bash
+# Validation runs by default
+uv run scripts/yaml_to_typst.py resume.yaml executive --output resume.typ
+# Output: Warning: Weak verb 'worked' in achievement: Worked with vendors...
+
+# Skip validation for legacy YAML formats
+uv run scripts/yaml_to_typst.py legacy_resume.yaml executive --skip-validation --output resume.typ
+```
+
+Validation checks:
+- Required: `contact`. Recommended: `summary`, `experience`, `skills`, `education`
+- Proper nesting: `contact.name`, `experience[].positions[].achievements`
+- Content quality: Warns about weak action verbs
 
 ### Review PDF
 

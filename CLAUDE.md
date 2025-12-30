@@ -53,6 +53,7 @@ uv run resume-optimizer/scripts/validate_yaml.py <resume.yaml>
 
 # PDF generation (templates: executive, tech-modern, modern-dense, compact, minimal)
 uv run resume-formatter/scripts/yaml_to_typst.py <resume.yaml> <template> -o <out.typ>
+uv run resume-formatter/scripts/yaml_to_typst.py <resume.yaml> <template> --skip-validation -o <out.typ>  # legacy YAML
 uv run resume-formatter/scripts/compile_typst.py <file.typ> -o <out.pdf>
 
 # One-liner PDF
@@ -65,6 +66,10 @@ uv run resume-optimizer/scripts/fetch_job_posting.py "<url>" --output job.txt
 # Export and compare
 uv run resume-state/scripts/export_version.py <v1> <output_dir>/
 uv run resume-state/scripts/diff_versions.py <v1> <v2>
+
+# Testing
+uv sync --extra dev           # Install test dependencies
+uv run pytest tests/ -v       # Run tests
 ```
 
 ## Architecture
@@ -103,7 +108,7 @@ Project    PDF/DOCX      YAML       YAML→PDF   Visual QA    Custom .typ.j2
 ```
 
 - **resume-state**: Manages projects and versions; tracks YAML iterations and original sources
-- **resume-reviewer**: Evaluates compiled PDFs against visual QA checklist, provides structured feedback
+- **resume-reviewer**: Generates review templates; Claude views the PDF and fills in the visual QA checklist
 - **resume-template-maker**: Creates custom templates using design vectors (typography, layout, whitespace, color)
 - **resume-coverletter**: Generates cover letters matching resume template styling
 
@@ -133,7 +138,7 @@ typst --version
 
 ## YAML Resume Structure
 
-Required sections: `contact`, `summary`, `experience`, `skills`, `education`
+Required: `contact`. Recommended: `summary`, `experience`, `skills`, `education`
 
 Optional: `certifications`, `projects`, `publications`, `awards`, `languages`, `volunteer`
 

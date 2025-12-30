@@ -16,8 +16,13 @@ import argparse
 import sys
 from pathlib import Path
 
+# Add resume-extractor/scripts to path for schema import
+_extractor_scripts = Path(__file__).parent.parent.parent / "resume-extractor" / "scripts"
+if _extractor_scripts.exists():
+    sys.path.insert(0, str(_extractor_scripts))
 
-def load_yaml(yaml_path: Path) -> dict:
+
+def load_yaml(yaml_path: Path, validate: bool = True) -> dict:
     """Load and parse YAML resume file."""
     try:
         import yaml
@@ -27,9 +32,36 @@ def load_yaml(yaml_path: Path) -> dict:
 
     try:
         with open(yaml_path, 'r') as f:
-            return yaml.safe_load(f)
+            data = yaml.safe_load(f)
     except Exception as e:
         print(f"Error loading YAML: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    if not validate:
+        return data
+
+    # Validate against schema
+    try:
+        from schema import validate_resume
+    except ImportError:
+        # Schema validation unavailable, skip
+        return data
+
+    try:
+        from pydantic import ValidationError
+    except ImportError:
+        return data
+
+    try:
+        resume, warnings = validate_resume(data)
+        for w in warnings:
+            print(f"Warning: {w}", file=sys.stderr)
+        return data
+    except ValidationError as e:
+        print("Schema validation failed:", file=sys.stderr)
+        for err in e.errors():
+            loc = " -> ".join(str(x) for x in err["loc"])
+            print(f"  {loc}: {err['msg']}", file=sys.stderr)
         sys.exit(1)
 
 
@@ -53,7 +85,8 @@ def render_typst(resume_data: dict, template_name: str, script_dir: Path) -> str
 
     if not template_path.exists():
         print(f"Error: Template not found: {template_file}", file=sys.stderr)
-        print(f"Available templates: modern, classic, academic, creative", file=sys.stderr)
+        available = get_available_templates(script_dir)
+        print(f"Available templates: {', '.join(available)}", file=sys.stderr)
         sys.exit(1)
 
     env = Environment(loader=FileSystemLoader(template_dir))
@@ -142,6 +175,8 @@ def main():
     parser.add_argument("template", choices=available_templates,
                         help="Typst template to use")
     parser.add_argument("-o", "--output", type=Path, help="Output .typ file path (default: stdout)")
+    parser.add_argument("--skip-validation", action="store_true",
+                        help="Skip schema validation (for legacy YAML formats)")
 
     args = parser.parse_args()
 
@@ -149,7 +184,7 @@ def main():
         print(f"Error: File not found: {args.yaml_file}", file=sys.stderr)
         sys.exit(1)
 
-    resume_data = load_yaml(args.yaml_file)
+    resume_data = load_yaml(args.yaml_file, validate=not args.skip_validation)
     typst_output = render_typst(resume_data, args.template, script_dir)
 
     if args.output:

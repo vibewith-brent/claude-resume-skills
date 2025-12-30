@@ -1,11 +1,11 @@
 ---
 name: resume-reviewer
-description: Visual QA for compiled resume PDFs. Evaluate layout, typography, spacing. Use after compiling a PDF to check for issues before finalizing.
+description: Visual QA templates for resume PDFs. Generates checklists and feedback templates that Claude fills in after visually reviewing the PDF.
 ---
 
 # Resume Reviewer Skill
 
-Visual QA and critique for compiled resume PDFs. Provides structured evaluation to drive iterative improvement.
+Generates structured review templates and checklists for resume PDF evaluation. Claude (or a human) visually reviews the PDF and fills in the template to produce actionable feedback.
 
 ## When to Use
 

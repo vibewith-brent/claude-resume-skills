@@ -1,6 +1,6 @@
 [project]
 name = "resume-helper"
-version = "1.2.0"
+version = "1.4.0"
 description = "Resume management skills suite: extract, optimize, format, review, and create custom templates"
 requires-python = ">=3.10"
 dependencies = [
@@ -11,6 +11,12 @@ dependencies = [
     "python-docx",
     "pyyaml",
     "requests",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=4.0",
 ]
 
 [project.scripts]

@@ -4,6 +4,7 @@ import json
 import os
 import re
 import shutil
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
@@ -109,7 +110,14 @@ def save_config(config: dict, store_path: Optional[Path] = None) -> None:
         store_path = get_store_path()
     ensure_store_exists(store_path)
     config_path = store_path / CONFIG_FILE
-    config_path.write_text(json.dumps(config, indent=2))
+    fd, tmp_path = tempfile.mkstemp(dir=store_path, suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w") as f:
+            json.dump(config, f, indent=2)
+        Path(tmp_path).replace(config_path)
+    except:
+        Path(tmp_path).unlink(missing_ok=True)
+        raise
 
 
 def get_project_path(project: str, store_path: Optional[Path] = None) -> Path:
@@ -143,7 +151,14 @@ def save_project_state(project: str, state: dict, store_path: Optional[Path] = N
     project_path = get_project_path(project, store_path)
     state["updated_at"] = datetime.now(timezone.utc).isoformat()
     state_file = project_path / PROJECT_FILE
-    state_file.write_text(json.dumps(state, indent=2))
+    fd, tmp_path = tempfile.mkstemp(dir=project_path, suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w") as f:
+            json.dump(state, f, indent=2)
+        Path(tmp_path).replace(state_file)
+    except:
+        Path(tmp_path).unlink(missing_ok=True)
+        raise
 
 
 def get_active_project(store_path: Optional[Path] = None) -> Optional[str]:

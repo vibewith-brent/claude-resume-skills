@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
-"""Review a resume PDF against the visual QA checklist.
+"""Generate review templates for resume PDF visual QA.
 
-This script provides structured output for resume PDF review, supporting both
-human-readable and JSON formats for iteration with template-maker.
+This script outputs structured templates (checklists, feedback forms) that a
+reviewer—Claude or a human—fills in after visually inspecting the PDF. It does
+NOT perform automated analysis; the reviewer must view the PDF and complete the
+template manually.
+
+Workflow:
+    1. Run this script to generate a review template
+    2. View the PDF (Claude uses the Read tool; humans open in a viewer)
+    3. Fill in the template with observations, scores, and issues
+    4. Use the completed review to guide template adjustments
 
 Usage:
     uv run scripts/review_pdf.py <resume.pdf> [--json] [--checklist]

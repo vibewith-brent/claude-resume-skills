@@ -57,7 +57,7 @@ After extracting text, parse it into structured YAML format following the resume
 **Schema reference:**
 
 See `references/resume_schema.yaml` for the complete YAML structure including:
-- Required fields (contact, summary, experience, education, skills)
+- Required: contact. Recommended: summary, experience, skills, education
 - Optional fields (certifications, projects, publications, awards, languages, volunteer)
 - Formatting guidelines and examples
 - Best practices for YAML syntax

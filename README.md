@@ -14,7 +14,17 @@ Seven skills for resume management: extract PDF/DOCX → optimize content → fo
 
 After installation, use skills via natural language (e.g., "Extract my resume from resume.pdf").
 
-**Prerequisite:** [Typst](https://typst.app) must be installed (`brew install typst`).
+### Updating Skills
+
+```bash
+/plugin update resume-skills@resume-helper-skills
+```
+
+After updating, **restart Claude Code** or start a new conversation to load the updated skills.
+
+### Prerequisite
+
+[Typst](https://typst.app) must be installed (`brew install typst`).
 
 ## Skills
 
@@ -25,7 +35,7 @@ After installation, use skills via natural language (e.g., "Extract my resume fr
 | **resume-optimizer** | Improve content: ATS optimization, metrics, keyword alignment, job tailoring |
 | **resume-formatter** | Generate PDFs from YAML using Typst templates |
 | **resume-coverletter** | Generate cover letters matching resume template styling |
-| **resume-reviewer** | Visual QA for compiled PDFs |
+| **resume-reviewer** | Visual QA templates — Claude views PDF and fills in checklist |
 | **resume-template-maker** | Create custom Typst templates |
 
 ### Templates
@@ -63,17 +73,26 @@ resume-*/              # Skill directories (SKILL.md + scripts/ + references/)
 
 ## YAML Schema
 
-**Required:** `contact`, `summary`, `experience`, `skills`, `education`
+**Required:** `contact`
+
+**Recommended:** `summary`, `experience`, `skills`, `education`
 
 **Optional:** `certifications`, `projects`, `publications`, `awards`, `languages`, `volunteer`
 
 Experience supports nested positions (multiple roles at same company). Full schema: `resume-extractor/references/resume_schema.yaml`
+
+The formatter validates YAML against the schema before rendering. Use `--skip-validation` for legacy formats:
+
+```bash
+uv run resume-formatter/scripts/yaml_to_typst.py resume.yaml executive --skip-validation
+```
 
 ## Troubleshooting
 
 | Issue | Fix |
 |-------|-----|
 | Skills not loading | Check `/plugin list`; reinstall with `/plugin install resume-skills@resume-helper-skills` |
+| Schema validation failed | Fix YAML structure per error messages, or use `--skip-validation` for legacy formats |
 | Typst errors | Check `typst --version`; escape special chars in YAML |
 | Content overflow | Reduce bullets (4-6/role), try `compact` template |
 | State not found | Run `init_project.py <name>` |
@@ -81,7 +100,16 @@ Experience supports nested positions (multiple roles at same company). Full sche
 ## Development
 
 ```bash
-uv sync  # Install dependencies
+uv sync              # Install dependencies
+uv sync --extra dev  # Include test dependencies
+```
+
+### Testing
+
+```bash
+uv run pytest tests/           # Run all tests
+uv run pytest tests/ -v        # Verbose output
+uv run pytest tests/ --cov     # With coverage
 ```
 
 ### Adding Skills
