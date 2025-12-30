@@ -1,57 +1,20 @@
 # Resume Skills for Claude Code
 
-Six skills for resume management: extract PDF/DOCX → optimize content → format to PDF → review and iterate.
+Seven skills for resume management: extract PDF/DOCX → optimize content → format to PDF → generate cover letters → review and iterate.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skills-blue)](https://claude.com/code)
 
-## Quick Install via Plugin Marketplace
+## Installation
 
-Register this repo as a plugin marketplace, then install:
-
-```
-/plugin marketplace add vibewith-brent/claude-resume-skills
+```bash
+/plugin marketplace add https://github.com/vibewith-brent/claude-resume-skills
 /plugin install resume-skills@resume-helper-skills
 ```
 
-Or browse available plugins after registering:
-
-1. Run `/plugin marketplace add vibewith-brent/claude-resume-skills`
-2. Select **Browse and install plugins**
-3. Select **resume-helper-skills**
-4. Select **resume-skills**
-5. Select **Install now**
-
-After installation, use skills by natural language (e.g., "Extract my resume from resume.pdf").
+After installation, use skills via natural language (e.g., "Extract my resume from resume.pdf").
 
 **Prerequisite:** [Typst](https://typst.app) must be installed (`brew install typst`).
-
-## Installation (Alternative Methods)
-
-### Project Skills (Recommended)
-
-Clone and open in Claude Code. Skills auto-load from `.claude/skills/`:
-
-```bash
-git clone https://github.com/vibewith-brent/claude-resume-skills.git
-cd claude-resume-skills
-brew install typst  # macOS (or: cargo install typst-cli)
-```
-
-### Personal Skills
-
-Copy skills to your personal directory for use across all projects:
-
-```bash
-# Package and install to personal skills
-uv run scripts/package_skills.py
-unzip dist/resume-*.zip -d ~/.claude/skills/
-```
-
-### Prerequisites
-
-- **Typst** — PDF compilation (~20MB, much lighter than LaTeX)
-- **Python 3.10+** — Auto-managed by `uv`
 
 ## Skills
 
@@ -61,6 +24,7 @@ unzip dist/resume-*.zip -d ~/.claude/skills/
 | **resume-extractor** | Convert PDF/DOCX to structured YAML |
 | **resume-optimizer** | Improve content: ATS optimization, metrics, keyword alignment, job tailoring |
 | **resume-formatter** | Generate PDFs from YAML using Typst templates |
+| **resume-coverletter** | Generate cover letters matching resume template styling |
 | **resume-reviewer** | Visual QA for compiled PDFs |
 | **resume-template-maker** | Create custom Typst templates |
 
@@ -83,6 +47,7 @@ Skills auto-select based on your request. Example workflow:
 "Extract to YAML and optimize for ATS"
 "Create version for Google, tailor for this job: [URL]"
 "Generate PDF with executive template"
+"Write a cover letter for this role"
 "Review the PDF"
 ```
 
@@ -91,12 +56,10 @@ CLI equivalents in each skill's `scripts/` directory.
 ## Structure
 
 ```
-resume-*/              # Source of truth for each skill (SKILL.md + scripts/ + references/)
-.claude/skills/        # Symlinks to resume-*/ (auto-loaded by Claude Code)
+resume-*/              # Skill directories (SKILL.md + scripts/ + references/)
+.claude-plugin/        # Plugin marketplace configuration
 .resume_versions/      # Version store (projects, sources, versions)
 ```
-
-Edit `resume-*/` directly. `.claude/skills/` contains symlinks.
 
 ## YAML Schema
 
@@ -110,7 +73,7 @@ Experience supports nested positions (multiple roles at same company). Full sche
 
 | Issue | Fix |
 |-------|-----|
-| Skills not loading | Verify symlinks: `ls -la .claude/skills/` → restart Claude Code |
+| Skills not loading | Check `/plugin list`; reinstall with `/plugin install resume-skills@resume-helper-skills` |
 | Typst errors | Check `typst --version`; escape special chars in YAML |
 | Content overflow | Reduce bullets (4-6/role), try `compact` template |
 | State not found | Run `init_project.py <name>` |
@@ -118,8 +81,7 @@ Experience supports nested positions (multiple roles at same company). Full sche
 ## Development
 
 ```bash
-uv sync                           # Install dependencies
-uv run scripts/package_skills.py  # Package to dist/*.zip
+uv sync  # Install dependencies
 ```
 
 ### Adding Skills
@@ -132,7 +94,7 @@ uv run scripts/package_skills.py  # Package to dist/*.zip
    ---
    ```
 2. Add `scripts/` and `references/` as needed
-3. Symlink: `ln -s ../resume-newskill .claude/skills/resume-newskill`
+3. Add skill path to `.claude-plugin/marketplace.json`
 
 See [Skill Authoring Best Practices](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/skills#authoring-best-practices).
 
@@ -148,7 +110,7 @@ MIT — see [LICENSE](LICENSE)
 
 - [Typst](https://typst.app) — Modern typesetting
 - [Claude Code Skills](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/skills) — Official docs
-- [Anthropic Skills Repo](https://github.com/anthropics/skills) — Examples
+- [Claude Code Plugins](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/plugins) — Plugin marketplace docs
 
 ---
 

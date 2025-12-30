@@ -37,5 +37,8 @@ Thumbs.db
 .resume_versions/
 
 # Packaged skill distributions (build artifacts)
-# dist/
+dist/
 *.skill
+
+# Local skill symlinks (use plugin marketplace instead)
+.claude/skills/

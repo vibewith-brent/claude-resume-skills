@@ -4,7 +4,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Resume management skills suite for Claude Code: extract PDF/DOCX → optimize content → format to PDF → review and iterate. Six skills auto-load from `.claude/skills/` and are invoked via natural language.
+Resume management skills suite for Claude Code: extract PDF/DOCX → optimize content → format to PDF → review and iterate. Seven skills distributed via plugin marketplace.
+
+## Installation
+
+Install skills via plugin marketplace:
+
+```bash
+# Add this repo as a plugin marketplace
+/plugin marketplace add https://github.com/vibewith-brent/claude-resume-skills
+
+# Install the resume skills plugin
+/plugin install resume-skills@resume-helper-skills
+
+# Or update if already installed
+/plugin update resume-skills@resume-helper-skills
+```
+
+After installation, skills are invoked via natural language (e.g., "extract my resume", "optimize for this job posting", "format as PDF").
 
 ## Workflow Priority
 
@@ -20,49 +37,51 @@ Run `uv sync` first if dependencies aren't installed.
 
 ```bash
 # Version management (USE FIRST)
-uv run .claude/skills/resume-state/scripts/init_project.py <project_name>
-uv run .claude/skills/resume-state/scripts/import_resume.py <file.pdf|docx>
-uv run .claude/skills/resume-state/scripts/create_version.py --tag <tag> --notes "description"
-uv run .claude/skills/resume-state/scripts/list_versions.py
-uv run .claude/skills/resume-state/scripts/switch_version.py <v1|v2|...>
-uv run .claude/skills/resume-state/scripts/get_active.py  # prints active YAML path
+uv run resume-state/scripts/init_project.py <project_name>
+uv run resume-state/scripts/import_resume.py <file.pdf|docx>
+uv run resume-state/scripts/create_version.py --tag <tag> --notes "description"
+uv run resume-state/scripts/list_versions.py
+uv run resume-state/scripts/switch_version.py <v1|v2|...>
+uv run resume-state/scripts/get_active.py  # prints active YAML path
 
 # Extraction
-uv run .claude/skills/resume-extractor/scripts/extract_pdf.py <file.pdf>
-uv run .claude/skills/resume-extractor/scripts/extract_docx.py <file.docx>
+uv run resume-extractor/scripts/extract_pdf.py <file.pdf>
+uv run resume-extractor/scripts/extract_docx.py <file.docx>
 
 # Validation
-uv run .claude/skills/resume-optimizer/scripts/validate_yaml.py <resume.yaml>
+uv run resume-optimizer/scripts/validate_yaml.py <resume.yaml>
 
 # PDF generation (templates: executive, tech-modern, modern-dense, compact, minimal)
-uv run .claude/skills/resume-formatter/scripts/yaml_to_typst.py <resume.yaml> <template> -o <out.typ>
-uv run .claude/skills/resume-formatter/scripts/compile_typst.py <file.typ> -o <out.pdf>
+uv run resume-formatter/scripts/yaml_to_typst.py <resume.yaml> <template> -o <out.typ>
+uv run resume-formatter/scripts/compile_typst.py <file.typ> -o <out.pdf>
 
 # One-liner PDF
-uv run .claude/skills/resume-formatter/scripts/yaml_to_typst.py resume.yaml executive -o resume.typ && \
-uv run .claude/skills/resume-formatter/scripts/compile_typst.py resume.typ -o resume.pdf
+uv run resume-formatter/scripts/yaml_to_typst.py resume.yaml executive -o resume.typ && \
+uv run resume-formatter/scripts/compile_typst.py resume.typ -o resume.pdf
 
 # Job tailoring
-uv run .claude/skills/resume-optimizer/scripts/fetch_job_posting.py "<url>" --output job.txt
+uv run resume-optimizer/scripts/fetch_job_posting.py "<url>" --output job.txt
 
 # Export and compare
-uv run .claude/skills/resume-state/scripts/export_version.py <v1> <output_dir>/
-uv run .claude/skills/resume-state/scripts/diff_versions.py <v1> <v2>
+uv run resume-state/scripts/export_version.py <v1> <output_dir>/
+uv run resume-state/scripts/diff_versions.py <v1> <v2>
 ```
 
 ## Architecture
 
 ```
-resume-*/                 # Canonical skill sources
+resume-*/                 # Skill directories (plugin source)
 ├── resume-extractor/     # PDF/DOCX → text extraction
 ├── resume-optimizer/     # Content improvement, ATS, tailoring
 ├── resume-formatter/     # YAML → Typst → PDF
 │   └── assets/templates/typst/  # Jinja2 templates (.typ.j2)
 ├── resume-reviewer/      # Visual QA for compiled PDFs
 ├── resume-template-maker/ # Create custom Typst templates
+├── resume-coverletter/   # Generate matching cover letters
 └── resume-state/         # Version and project management
 
-.claude/skills/           # Symlinks to resume-*/ (auto-loaded by Claude Code)
+.claude-plugin/           # Plugin marketplace configuration
+└── marketplace.json      # Defines plugin entry points
 
 .resume_versions/         # Version store (created on init)
 ├── config.json           # Active project setting
@@ -73,31 +92,31 @@ resume-*/                 # Canonical skill sources
     └── jobs/             # Cached job postings
 ```
 
-Single source of truth: edit `resume-*/` directories; `.claude/skills/` contains symlinks.
-
 ### Skill Workflow
 
 ```
 [State] → [Extract] → [Optimize] → [Format] → [Review] ←→ [Template Maker]
    ↓          ↓            ↓            ↓          ↓              ↓
 Project    PDF/DOCX      YAML       YAML→PDF   Visual QA    Custom .typ.j2
-Versions
+                                       ↓
+                               [Cover Letter]
 ```
 
 - **resume-state**: Manages projects and versions; tracks YAML iterations and original sources
 - **resume-reviewer**: Evaluates compiled PDFs against visual QA checklist, provides structured feedback
 - **resume-template-maker**: Creates custom templates using design vectors (typography, layout, whitespace, color)
+- **resume-coverletter**: Generates cover letters matching resume template styling
 
 ## Key Files
 
 - **State Schema**: `.resume_versions/projects/<name>/project.json` — version history and metadata
 - **Global Config**: `.resume_versions/config.json` — active project setting
 - **State Utils**: `resume-state/scripts/state_utils.py` — shared utilities for version management (schema v1.0.0)
-- **YAML Schema**: `.claude/skills/resume-extractor/references/resume_schema.yaml` — canonical structure for resume data
-- **Typst Templates**: `.claude/skills/resume-formatter/assets/templates/typst/*.typ.j2` — Jinja2 templates with `typst_escape` filter
-- **Visual QA Checklist**: `.claude/skills/resume-reviewer/references/visual_qa_checklist.md` — structured evaluation criteria
-- **Design Vectors**: `.claude/skills/resume-template-maker/references/design_vectors.md` — typography, layout, whitespace, color guidance
-- **Industry Themes**: `.claude/skills/resume-template-maker/references/industry_themes.md` — industry-specific design recommendations
+- **YAML Schema**: `resume-extractor/references/resume_schema.yaml` — canonical structure for resume data
+- **Typst Templates**: `resume-formatter/assets/templates/typst/*.typ.j2` — Jinja2 templates with `typst_escape` filter
+- **Visual QA Checklist**: `resume-reviewer/references/visual_qa_checklist.md` — structured evaluation criteria
+- **Design Vectors**: `resume-template-maker/references/design_vectors.md` — typography, layout, whitespace, color guidance
+- **Industry Themes**: `resume-template-maker/references/industry_themes.md` — industry-specific design recommendations
 - **Reference Docs**: `references/` dirs contain ATS guidelines, action verbs, impact patterns, examples
 
 ## Typst Dependency
@@ -157,12 +176,11 @@ Design vectors prevent generic "AI resume" patterns by providing mid-altitude gu
 - **YAML escaping**: Quotes containing colons or special chars need proper YAML escaping
 - **Template names**: Lowercase only (`modern-tech` not `Modern-Tech`)
 - **Version IDs**: Format is `v1`, `v2` (lowercase v + number)
-- **Skill invocation**: Use natural language; skills auto-detect from `.claude/skills/` symlinks
-- **Source of truth**: Edit `resume-*/` directories, not `.claude/skills/` (symlinks)
+- **Skill invocation**: Use natural language after plugin installation
 
 ## Troubleshooting
 
-**Skills not loading:** Verify `.claude/skills/` symlinks point to `resume-*/` directories. Restart Claude Code.
+**Skills not loading:** Verify plugin is installed with `/plugin list`. Re-install with `/plugin install resume-skills@resume-helper-skills`.
 
 **Typst compile errors:** Check `typst --version`. Escape special chars in YAML (colons, quotes).
 
@@ -170,7 +188,7 @@ Design vectors prevent generic "AI resume" patterns by providing mid-altitude gu
 
 **State not found:** Run `get_active.py` to verify project exists. If no `.resume_versions/`, run `init_project.py`.
 
-**Store location:** Scripts search upward for `.resume_versions/`, fall back to `~/.resume_versions`. Override with `RESUME_VERSIONS_PATH` env var.
+**Store location:** Scripts search upward for `.resume_versions/`. If in a git repo, prefer repo-local `.resume_versions/`. Otherwise fall back to `~/.resume_versions`. Override with `RESUME_VERSIONS_PATH` env var.
 
 ## Development Notes
 
@@ -178,17 +196,17 @@ Design vectors prevent generic "AI resume" patterns by providing mid-altitude gu
 
 - Managed with `uv`; run `uv sync` to install dependencies
 - Python >=3.10 required
-- Dependencies: pdfplumber, python-docx, pyyaml, jinja2, requests, beautifulsoup4
+- Dependencies: pdfplumber, python-docx, pyyaml, jinja2, requests, beautifulsoup4, pydantic
 
 ### Skill Architecture
 
-- **Source of Truth**: `resume-*/` directories (not `.claude/skills/` symlinks)
+- **Source of Truth**: `resume-*/` directories
+- **Plugin Config**: `.claude-plugin/marketplace.json` defines plugin entry points
 - **State Management**: `state_utils.py` provides config/project loading, version resolution, path handling
 - **New scripts**: Import from `state_utils.py`, use `resolve_project()` for `--project/-p` flags
 
-### Packaging Skills
+### Local Development
 
-```bash
-uv run scripts/package_skills.py           # All skills → dist/*.zip
-uv run scripts/package_skills.py resume-formatter  # Single skill
-```
+For local development/testing, you can either:
+1. Install via plugin marketplace (recommended — tests real distribution)
+2. Create symlinks in `.claude/skills/` pointing to `resume-*/` directories

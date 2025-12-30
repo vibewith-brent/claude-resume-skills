@@ -1,0 +1,71 @@
+// Cover Letter - Tech Modern Style
+// Matching tech-modern.typ.j2 resume design language
+// Font: Carlito, Colors: Deep Lavender palette
+
+#set page(
+  paper: "us-letter",
+  margin: (top: 0.6in, bottom: 0.6in, left: 0.75in, right: 0.75in),
+)
+
+#set text(font: "Carlito", size: 10.5pt, fill: rgb("#1f2937"))
+#set par(justify: true, leading: 0.55em, first-line-indent: 0pt)
+
+// Colors - Deep Lavender Professional Palette
+#let lavender-deep = rgb("#6b5b95")
+#let lavender = rgb("#8b7bb8")
+#let navy = rgb("#374151")
+#let charcoal = rgb("#1f2937")
+#let slate = rgb("#6b7280")
+
+// Header
+#align(center)[
+  #text(font: "Carlito", size: 18pt, weight: "bold", fill: navy, tracking: 0.3pt)[{{ contact.name | typst_escape }}]
+
+  #v(4pt)
+
+  #set text(size: 9.5pt, fill: slate)
+  {% if contact.location %}{{ contact.location | typst_escape }}{% endif %}
+  {% if contact.phone %}#h(6pt) #text(fill: rgb("#e5e7eb"))[|] #h(6pt) {{ contact.phone | typst_escape }}{% endif %}
+  {% if contact.email %}#h(6pt) #text(fill: rgb("#e5e7eb"))[|] #h(6pt) #link("mailto:{{ contact.email | url_escape }}")[#text(fill: lavender-deep)[{{ contact.email | typst_escape }}]]{% endif %}
+  {% if contact.linkedin %}#h(6pt) #text(fill: rgb("#e5e7eb"))[|] #h(6pt) #link("{{ contact.linkedin if contact.linkedin.startswith('http') else 'https://' + contact.linkedin | url_escape }}")[#text(fill: lavender-deep)[LinkedIn]]{% endif %}
+]
+
+#v(16pt)
+
+{% if not is_generic %}
+Dear Hiring Team,
+{% else %}
+Dear Hiring Manager,
+{% endif %}
+
+#v(4pt)
+
+{% if not is_generic %}
+I am writing to express my strong interest in the {{ position | typst_escape }} position at {{ company | typst_escape }}. {% else %}I am writing to express my strong interest in contributing to your organization. {% endif %}{{ summary | typst_escape }}
+
+#v(4pt)
+
+{% if achievements %}
+My track record demonstrates the impact I can bring{% if not is_generic %} to {{ company | typst_escape }}{% endif %}:
+
+#v(2pt)
+
+{% for achievement in achievements[:5] %}
+- *{{ achievement | typst_escape }}*
+
+#v(2pt)
+
+{% endfor %}
+{% endif %}
+
+#v(4pt)
+
+I excel at translating strategic goals into actionable plans, setting clear performance metrics, and delivering results in fast-paced environments. {% if not is_generic %}I am energized by the opportunity to contribute to {{ company | typst_escape }}'s success{% else %}I thrive on solving complex challenges{% endif %} and would welcome the opportunity to discuss how my experience can support {% if not is_generic %}your{% else %}organizational{% endif %} goals. Thank you for your consideration.
+
+#v(8pt)
+
+Sincerely,
+
+#v(8pt)
+
+#text(weight: "semibold", fill: lavender-deep)[{{ contact.name | typst_escape }}]

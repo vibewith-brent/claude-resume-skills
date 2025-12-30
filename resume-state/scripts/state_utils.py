@@ -20,38 +20,69 @@ PROJECT_SCHEMA_VERSION = "1.0.0"
 
 
 def get_store_path(start_path: Optional[Path] = None) -> Path:
-    """Find .resume_versions store by searching upward, then global fallback.
+    """Find .resume_versions store by searching upward within git repo, then global fallback.
 
     Search order:
     1. RESUME_VERSIONS_PATH environment variable
-    2. Search upward from current/start directory for .resume_versions
-    3. Global ~/.resume_versions
+    2. If in git repo: search upward within repo boundaries for .resume_versions
+       - If found, use it
+       - If not found, use repo root .resume_versions
+    3. Otherwise: search upward from current directory for .resume_versions
+    4. Fall back to global ~/.resume_versions
 
-    Returns existing store path, or global path for creation.
+    Returns existing store path, or appropriate path for creation.
     """
     # Check environment variable
     env_path = os.environ.get("RESUME_VERSIONS_PATH")
     if env_path:
         return Path(env_path).expanduser()
 
-    # Search upward from start_path
+    # Start from current directory
     if start_path is None:
         start_path = Path.cwd()
 
     current = start_path.resolve()
+    git_root = None
+
+    # First pass: find git root
+    temp = current
     while True:
-        candidate = current / STORE_DIR
-        if candidate.exists() and candidate.is_dir():
-            return candidate
-
-        # Check if we've reached root
-        parent = current.parent
-        if parent == current:
+        if (temp / ".git").exists():
+            git_root = temp
             break
-        current = parent
+        parent = temp.parent
+        if parent == temp:
+            break
+        temp = parent
 
-    # Fall back to global location
-    return Path.home() / STORE_DIR
+    # If in a git repo, search only within repo boundaries
+    if git_root:
+        current = start_path.resolve()
+        while True:
+            candidate = current / STORE_DIR
+            if candidate.exists() and candidate.is_dir():
+                return candidate
+
+            # Stop at git root
+            if current == git_root:
+                return git_root / STORE_DIR
+
+            current = current.parent
+    else:
+        # Not in git repo: search upward normally
+        while True:
+            candidate = current / STORE_DIR
+            if candidate.exists() and candidate.is_dir():
+                return candidate
+
+            # Check if we've reached root
+            parent = current.parent
+            if parent == current:
+                break
+            current = parent
+
+        # Fall back to global location
+        return Path.home() / STORE_DIR
 
 
 def ensure_store_exists(store_path: Optional[Path] = None) -> Path:

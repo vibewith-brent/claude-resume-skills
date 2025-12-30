@@ -5,19 +5,20 @@
     "email": "brent.skoumal@gmail.com"
   },
   "metadata": {
-    "description": "Professional resume management suite for extracting, optimizing, formatting, reviewing, creating custom templates, and version management",
-    "version": "1.3.0"
+    "description": "Professional resume management suite for extracting, optimizing, formatting, reviewing, creating custom templates, generating cover letters, and version management",
+    "version": "1.4.0"
   },
   "plugins": [
     {
       "name": "resume-skills",
-      "description": "Complete resume workflow: extract from PDF/DOCX, optimize for ATS and target roles, format to professional PDFs, review for quality, create custom templates, and manage versions",
+      "description": "Complete resume workflow: extract from PDF/DOCX, optimize for ATS and target roles, format to professional PDFs, generate matching cover letters, review for quality, create custom templates, and manage versions",
       "source": "./",
       "strict": false,
       "skills": [
         "./resume-extractor",
         "./resume-optimizer",
         "./resume-formatter",
+        "./resume-coverletter",
         "./resume-reviewer",
         "./resume-template-maker",
         "./resume-state"

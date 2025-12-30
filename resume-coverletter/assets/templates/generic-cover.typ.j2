@@ -1,0 +1,69 @@
+// Cover Letter - Generic/Adaptable Style
+// Industry-agnostic, neutral design
+// Font: Inter, Colors: Minimal monochrome
+
+#set page(
+  paper: "us-letter",
+  margin: (top: 0.75in, bottom: 0.75in, left: 1in, right: 1in),
+)
+
+#set text(font: "Inter", size: 11pt, fill: rgb("#1a1a1a"))
+#set par(justify: true, leading: 0.65em, first-line-indent: 0pt)
+
+// Colors - Minimal palette
+#let dark = rgb("#1a1a1a")
+#let gray = rgb("#6b7280")
+#let blue = rgb("#2563eb")
+
+// Header
+#align(left)[
+  #text(font: "Inter", size: 15pt, weight: "semibold", fill: dark)[{{ contact.name | typst_escape }}]
+
+  #v(6pt)
+
+  #set text(size: 9.5pt, fill: gray)
+  {% if contact.location %}{{ contact.location | typst_escape }} · {% endif %}{% if contact.phone %}{{ contact.phone | typst_escape }} · {% endif %}{% if contact.email %}#link("mailto:{{ contact.email | url_escape }}")[#text(fill: blue)[{{ contact.email | typst_escape }}]]{% endif %}
+  {% if contact.linkedin %} · #link("{{ contact.linkedin if contact.linkedin.startswith('http') else 'https://' + contact.linkedin | url_escape }}")[#text(fill: blue)[LinkedIn]]{% endif %}
+]
+
+#v(20pt)
+
+{% if not is_generic and company %}
+{{ company | typst_escape }}
+#v(2pt)
+{% endif %}
+
+Dear Hiring Manager,
+
+#v(10pt)
+
+{% if not is_generic %}
+I am writing to express my interest in the {{ position | typst_escape }} position{% if company %} at {{ company | typst_escape }}{% endif %}. {% else %}I am writing to express my interest in professional opportunities within your organization. {% endif %}{{ summary | typst_escape }}
+
+#v(8pt)
+
+{% if achievements %}
+My professional experience includes:
+
+#v(4pt)
+
+{% for achievement in achievements[:5] %}
+{{ achievement | typst_escape }}
+
+#v(4pt)
+
+{% endfor %}
+
+#v(4pt)
+
+{% endif %}
+
+I believe my background and skills would allow me to make meaningful contributions{% if not is_generic and company %} to {{ company | typst_escape }}{% endif %}. I would appreciate the opportunity to discuss how my experience aligns with your needs. Thank you for your consideration.
+
+#v(10pt)
+
+Sincerely,
+
+#v(16pt)
+
+#text(weight: "medium")[{{ contact.name | typst_escape }}]

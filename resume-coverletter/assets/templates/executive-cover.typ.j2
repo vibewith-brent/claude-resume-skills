@@ -1,0 +1,75 @@
+// Cover Letter - Executive Style
+// Matching executive.typ.j2 resume design language
+// Font: Inter, Colors: Navy/Blue professional palette
+
+#set page(
+  paper: "us-letter",
+  margin: (top: 0.75in, bottom: 0.75in, left: 1in, right: 1in),
+)
+
+#set text(font: "Inter", size: 11pt, fill: rgb("#1a1a1a"))
+#set par(justify: true, leading: 0.65em, first-line-indent: 0pt)
+
+// Colors
+#let primary = rgb("#1e3a5f")
+#let secondary = rgb("#475569")
+#let muted = rgb("#64748b")
+#let accent = rgb("#0369a1")
+
+// Header
+#align(left)[
+  #text(font: "Inter", size: 16pt, weight: "bold", fill: primary, tracking: 0.3pt)[{{ contact.name | typst_escape }}]
+
+  #v(6pt)
+
+  #set text(size: 9.5pt, fill: muted)
+  {% if contact.location %}{{ contact.location | typst_escape }} #h(4pt) · #h(4pt) {% endif %}{% if contact.phone %}{{ contact.phone | typst_escape }} #h(4pt) · #h(4pt) {% endif %}{% if contact.email %}#link("mailto:{{ contact.email | url_escape }}")[#text(fill: accent)[{{ contact.email | typst_escape }}]]{% endif %}
+  {% if contact.linkedin %}#h(4pt) · #h(4pt) #link("{{ contact.linkedin if contact.linkedin.startswith('http') else 'https://' + contact.linkedin | url_escape }}")[#text(fill: accent)[LinkedIn]]{% endif %}
+]
+
+#v(20pt)
+
+{% if not is_generic and company %}
+{{ company | typst_escape }}
+#v(2pt)
+{% endif %}
+
+{% if not is_generic %}
+Dear Hiring Manager,
+{% else %}
+To Whom It May Concern,
+{% endif %}
+
+#v(10pt)
+
+{% if not is_generic %}
+I am writing to express my strong interest in the {{ position | typst_escape }} position at {{ company | typst_escape }}. {% else %}I am writing to express my interest in opportunities within your organization. {% endif %}{{ summary | typst_escape }}
+
+#v(8pt)
+
+{% if achievements %}
+Key highlights of my experience include:
+
+#v(4pt)
+
+{% for achievement in achievements[:5] %}
+*{{ achievement | typst_escape }}*
+
+#v(4pt)
+
+{% endfor %}
+
+#v(4pt)
+
+{% endif %}
+
+{% if not is_generic %}
+I am confident that my background aligns well with {{ company | typst_escape }}'s needs{% else %}I am confident that my background can contribute meaningfully to your organization{% endif %}, and I would welcome the opportunity to discuss how I can contribute to {% if not is_generic %}your team's{% else %}organizational{% endif %} success. Thank you for your time and consideration.
+
+#v(10pt)
+
+Sincerely,
+
+#v(16pt)
+
+#text(weight: "semibold", fill: primary)[{{ contact.name | typst_escape }}]
