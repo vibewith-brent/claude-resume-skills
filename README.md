@@ -209,7 +209,9 @@ Templates are starting points, not final solutions. Most resumes need template c
 
 ## Usage
 
-Skills auto-select based on your request. Example workflow:
+### Natural Language (Claude Code)
+
+Skills auto-select based on your request:
 
 ```
 "Initialize project ml_engineer and import resume.pdf"
@@ -221,7 +223,37 @@ Skills auto-select based on your request. Example workflow:
 "Review the PDF"
 ```
 
-CLI equivalents in each skill's `scripts/` directory.
+### Unified CLI
+
+After `uv sync`, use the `resume` command:
+
+```bash
+# Project setup
+resume init my_resume              # Create new project
+resume import resume.pdf           # Import existing resume
+resume status                      # Show current project/version
+
+# Content workflow
+resume extract resume.pdf          # Extract text from PDF/DOCX
+resume job "https://..."           # Fetch job posting
+resume format                      # Generate PDF (uses active version)
+resume format --all-templates      # Compare all 5 templates
+resume review output.pdf           # Review PDF quality
+
+# Version management
+resume version list                # List all versions
+resume version create -t google    # Create new version with tag
+resume version switch v2           # Switch active version
+resume version diff v1 v2          # Compare versions
+
+# Cover letter
+resume cover -c "Acme" -p "Engineer" -j job.txt
+```
+
+**Key features:**
+- Auto-detects active project/version when no file specified
+- `--all-templates` compiles with all 5 templates for comparison
+- Combines YAML→Typst→PDF in single `format` command
 
 ## Structure
 

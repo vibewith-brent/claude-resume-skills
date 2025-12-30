@@ -35,13 +35,42 @@ After installation, skills are invoked via natural language (e.g., "extract my r
 
 Run `uv sync` first if dependencies aren't installed.
 
+### Unified CLI (Recommended)
+
 ```bash
-# Version management (USE FIRST)
+# Project setup
+resume init <project_name>         # Create new project
+resume import <file.pdf|docx>      # Import resume file
+resume status                      # Show current project/version
+
+# Content workflow
+resume extract <file.pdf|docx>     # Extract text
+resume job "<url>"                 # Fetch job posting
+resume format                      # Generate PDF (active version, executive template)
+resume format -t tech-modern       # Use specific template
+resume format --all-templates      # Compare all 5 templates
+
+# Version management
+resume version list                # List versions
+resume version create -t <tag>     # Create new version
+resume version switch <v1|v2>      # Switch active version
+resume version diff <v1> <v2>      # Compare versions
+
+# Cover letter
+resume cover -c "Company" -p "Position" -j job.txt
+
+# Review
+resume review <file.pdf>           # Generate QA checklist
+```
+
+### Direct Script Access
+
+For more control, use individual scripts:
+
+```bash
+# Version management
 uv run resume-state/scripts/init_project.py <project_name>
 uv run resume-state/scripts/import_resume.py <file.pdf|docx>
-uv run resume-state/scripts/create_version.py --tag <tag> --notes "description"
-uv run resume-state/scripts/list_versions.py
-uv run resume-state/scripts/switch_version.py <v1|v2|...>
 uv run resume-state/scripts/get_active.py  # prints active YAML path
 
 # Extraction
@@ -53,19 +82,10 @@ uv run resume-optimizer/scripts/validate_yaml.py <resume.yaml>
 
 # PDF generation (templates: executive, tech-modern, modern-dense, compact, minimal)
 uv run resume-formatter/scripts/yaml_to_typst.py <resume.yaml> <template> -o <out.typ>
-uv run resume-formatter/scripts/yaml_to_typst.py <resume.yaml> <template> --skip-validation -o <out.typ>  # legacy YAML
 uv run resume-formatter/scripts/compile_typst.py <file.typ> -o <out.pdf>
-
-# One-liner PDF
-uv run resume-formatter/scripts/yaml_to_typst.py resume.yaml executive -o resume.typ && \
-uv run resume-formatter/scripts/compile_typst.py resume.typ -o resume.pdf
 
 # Job tailoring
 uv run resume-optimizer/scripts/fetch_job_posting.py "<url>" --output job.txt
-
-# Export and compare
-uv run resume-state/scripts/export_version.py <v1> <output_dir>/
-uv run resume-state/scripts/diff_versions.py <v1> <v2>
 
 # Testing
 uv sync --extra dev           # Install test dependencies
