@@ -104,6 +104,16 @@ uv sync              # Install dependencies
 uv sync --extra dev  # Include test dependencies
 ```
 
+### Local Development
+
+**Use plugin marketplace only.** Do not create `.claude/skills/` symlinks — this causes duplicate skills to appear (once as `(project)` and again as `(plugin)`).
+
+Workflow:
+1. Modify skill sources in `resume-*/` directories
+2. Run `/plugin update resume-skills@resume-helper-skills`
+3. Restart Claude Code or start a new conversation
+4. Test changes
+
 ### Testing
 
 ```bash

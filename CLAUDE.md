@@ -212,6 +212,17 @@ Design vectors prevent generic "AI resume" patterns by providing mid-altitude gu
 
 ### Local Development
 
-For local development/testing, you can either:
-1. Install via plugin marketplace (recommended — tests real distribution)
-2. Create symlinks in `.claude/skills/` pointing to `resume-*/` directories
+**Use plugin marketplace only.** Do not create `.claude/skills/` symlinks.
+
+Creating symlinks causes duplicate skills — each skill appears twice (once as `(project)` from `.claude/skills/` and again as `(plugin)` from the marketplace). This is confusing and wastes context.
+
+Workflow for testing changes:
+1. Modify skill sources in `resume-*/` directories
+2. Run `/plugin update resume-skills@resume-helper-skills`
+3. Restart Claude Code or start a new conversation
+4. Test the updated skills
+
+If you have existing symlinks, remove them:
+```bash
+rm -rf .claude/skills
+```
