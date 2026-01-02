@@ -35,13 +35,42 @@ After installation, skills are invoked via natural language (e.g., "extract my r
 
 Run `uv sync` first if dependencies aren't installed.
 
+### Unified CLI (Recommended)
+
 ```bash
-# Version management (USE FIRST)
+# Project setup
+resume init <project_name>         # Create new project
+resume import <file.pdf|docx>      # Import resume file
+resume status                      # Show current project/version
+
+# Content workflow
+resume extract <file.pdf|docx>     # Extract text
+resume job "<url>"                 # Fetch job posting
+resume format                      # Generate PDF (active version, executive template)
+resume format -t tech-modern       # Use specific template
+resume format --all-templates      # Compare all 5 templates
+
+# Version management
+resume version list                # List versions
+resume version create -t <tag>     # Create new version
+resume version switch <v1|v2>      # Switch active version
+resume version diff <v1> <v2>      # Compare versions
+
+# Cover letter
+resume cover -c "Company" -p "Position" -j job.txt
+
+# Review
+resume review <file.pdf>           # Generate QA checklist
+```
+
+### Direct Script Access
+
+For more control, use individual scripts:
+
+```bash
+# Version management
 uv run resume-state/scripts/init_project.py <project_name>
 uv run resume-state/scripts/import_resume.py <file.pdf|docx>
-uv run resume-state/scripts/create_version.py --tag <tag> --notes "description"
-uv run resume-state/scripts/list_versions.py
-uv run resume-state/scripts/switch_version.py <v1|v2|...>
 uv run resume-state/scripts/get_active.py  # prints active YAML path
 
 # Extraction
@@ -53,19 +82,10 @@ uv run resume-optimizer/scripts/validate_yaml.py <resume.yaml>
 
 # PDF generation (templates: executive, tech-modern, modern-dense, compact, minimal)
 uv run resume-formatter/scripts/yaml_to_typst.py <resume.yaml> <template> -o <out.typ>
-uv run resume-formatter/scripts/yaml_to_typst.py <resume.yaml> <template> --skip-validation -o <out.typ>  # legacy YAML
 uv run resume-formatter/scripts/compile_typst.py <file.typ> -o <out.pdf>
-
-# One-liner PDF
-uv run resume-formatter/scripts/yaml_to_typst.py resume.yaml executive -o resume.typ && \
-uv run resume-formatter/scripts/compile_typst.py resume.typ -o resume.pdf
 
 # Job tailoring
 uv run resume-optimizer/scripts/fetch_job_posting.py "<url>" --output job.txt
-
-# Export and compare
-uv run resume-state/scripts/export_version.py <v1> <output_dir>/
-uv run resume-state/scripts/diff_versions.py <v1> <v2>
 
 # Testing
 uv sync --extra dev           # Install test dependencies
@@ -153,28 +173,56 @@ experience:
           - "Bullet starting with action verb"
 ```
 
-## Template Selection
+## Template Philosophy
 
-| Template | Use Case |
-|----------|----------|
-| executive | Professional, clean hierarchy, navy accents (default) |
-| tech-modern | Modern/creative with deep lavender palette, pill-style skills, Carlito font, single-page optimized |
-| modern-dense | Maximum density with categorized inline skills, strategic spacing, ~20-25 bullets |
-| compact | Maximum density for extensive experience |
-| minimal | Clean, understated, monochromatic |
+**Templates are starting points, not final solutions.** Each person's resume content will need a custom template to fit their content on the desired number of pages. The built-in templates demonstrate different approaches but almost always require adjustment for:
 
-### Custom Template Creation
+- **Content volume** — 20 years of experience vs. recent grad
+- **Target page count** — Fitting exactly on 1 page vs. 2 pages
+- **Section emphasis** — Skills-forward for tech, experience-forward for management
+- **Bullet density** — 4-6 per role vs. 2-3 per role
 
-For custom templates, the template-maker and reviewer work in an iteration loop:
+### Built-in Templates (Starting Points)
 
-1. **Design** — Define typography, layout, whitespace, color based on industry theme
-2. **Create** — Generate `.typ.j2` template in `assets/templates/typst/`
-3. **Compile** — Convert to PDF using existing formatter scripts
-4. **Review** — Evaluate with resume-reviewer skill
-5. **Adjust** — Fix issues identified by reviewer
-6. **Repeat** — Continue until all visual QA checks pass
+| Template | Best For | Key Traits |
+|----------|----------|------------|
+| executive | 2-page professional | Clean hierarchy, navy accents, balanced spacing |
+| tech-modern | Creative/startup | Lavender palette, pill-style skills, single-page optimized |
+| modern-dense | Extensive experience | Maximum density, inline skills, ~20-25 bullets |
+| compact | 1-page constraint | Tight margins, minimal section gaps |
+| minimal | Understated | Monochromatic, maximum readability |
 
-Design vectors prevent generic "AI resume" patterns by providing mid-altitude guidance on fonts, spacing, and color choices tailored to industry expectations.
+### Custom Template Workflow (Expected Path)
+
+Most resume projects should create a personalized template:
+
+1. **Start** — Pick the closest built-in template as a base
+2. **Compile** — Generate a PDF with the user's actual content
+3. **Review** — Use resume-reviewer to identify fit issues
+4. **Customize** — Copy template, adjust spacing/sizing (see Tuning Parameters below)
+5. **Iterate** — Repeat until content fits target page count cleanly
+
+### Template Tuning Parameters
+
+Quick reference for fitting content:
+
+| Parameter | Where | Effect | Adjustment |
+|-----------|-------|--------|------------|
+| Margins | `margin:` in `#set page()` | +/- 4-5 lines per 0.1in | 0.5-0.75in typical |
+| Body font | `size:` in `#set text()` | Major density change | 9-10.5pt typical |
+| Line height | `leading:` in `#set par()` | Subtle density | 0.5-0.7em typical |
+| Section gap | `#let lg = 10pt` | Space between sections | 6-12pt typical |
+| List spacing | `spacing:` in `#set list()` | Between bullets | 2-4pt typical |
+| Name size | Header text size | Visual impact | 18-24pt typical |
+
+### Creating a Custom Template
+
+1. Copy closest template: `cp executive.typ.j2 custom.typ.j2`
+2. Adjust parameters above based on content fit
+3. Compile and review
+4. For major changes, use template-maker skill with design vectors
+
+The template-maker skill provides structured guidance on typography, layout, whitespace, and color when creating templates from scratch or making significant aesthetic changes.
 
 ## Common Pitfalls
 

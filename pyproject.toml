@@ -1,7 +1,7 @@
 [project]
 name = "resume-helper"
-version = "1.4.0"
-description = "Resume management skills suite: extract, optimize, format, review, and create custom templates"
+version = "1.5.0"
+description = "Resume management skills suite: extract, coach, optimize, format, review, and create custom templates"
 requires-python = ">=3.10"
 dependencies = [
     "beautifulsoup4",
@@ -19,8 +19,14 @@ dev = [
     "pytest-cov>=4.0",
 ]
 
+[project.scripts]
+resume = "resume_cli.cli:main"
+
 [tool.uv]
 package = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["resume_cli"]
 
 [build-system]
 requires = ["hatchling"]
