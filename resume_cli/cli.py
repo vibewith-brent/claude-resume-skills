@@ -165,7 +165,7 @@ def cmd_format(args: argparse.Namespace) -> int:
                     import pdfplumber
                     with pdfplumber.open(pdf_path) as pdf:
                         pages = len(pdf.pages)
-                except:
+                except (ImportError, OSError, Exception) as e:
                     pages = "?"
                 results.append((template, pdf_path, pages, "OK"))
             else:
