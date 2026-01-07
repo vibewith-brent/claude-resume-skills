@@ -87,6 +87,11 @@ uv run resume-formatter/scripts/compile_typst.py <file.typ> -o <out.pdf>
 # Job tailoring
 uv run resume-optimizer/scripts/fetch_job_posting.py "<url>" --output job.txt
 
+# Coaching sessions
+uv run resume-coach/scripts/session_manager.py list      # List coaching sessions
+uv run resume-coach/scripts/session_manager.py resume    # Resume incomplete session
+uv run resume-coach/scripts/session_manager.py save -f session.json  # Save session
+
 # Testing
 uv sync --extra dev           # Install test dependencies
 uv run pytest tests/ -v       # Run tests
@@ -97,6 +102,7 @@ uv run pytest tests/ -v       # Run tests
 ```
 resume-*/                 # Skill directories (plugin source)
 ├── resume-extractor/     # PDF/DOCX → text extraction
+├── resume-coach/         # Adaptive content discovery via conversation
 ├── resume-optimizer/     # Content improvement, ATS, tailoring
 ├── resume-formatter/     # YAML → Typst → PDF
 │   └── assets/templates/typst/  # Jinja2 templates (.typ.j2)
@@ -114,20 +120,22 @@ resume-*/                 # Skill directories (plugin source)
     ├── project.json      # Version history
     ├── sources/          # Original PDFs/DOCXs
     ├── versions/v1/      # Version snapshots
+    │   └── coaching/     # Coaching session history
     └── jobs/             # Cached job postings
 ```
 
 ### Skill Workflow
 
 ```
-[State] → [Extract] → [Optimize] → [Format] → [Review] ←→ [Template Maker]
-   ↓          ↓            ↓            ↓          ↓              ↓
-Project    PDF/DOCX      YAML       YAML→PDF   Visual QA    Custom .typ.j2
-                                       ↓
-                               [Cover Letter]
+[State] → [Extract] → [Coach] → [Optimize] → [Format] → [Review] ←→ [Template Maker]
+   ↓          ↓          ↓           ↓            ↓          ↓              ↓
+Project    PDF/DOCX   Discover     YAML       YAML→PDF   Visual QA    Custom .typ.j2
+                      content                     ↓
+                                          [Cover Letter]
 ```
 
-- **resume-state**: Manages projects and versions; tracks YAML iterations and original sources
+- **resume-state**: Manages projects and versions; tracks YAML iterations, original sources, and coaching sessions
+- **resume-coach**: Adaptive coaching to discover achievements and expand content through conversation; persists sessions per version
 - **resume-reviewer**: Generates review templates; Claude views the PDF and fills in the visual QA checklist
 - **resume-template-maker**: Creates custom templates using design vectors (typography, layout, whitespace, color)
 - **resume-coverletter**: Generates cover letters matching resume template styling
@@ -136,7 +144,8 @@ Project    PDF/DOCX      YAML       YAML→PDF   Visual QA    Custom .typ.j2
 
 - **State Schema**: `.resume_versions/projects/<name>/project.json` — version history and metadata
 - **Global Config**: `.resume_versions/config.json` — active project setting
-- **State Utils**: `resume-state/scripts/state_utils.py` — shared utilities for version management (schema v1.0.0)
+- **State Utils**: `resume-state/scripts/state_utils.py` — shared utilities for version and coaching session management
+- **Coaching Sessions**: `.resume_versions/projects/<name>/versions/<v#>/coaching/` — session history per version
 - **YAML Schema**: `resume-extractor/references/resume_schema.yaml` — canonical structure for resume data
 - **Typst Templates**: `resume-formatter/assets/templates/typst/*.typ.j2` — Jinja2 templates with `typst_escape` filter
 - **Visual QA Checklist**: `resume-reviewer/references/visual_qa_checklist.md` — structured evaluation criteria

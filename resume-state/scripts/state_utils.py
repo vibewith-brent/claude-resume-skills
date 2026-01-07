@@ -146,7 +146,9 @@ def load_project_state(project: str, store_path: Optional[Path] = None) -> dict:
     return json.loads(state_file.read_text())
 
 
-def save_project_state(project: str, state: dict, store_path: Optional[Path] = None) -> None:
+def save_project_state(
+    project: str, state: dict, store_path: Optional[Path] = None
+) -> None:
     """Save project state to project.json."""
     project_path = get_project_path(project, store_path)
     state["updated_at"] = datetime.now(timezone.utc).isoformat()
@@ -242,6 +244,7 @@ def get_next_version_id(state: dict) -> str:
         except ValueError:
             # Skip malformed version IDs but log warning
             import sys
+
             print(f"Warning: Skipping malformed version ID: {vid}", file=sys.stderr)
 
     return f"v{max_num + 1}"
@@ -296,3 +299,208 @@ def copy_file(src: Path, dst: Path) -> None:
 def now_iso() -> str:
     """Get current UTC timestamp in ISO format."""
     return datetime.now(timezone.utc).isoformat()
+
+
+# Coaching session constants
+COACHING_DIR = "coaching"
+COACHING_SESSION_SCHEMA_VERSION = "1.0.0"
+
+
+def get_coaching_dir(
+    project: str,
+    version_id: str,
+    tag: Optional[str] = None,
+    store_path: Optional[Path] = None,
+) -> Path:
+    """Get path to coaching directory for a version.
+
+    Args:
+        project: Project name
+        version_id: Version ID (e.g., 'v1', 'v2')
+        tag: Optional version tag
+        store_path: Optional store path override
+
+    Returns:
+        Path to the coaching directory within the version
+    """
+    version_path = get_version_path(project, version_id, tag, store_path)
+    return version_path / COACHING_DIR
+
+
+def generate_session_id() -> str:
+    """Generate a unique session ID with timestamp."""
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    return f"session_{timestamp}"
+
+
+def save_coaching_session(
+    project: str,
+    version_id: str,
+    session: dict,
+    tag: Optional[str] = None,
+    store_path: Optional[Path] = None,
+) -> Path:
+    """Save a coaching session to the version's coaching directory.
+
+    Args:
+        project: Project name
+        version_id: Version ID (e.g., 'v1', 'v2')
+        session: Session data dictionary
+        tag: Optional version tag
+        store_path: Optional store path override
+
+    Returns:
+        Path to the saved session file
+    """
+    coaching_dir = get_coaching_dir(project, version_id, tag, store_path)
+    coaching_dir.mkdir(parents=True, exist_ok=True)
+
+    # Ensure session has required fields
+    if "id" not in session:
+        session["id"] = generate_session_id()
+    if "version" not in session:
+        session["version"] = COACHING_SESSION_SCHEMA_VERSION
+    if "created_at" not in session:
+        session["created_at"] = now_iso()
+    session["updated_at"] = now_iso()
+
+    session_file = coaching_dir / f"{session['id']}.json"
+
+    # Atomic write
+    fd, tmp_path = tempfile.mkstemp(dir=coaching_dir, suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w") as f:
+            json.dump(session, f, indent=2)
+        Path(tmp_path).replace(session_file)
+    except:
+        Path(tmp_path).unlink(missing_ok=True)
+        raise
+
+    return session_file
+
+
+def load_coaching_session(
+    project: str,
+    version_id: str,
+    session_id: str,
+    tag: Optional[str] = None,
+    store_path: Optional[Path] = None,
+) -> dict:
+    """Load a specific coaching session by ID.
+
+    Args:
+        project: Project name
+        version_id: Version ID (e.g., 'v1', 'v2')
+        session_id: Session ID to load
+        tag: Optional version tag
+        store_path: Optional store path override
+
+    Returns:
+        Session data dictionary
+
+    Raises:
+        FileNotFoundError: If session file does not exist
+    """
+    coaching_dir = get_coaching_dir(project, version_id, tag, store_path)
+    session_file = coaching_dir / f"{session_id}.json"
+
+    if not session_file.exists():
+        raise FileNotFoundError(f"Coaching session not found: {session_id}")
+
+    return json.loads(session_file.read_text())
+
+
+def list_coaching_sessions(
+    project: str,
+    version_id: Optional[str] = None,
+    tag: Optional[str] = None,
+    store_path: Optional[Path] = None,
+) -> list[dict]:
+    """List all coaching sessions for a version.
+
+    Args:
+        project: Project name
+        version_id: Version ID (e.g., 'v1', 'v2'). If None, uses active version.
+        tag: Optional version tag
+        store_path: Optional store path override
+
+    Returns:
+        List of session metadata dicts (id, created_at, status, focus areas)
+    """
+    # Resolve version if not provided
+    if version_id is None:
+        state = load_project_state(project, store_path)
+        version_id = state.get("active_version")
+        if not version_id:
+            return []
+        version_entry = get_version_entry(state, version_id)
+        tag = version_entry.get("tag") if version_entry else None
+
+    coaching_dir = get_coaching_dir(project, version_id, tag, store_path)
+    if not coaching_dir.exists():
+        return []
+
+    sessions = []
+    for session_file in sorted(coaching_dir.glob("session_*.json")):
+        try:
+            data = json.loads(session_file.read_text())
+            sessions.append(
+                {
+                    "id": data.get("id", session_file.stem),
+                    "created_at": data.get("created_at"),
+                    "updated_at": data.get("updated_at"),
+                    "status": data.get("status", "unknown"),
+                    "focus_areas": data.get("focus", {}).get("areas", []),
+                }
+            )
+        except (json.JSONDecodeError, KeyError):
+            # Skip malformed session files
+            continue
+
+    return sessions
+
+
+def get_latest_session(
+    project: str,
+    version_id: Optional[str] = None,
+    tag: Optional[str] = None,
+    store_path: Optional[Path] = None,
+    status_filter: Optional[str] = None,
+) -> Optional[dict]:
+    """Get the most recent coaching session.
+
+    Args:
+        project: Project name
+        version_id: Version ID. If None, uses active version.
+        tag: Optional version tag
+        store_path: Optional store path override
+        status_filter: Optional status to filter by (e.g., 'active', 'paused')
+
+    Returns:
+        Full session data dict, or None if no sessions exist
+    """
+    # Resolve version if not provided
+    if version_id is None:
+        state = load_project_state(project, store_path)
+        version_id = state.get("active_version")
+        if not version_id:
+            return None
+        version_entry = get_version_entry(state, version_id)
+        tag = version_entry.get("tag") if version_entry else None
+
+    coaching_dir = get_coaching_dir(project, version_id, tag, store_path)
+    if not coaching_dir.exists():
+        return None
+
+    # Find most recent session file
+    session_files = sorted(coaching_dir.glob("session_*.json"), reverse=True)
+
+    for session_file in session_files:
+        try:
+            data = json.loads(session_file.read_text())
+            if status_filter is None or data.get("status") == status_filter:
+                return data
+        except (json.JSONDecodeError, KeyError):
+            continue
+
+    return None

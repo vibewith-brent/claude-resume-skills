@@ -188,7 +188,7 @@ flowchart TB
 |-------|---------|
 | **resume-state** | Version control. Initialize projects, import files, branch versions, compare changes. *Use first.* |
 | **resume-extractor** | Convert PDF/DOCX to structured YAML |
-| **resume-coach** | Discover and expand content through guided questions. Add experience, fill gaps, articulate achievements. *(New)* |
+| **resume-coach** | Adaptive coaching to discover achievements through conversation. Persists sessions per version for iterative content development. |
 | **resume-optimizer** | Improve content: ATS optimization, metrics, keyword alignment, job tailoring |
 | **resume-formatter** | Generate PDFs from YAML using Typst templates |
 | **resume-coverletter** | Generate cover letters matching resume template styling |
@@ -216,6 +216,9 @@ Skills auto-select based on your request:
 ```
 "Initialize project ml_engineer and import resume.pdf"
 "Extract to YAML and optimize for ATS"
+"Help me discover achievements from my last role"
+"I can't think of what to put for my current job"
+"This bullet is weak - help me expand it"
 "Create version for Google, tailor for this job: [URL]"
 "Generate PDF with executive template"
 "The content overflows - adjust the template to fit on 2 pages"
@@ -332,25 +335,6 @@ See [Skill Authoring Best Practices](https://docs.anthropic.com/en/docs/agents-a
 
 Current gaps and potential improvements:
 
-### Content Discovery & Coaching (High Priority Gap)
-
-The current flow assumes resume content already exists. Missing: helping users discover, create, and expand content.
-
-| Gap | Description | Priority |
-|-----|-------------|----------|
-| **Achievement Discovery** | Interview-style questions to help users remember forgotten accomplishments | High |
-| **Skills Coaxing** | Draw out hidden skills from side projects, hobbies, volunteer work | High |
-| **Content Generation** | Create new bullets from scratch based on role descriptions | High |
-| **Experience Updates** | Guided flow for adding recent work experience | High |
-| **Gap Analysis** | Identify what's missing for target role, help create that content | High |
-| **STAR Expansion** | Take basic bullets and expand with Situation, Task, Action, Result | Medium |
-
-**Example coaching questions:**
-- "What's the biggest problem you solved in this role?"
-- "Did you save time, money, or reduce errors? By how much?"
-- "What tools/technologies did you use that aren't listed?"
-- "Any projects outside work that demonstrate these skills?"
-
 ### Content Analysis
 | Gap | Description | Priority |
 |-----|-------------|----------|
@@ -388,24 +372,22 @@ PRs welcome for any of the above. See [Contributing](#contributing) for guidelin
 flowchart LR
     subgraph current["Current Skills"]
         A[State] --> B[Extract]
-        B --> C[Optimize]
-        C --> D[Format]
-        D --> E[Review]
-        E --> F[Cover Letter]
+        B --> C[Coach]
+        C --> D[Optimize]
+        D --> E[Format]
+        E --> F[Review]
+        F --> G[Cover Letter]
     end
 
     subgraph planned["Planned Additions"]
-        G[Content Coach]
         H[ATS Score]
         I[Auto-Fit]
         J[App Tracker]
     end
 
-    B -.-> G
-    G -.-> C
-    C -.-> H
-    D -.-> I
-    F -.-> J
+    D -.-> H
+    E -.-> I
+    G -.-> J
 
     style planned fill:#fff9c4
 ```
@@ -413,7 +395,6 @@ flowchart LR
 ## Contributing
 
 PRs welcome. Priority areas:
-- **Content coaching** - Interview-style discovery, STAR expansion, gap analysis
 - **ATS scoring** - Keyword match %, format compliance scoring
 - **Auto-fit** - Automatic spacing adjustment to hit target pages
 - **Application tracking** - Track versions sent to companies
