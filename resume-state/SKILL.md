@@ -1,6 +1,6 @@
 ---
 name: managing-resume-versions
-description: Manages resume projects and versions. Use first when starting resume work to initialize projects, import files, create versions before changes, or switch between resume variants for different roles.
+description: Manages resume projects and versions. Use first when the user starts resume work to initialize projects, import files, create versions before changes, or switch between resume variants for different roles.
 ---
 
 # Resume State Manager

@@ -1,6 +1,6 @@
 ---
 name: optimizing-resumes
-description: Optimizes resume content for target roles with ATS optimization, impact quantification, and keyword alignment. Use when user wants to tailor for a job posting, improve bullets, add metrics, or strengthen action verbs.
+description: Optimizes resume content for target roles with ATS optimization, impact quantification, and keyword alignment. Use when the user wants to tailor for a job posting, improve bullets, add metrics, or strengthen action verbs.
 ---
 
 # Resume Optimizer

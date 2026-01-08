@@ -1,6 +1,6 @@
 ---
 name: generating-cover-letters
-description: Generates professional cover letters matching resume templates. Use when user needs a cover letter, is applying for a job, or wants matching application materials with consistent styling.
+description: Generates professional cover letters matching resume templates. Use when the user needs a cover letter, is applying for a job, or wants matching application materials with consistent styling.
 ---
 
 # Resume Cover Letter Generator
