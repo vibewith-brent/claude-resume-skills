@@ -1,6 +1,6 @@
 ---
-name: resume-reviewer
-description: Visual QA templates for resume PDFs. Generates checklists and feedback templates that Claude fills in after visually reviewing the PDF.
+name: reviewing-resumes
+description: Performs visual QA on resume PDFs using structured checklists. Use when the user asks to review a PDF, check layout issues, evaluate formatting, or wants feedback before submitting.
 ---
 
 # Resume Reviewer Skill
@@ -62,12 +62,12 @@ When reviewing for template-maker iteration:
 
 ## Integration with Template Maker
 
-This skill is the inner loop of the template-maker workflow:
+This skill is the inner loop of the creating-resume-templates workflow:
 
 ```
-template-maker generates → compile to PDF → reviewer evaluates → template-maker adjusts
-                                ↑                                        ↓
-                                └────────────────────────────────────────┘
+creating-resume-templates generates → compile to PDF → reviewing-resumes evaluates → creating-resume-templates adjusts
+                                           ↑                                                      ↓
+                                           └──────────────────────────────────────────────────────┘
 ```
 
-Continue iteration until reviewer returns all PASS results.
+Continue iteration until reviewing-resumes returns all PASS results.

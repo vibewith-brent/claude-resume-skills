@@ -1,6 +1,6 @@
 ---
-name: resume-coach
-description: Adaptive coaching to discover, expand, and articulate resume content through conversation. Persists insights to resume-state for iterative improvement.
+name: coaching-resume-content
+description: Discovers, expands, and articulates resume content through adaptive conversation. Use when the user says they don't know what to put, needs help thinking of achievements, has thin content, or wants to expand weak bullets.
 ---
 
 # Resume Coach
@@ -240,10 +240,10 @@ experience:
 ## Integration with Other Skills
 
 ```
-resume-state → resume-coach → resume-optimizer → resume-formatter
-     ↓              ↓               ↓                  ↓
-  Project     Content discovery  Polish language    Generate PDF
-  version     & expansion        & add metrics
+managing-resume-versions → coaching-resume-content → optimizing-resumes → formatting-resumes
+          ↓                          ↓                        ↓                    ↓
+      Project                 Content discovery        Polish language       Generate PDF
+      version                  & expansion             & add metrics
 ```
 
 **Before coaching**: Ensure project exists and version is active

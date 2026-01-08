@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Resume management skills suite for Claude Code: extract PDF/DOCX → optimize content → format to PDF → review and iterate. Seven skills distributed via plugin marketplace.
+Resume management skills suite for Claude Code: extract PDF/DOCX → optimize content → format to PDF → review and iterate. Eight skills distributed via plugin marketplace.
 
 ## Installation
 
@@ -26,9 +26,9 @@ After installation, skills are invoked via natural language (e.g., "extract my r
 ## Workflow Priority
 
 **IMPORTANT**: When a user provides a resume (PDF/DOCX) or starts working on a resume:
-1. **First**: Initialize a project with `resume-state` if none exists
+1. **First**: Initialize a project with `managing-resume-versions` if none exists
 2. **Then**: Import the resume file to track the original
-3. **Then**: Use other skills (extract, optimize, format)
+3. **Then**: Use other skills (extracting-resumes, optimizing-resumes, formatting-resumes)
 4. **Before changes**: Create a new version to preserve history
 
 ## Quick Reference
@@ -99,17 +99,36 @@ uv run pytest tests/ -v       # Run tests
 
 ## Architecture
 
+### Directory and Skill Naming
+
+**Important**: Skill directories retain their original `resume-*/` names for backwards compatibility, while skill names (used by Claude Code) follow gerund naming conventions for natural language alignment:
+
+| Directory | Skill Name | Trigger Examples |
+|-----------|------------|------------------|
+| resume-extractor/ | extracting-resumes | "extract my resume", "convert PDF to YAML" |
+| resume-coach/ | coaching-resume-content | "help me think of achievements", "expand weak bullets" |
+| resume-optimizer/ | optimizing-resumes | "optimize for this job", "add metrics" |
+| resume-formatter/ | formatting-resumes | "generate a PDF", "compile my resume" |
+| resume-coverletter/ | generating-cover-letters | "create a cover letter" |
+| resume-reviewer/ | reviewing-resumes | "review this PDF", "check layout" |
+| resume-template-maker/ | creating-resume-templates | "create a custom template" |
+| resume-state/ | managing-resume-versions | "initialize project", "create new version" |
+
+When referencing skills in documentation or conversation, use the gerund form (e.g., `formatting-resumes`). Directory names remain unchanged.
+
+### File Structure
+
 ```
 resume-*/                 # Skill directories (plugin source)
-├── resume-extractor/     # PDF/DOCX → text extraction
-├── resume-coach/         # Adaptive content discovery via conversation
-├── resume-optimizer/     # Content improvement, ATS, tailoring
-├── resume-formatter/     # YAML → Typst → PDF
+├── resume-extractor/     # extracting-resumes: PDF/DOCX → text extraction
+├── resume-coach/         # coaching-resume-content: Adaptive content discovery
+├── resume-optimizer/     # optimizing-resumes: Content improvement, ATS, tailoring
+├── resume-formatter/     # formatting-resumes: YAML → Typst → PDF
 │   └── assets/templates/typst/  # Jinja2 templates (.typ.j2)
-├── resume-reviewer/      # Visual QA for compiled PDFs
-├── resume-template-maker/ # Create custom Typst templates
-├── resume-coverletter/   # Generate matching cover letters
-└── resume-state/         # Version and project management
+├── resume-reviewer/      # reviewing-resumes: Visual QA for compiled PDFs
+├── resume-template-maker/ # creating-resume-templates: Custom Typst templates
+├── resume-coverletter/   # generating-cover-letters: Matching cover letters
+└── resume-state/         # managing-resume-versions: Version and project management
 
 .claude-plugin/           # Plugin marketplace configuration
 └── marketplace.json      # Defines plugin entry points
@@ -127,18 +146,18 @@ resume-*/                 # Skill directories (plugin source)
 ### Skill Workflow
 
 ```
-[State] → [Extract] → [Coach] → [Optimize] → [Format] → [Review] ←→ [Template Maker]
-   ↓          ↓          ↓           ↓            ↓          ↓              ↓
-Project    PDF/DOCX   Discover     YAML       YAML→PDF   Visual QA    Custom .typ.j2
-                      content                     ↓
-                                          [Cover Letter]
+[Managing Versions] → [Extracting] → [Coaching] → [Optimizing] → [Formatting] → [Reviewing] ←→ [Creating Templates]
+         ↓                 ↓              ↓              ↓               ↓             ↓                    ↓
+     Project           PDF/DOCX       Discover        YAML          YAML→PDF      Visual QA         Custom .typ.j2
+                                      content                            ↓
+                                                             [Generating Cover Letters]
 ```
 
-- **resume-state**: Manages projects and versions; tracks YAML iterations, original sources, and coaching sessions
-- **resume-coach**: Adaptive coaching to discover achievements and expand content through conversation; persists sessions per version
-- **resume-reviewer**: Generates review templates; Claude views the PDF and fills in the visual QA checklist
-- **resume-template-maker**: Creates custom templates using design vectors (typography, layout, whitespace, color)
-- **resume-coverletter**: Generates cover letters matching resume template styling
+- **managing-resume-versions**: Manages projects and versions; tracks YAML iterations, original sources, and coaching sessions
+- **coaching-resume-content**: Adaptive coaching to discover achievements and expand content through conversation; persists sessions per version
+- **reviewing-resumes**: Generates review templates; Claude views the PDF and fills in the visual QA checklist
+- **creating-resume-templates**: Creates custom templates using design vectors (typography, layout, whitespace, color)
+- **generating-cover-letters**: Generates cover letters matching resume template styling
 
 ## Key Files
 

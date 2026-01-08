@@ -1,6 +1,6 @@
 ---
-name: resume-formatter
-description: Convert resume YAML to professionally formatted PDF using Typst templates. Use when generating final resume PDFs, comparing template layouts, or creating print-ready documents.
+name: formatting-resumes
+description: Converts resume YAML to professionally formatted PDF using Typst templates. Use when the user wants to generate a PDF, compile their resume, compare template layouts, or create print-ready documents.
 ---
 
 # Resume Formatter
@@ -257,9 +257,9 @@ uv run scripts/compile_typst.py resume_compact.typ \
 
 **Complete resume workflow:**
 
-1. **Extract:** Use `resume-extractor` to convert PDF/DOCX to YAML
-2. **Optimize:** Use `resume-optimizer` to improve content and tailor for target role
-3. **Format:** Use `resume-formatter` (this skill) to generate final PDF
+1. **Extract:** Use `extracting-resumes` to convert PDF/DOCX to YAML
+2. **Optimize:** Use `optimizing-resumes` to improve content and tailor for target role
+3. **Format:** Use `formatting-resumes` (this skill) to generate final PDF
 4. **Iterate:** Make updates in YAML and regenerate
 
 This workflow keeps resume data in editable YAML format while producing professional PDF output.
