@@ -1,6 +1,6 @@
 ---
-name: resume-template-maker
-description: Create custom Typst resume templates tailored to specific content and page requirements. Use for any resume project that needs to fit content precisely.
+name: creating-resume-templates
+description: Creates custom Typst resume templates tailored to specific content and page requirements. Use when content doesn't fit built-in templates, user needs custom styling, or content overflows target page count.
 ---
 
 # Resume Template Maker Skill

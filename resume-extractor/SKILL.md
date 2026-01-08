@@ -1,6 +1,6 @@
 ---
-name: resume-extractor
-description: Extract PDF/DOCX resumes to structured YAML format. Use when converting resume documents to YAML, importing existing resumes, or beginning resume workflows.
+name: extracting-resumes
+description: Extracts PDF/DOCX resumes to structured YAML format. Use when user has a resume file to convert, mentions importing an existing resume, or starts a resume workflow with a document.
 ---
 
 # Resume Extractor

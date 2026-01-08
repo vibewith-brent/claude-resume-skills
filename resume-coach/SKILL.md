@@ -1,6 +1,6 @@
 ---
-name: resume-coach
-description: Adaptive coaching to discover, expand, and articulate resume content through conversation. Persists insights to resume-state for iterative improvement.
+name: coaching-resume-content
+description: Discovers, expands, and articulates resume content through adaptive conversation. Use when user says they don't know what to put, needs help thinking of achievements, has thin content, or wants to expand weak bullets.
 ---
 
 # Resume Coach

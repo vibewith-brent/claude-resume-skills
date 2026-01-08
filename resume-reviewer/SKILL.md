@@ -1,6 +1,6 @@
 ---
-name: resume-reviewer
-description: Visual QA templates for resume PDFs. Generates checklists and feedback templates that Claude fills in after visually reviewing the PDF.
+name: reviewing-resumes
+description: Performs visual QA on resume PDFs using structured checklists. Use when user asks to review a PDF, check layout issues, evaluate formatting, or wants feedback before submitting.
 ---
 
 # Resume Reviewer Skill

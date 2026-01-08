@@ -1,6 +1,6 @@
 # Resume Skills for Claude Code
 
-Seven skills for resume management: extract PDF/DOCX → optimize content → format to PDF → generate cover letters → review and iterate.
+Eight skills for resume management: extract PDF/DOCX → coach content discovery → optimize content → format to PDF → generate cover letters → review and iterate.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skills-blue)](https://claude.com/code)
@@ -186,14 +186,14 @@ flowchart TB
 
 | Skill | Purpose |
 |-------|---------|
-| **resume-state** | Version control. Initialize projects, import files, branch versions, compare changes. *Use first.* |
-| **resume-extractor** | Convert PDF/DOCX to structured YAML |
-| **resume-coach** | Adaptive coaching to discover achievements through conversation. Persists sessions per version for iterative content development. |
-| **resume-optimizer** | Improve content: ATS optimization, metrics, keyword alignment, job tailoring |
-| **resume-formatter** | Generate PDFs from YAML using Typst templates |
-| **resume-coverletter** | Generate cover letters matching resume template styling |
-| **resume-reviewer** | Visual QA templates — Claude views PDF and fills in checklist |
-| **resume-template-maker** | Create custom Typst templates for content fitting |
+| **managing-resume-versions** | Version control. Initialize projects, import files, branch versions, compare changes. *Use first.* |
+| **extracting-resumes** | Convert PDF/DOCX to structured YAML |
+| **coaching-resume-content** | Adaptive coaching to discover achievements through conversation. Persists sessions per version for iterative content development. |
+| **optimizing-resumes** | Improve content: ATS optimization, metrics, keyword alignment, job tailoring |
+| **formatting-resumes** | Generate PDFs from YAML using Typst templates |
+| **generating-cover-letters** | Generate cover letters matching resume template styling |
+| **reviewing-resumes** | Visual QA templates — Claude views PDF and fills in checklist |
+| **creating-resume-templates** | Create custom Typst templates for content fitting |
 
 ### Templates (Starting Points)
 
@@ -319,15 +319,20 @@ uv run pytest tests/ --cov     # With coverage
 
 ### Adding Skills
 
-1. Create `resume-newskill/SKILL.md`:
+1. Create `resume-newskill/SKILL.md` with gerund-form name:
    ```yaml
    ---
-   name: resume-newskill
-   description: What it does and when to use it. Third person.
+   name: doing-something-with-resumes
+   description: Does X to resumes. Use when user wants Y or mentions Z.
    ---
    ```
 2. Add `scripts/` and `references/` as needed
 3. Add skill path to `.claude-plugin/marketplace.json`
+
+**Best practices:**
+- Use gerund form for names (e.g., `formatting-resumes`, not `resume-formatter`)
+- Include "Use when" trigger phrases in descriptions
+- Write in third person
 
 See [Skill Authoring Best Practices](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/skills#authoring-best-practices).
 

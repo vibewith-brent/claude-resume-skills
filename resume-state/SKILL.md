@@ -1,6 +1,6 @@
 ---
-name: resume-state
-description: Use first when working with resumes. Initialize projects, import PDFs/DOCXs, create versions before changes. Manages multiple resume variants for different roles.
+name: managing-resume-versions
+description: Manages resume projects and versions. Use first when starting resume work to initialize projects, import files, create versions before changes, or switch between resume variants for different roles.
 ---
 
 # Resume State Manager
